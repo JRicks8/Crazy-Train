@@ -42,3 +42,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2423734029
+    locked: 0
+  - name: Foreground
+    uniqueID: 2951004995
+    locked: 0
+  - name: Game Elements
+    uniqueID: 929783687
+    locked: 0
+  - name: VFX
+    uniqueID: 1179352833
+    locked: 0
+  - name: Interface
+    uniqueID: 916022301
+    locked: 0
