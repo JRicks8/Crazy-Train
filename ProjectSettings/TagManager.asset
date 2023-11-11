@@ -5,17 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - PathfindData
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - NoCollision
   - Water
   - UI
   - EnemyProjectile
   - PlayerProjectile
   - NeutralProjectile
-  - 
+  - Terrain
   - 
   - 
   - Neutral

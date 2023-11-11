@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2911732194316374304}
   - component: {fileID: 933020247832102479}
   - component: {fileID: 3759116774164141502}
+  - component: {fileID: 3968494191814527807}
   m_Layer: 14
   m_Name: Enemy
   m_TagString: Enemy
@@ -150,7 +151,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &933020247832102479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,8 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f68d31474c82d346be4e41c2b1032ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  acceleration: 0
   jumpPower: 10
+  maxHorizontalSpeed: 0
   bulletSpeed: 10
   fireRate: 2
   target: {fileID: 0}
@@ -185,6 +187,19 @@ MonoBehaviour:
   slider: {fileID: 900763094949377950}
   health: 10
   maxHealth: 10
+--- !u!114 &3968494191814527807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8888877826769090527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d4958df8cd17c4d81300dfcd2267e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathfindData: {fileID: 0}
 --- !u!1001 &8208858936572245096
 PrefabInstance:
   m_ObjectHideFlags: 0
