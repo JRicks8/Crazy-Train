@@ -48,6 +48,7 @@ public class GroundPathfind : MonoBehaviour
         //Debug.Log("Starting Pathfind Coroutine");
         while (true)
         {
+            Debug.Log("Pathfinding to: " + targetPosition);
             //float timeStart = Time.time;
 
             PathNode startNode = FindClosestNode(transform.position);

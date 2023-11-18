@@ -104,7 +104,9 @@ public class InCombatWithTarget : IState
             moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
             // move to a random nearby node
             PathNode n = owner.GetClosestNode();
-            Debug.Log(n.transform.position);
+            int size = n.connections.Count;
+            n = n.connections[UnityEngine.Random.Range(0, size - 1)].node;
+
             owner.UpdatePathfindDestination(n.transform.position);
             if (!owner.pathing) owner.StartPathfinding(n.transform.position);
         }
@@ -112,19 +114,17 @@ public class InCombatWithTarget : IState
         if (owner.CanSeeTarget())
         {
             lastSeenTargetTimer = 0.0f;
+            lastSeenPosition = owner.target.position;
 
             owner.Shoot();
         }
         else
         {
-            Debug.Log("Can't see target!");
             if (lastSeenTargetTimer >= lastSeenTargetTimeThreshold)
             {
                 owner.stateMachine.ChangeState(new Wander(owner));
                 owner.target = null;
             }
-            else if (!owner.pathing) 
-                owner.StartPathfinding(lastSeenPosition);
             else 
                 owner.UpdatePathfindDestination(lastSeenPosition);
         }
@@ -259,7 +259,6 @@ public class Enemy : MonoBehaviour
     public void Shoot()
     {
         if (shootTimer < 1 / fireRate) return;
-        Debug.Log("Shooty shooty bang bang");
         shootTimer = 0;
 
         GameObject b = Instantiate(bulletPrefab);
@@ -277,7 +276,6 @@ public class Enemy : MonoBehaviour
     public void MoveAlongPath()
     {
         if (groundPathfinder.path.Count == 0) return;
-        Debug.Log(groundPathfinder.path[0].transform.position);
         float dist = Vector2.Distance(groundPathfinder.path[0].transform.position, transform.position);
         if (dist <= 0.5f)
         {
