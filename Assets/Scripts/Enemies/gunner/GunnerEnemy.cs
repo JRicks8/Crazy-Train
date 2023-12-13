@@ -5,9 +5,9 @@ using UnityEngine;
 // State Machine States
 public class Wander : IState
 {
-    Enemy owner;
+    GunnerEnemy owner;
 
-    public Wander(Enemy owner) { this.owner = owner; }
+    public Wander(GunnerEnemy owner) { this.owner = owner; }
 
     private float wanderTimer = 0.0f;
     private float wanderTimerStart = 5.0f;
@@ -41,9 +41,9 @@ public class Wander : IState
 
 public class Wandering : IState
 {
-    Enemy owner;
+    GunnerEnemy owner;
 
-    public Wandering(Enemy owner) { this.owner = owner; }
+    public Wandering(GunnerEnemy owner) { this.owner = owner; }
 
     private Vector2 destination;
 
@@ -77,9 +77,9 @@ public class Wandering : IState
 
 public class InCombatWithTarget : IState
 {
-    Enemy owner;
+    GunnerEnemy owner;
 
-    public InCombatWithTarget(Enemy owner) { this.owner = owner; }
+    public InCombatWithTarget(GunnerEnemy owner) { this.owner = owner; }
 
     private float moveTimer = 0.0f;
     private float moveTimerThreshold = 2.0f;
@@ -139,27 +139,33 @@ public class InCombatWithTarget : IState
 }
 
 // Main Class
-public class Enemy : MonoBehaviour
+public class GunnerEnemy : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float acceleration;
     public float jumpPower;
     public float maxHorizontalSpeed;
-    private bool grounded;
+    public bool grounded;
     [Header("Combat Settings")]
     public float bulletSpeed;
     public float fireRate; // per second
     [Header("Object References")]
     public Transform target;
     public Transform bottom;
+    public Transform middle;
+    public Rigidbody2D rb;
     public GameObject bulletPrefab;
+    public Animator animator;
+    public SpriteRenderer sRenderer;
     [Header("State Machine")]
     public StateMachine stateMachine;
+    [Header("Pathfinding")]
+    public float satisfiedNodeDistance = 0.5f;
 
     public bool pathing => groundPathfinder.currentlyPathfinding;
 
     private GroundPathfind groundPathfinder;
-    private Rigidbody2D rb;
+    private Health health;
     private float shootTimer = 0;
     private bool movedThisFrame = false;
 
@@ -169,6 +175,9 @@ public class Enemy : MonoBehaviour
         stateMachine.ChangeState(new Wander(this));
         groundPathfinder = GetComponent<GroundPathfind>();
         rb = GetComponent<Rigidbody2D>();
+
+        // setup animation behavior script
+        animator.GetBehaviour<AnimGunnerBehavior>().SetEnemyReferences(gameObject, sRenderer, animator);
     }
 
     private void Update()
@@ -276,8 +285,8 @@ public class Enemy : MonoBehaviour
     public void MoveAlongPath()
     {
         if (groundPathfinder.path.Count == 0) return;
-        float dist = Vector2.Distance(groundPathfinder.path[0].transform.position, transform.position);
-        if (dist <= 0.5f)
+        float dist = Vector2.Distance(groundPathfinder.path[0].transform.position, middle.position);
+        if (dist <= satisfiedNodeDistance)
         {
             if (groundPathfinder.path.Count > 1)
             {

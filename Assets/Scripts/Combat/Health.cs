@@ -7,8 +7,9 @@ public class Health : MonoBehaviour
     public GameObject healthbar;
     public Transform slider;
 
-    public delegate void OnDeathDelegate(GameObject entity);
-    public OnDeathDelegate OnDeath;
+    public delegate void OnHealthEventDelegate(GameObject entity);
+    public OnHealthEventDelegate OnDeath;
+    public OnHealthEventDelegate OnDamageTaken;
 
     [SerializeField]
     private float health = 10;
@@ -24,6 +25,7 @@ public class Health : MonoBehaviour
     {
         health -= damage;
         UpdateHealthBarAppearance();
+        OnDamageTaken?.Invoke(gameObject);
         if (health <= 0) OnDeath?.Invoke(gameObject);
         return health;
     }

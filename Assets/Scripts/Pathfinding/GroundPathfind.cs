@@ -48,7 +48,6 @@ public class GroundPathfind : MonoBehaviour
         //Debug.Log("Starting Pathfind Coroutine");
         while (true)
         {
-            Debug.Log("Pathfinding to: " + targetPosition);
             //float timeStart = Time.time;
 
             PathNode startNode = FindClosestNode(transform.position);
@@ -217,15 +216,12 @@ public class GroundPathfind : MonoBehaviour
 
     private void SearchForPathfindData()
     {
-        Debug.Log("Searching for PathfindData GameObject");
         pathfindData = GameObject.FindGameObjectWithTag("PathfindData");
 
         if (pathfindData != null)
         {
-            Debug.Log("Found PathfindData GameObject");
             pathNodes = pathfindData.GetComponentsInChildren<PathNode>().ToList();
             CancelInvoke(nameof(SearchForPathfindData));
         }
-        else Debug.Log("Pathfind Data not found. Searching again.");
     }
 }
