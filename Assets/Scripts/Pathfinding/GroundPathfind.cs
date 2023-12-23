@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public class GroundPathfind : MonoBehaviour
 {
-    public GameObject pathfindData;
-    public List<PathNode> pathNodes = new List<PathNode>();
+    private GameObject pathfindData;
+    private List<PathNode> pathNodes = new List<PathNode>();
 
-    public List<PathNode> path;
+    private List<PathNode> path = new List<PathNode>();
 
-    public Vector2 targetPosition;
+    private Vector2 targetPosition;
 
-    public float recalculateCooldown = 0.5f;
-    public bool continuouslyUpdate = true;
+    private float recalculateCooldown = 0.5f;
+    private bool continuouslyUpdate = true;
     public bool currentlyPathfinding = false;
     public bool pausePathfinding = false;
 
@@ -33,12 +34,12 @@ public class GroundPathfind : MonoBehaviour
     public void StartPathfinding(Vector2 p)
     {
         targetPosition = p;
-        StartCoroutine(pathFindCoroutine);
+        if (pathFindCoroutine != null) StartCoroutine(pathFindCoroutine);
     }
 
     public void EndPathfinding()
     {
-        StopCoroutine(pathFindCoroutine);
+        if (pathFindCoroutine != null) StopCoroutine(pathFindCoroutine);
     }
 
     IEnumerator PathFindCoroutine()
@@ -223,5 +224,54 @@ public class GroundPathfind : MonoBehaviour
             pathNodes = pathfindData.GetComponentsInChildren<PathNode>().ToList();
             CancelInvoke(nameof(SearchForPathfindData));
         }
+    }
+
+    // Moves along the path. Return value is the success of movement.
+    public bool MoveAlongPath(Character character, Transform trans, float satisfiedDist)
+    {
+        if (path == null)
+        {
+            Debug.LogError("Attempt to move along path has failed: Path is null!");
+            return false;
+        }
+        if (path.Count == 0) return true;
+        float dist = Vector2.Distance(path[0].transform.position, trans.position);
+        if (dist <= satisfiedDist)
+        {
+            if (path.Count > 1)
+            {
+                List<Connection> connections = path[0].connections;
+                foreach (Connection connection in connections)
+                {
+                    if (connection.moveType == MoveType.JUMP && connection.node == path[1])
+                    {
+                        character.Jump();
+                    }
+                }
+            }
+
+            path.RemoveAt(0);
+        }
+        if (path.Count == 0) return true;
+
+        float dir = path[0].transform.position.x - transform.position.x;
+        dir /= Mathf.Abs(dir);
+        character.Move((int)dir);
+        return true;
+    }
+
+    public void UpdatePathfindDestination(Vector2 p)
+    {
+        targetPosition = p;
+    }
+
+    public List<PathNode> GetCurrentPath()
+    {
+        return path;
+    }
+
+    public List<PathNode> GetAllPathfindNodes()
+    {
+        return pathNodes;
     }
 }

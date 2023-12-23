@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public Character owner;
+
     public float timeAlive = 0.0f;
     public float maxTimeAlive = 5.0f;
     public float damage = 1.0f;

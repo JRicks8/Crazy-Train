@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - PathfindData
+  - GunData
   layers:
   - Default
   - TransparentFX

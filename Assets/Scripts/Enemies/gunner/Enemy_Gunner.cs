@@ -1,0 +1,184 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Enemy_Gunner : Character
+{
+    [Header("State Machine")]
+    public StateMachine stateMachine;
+    [Header("Gunner Settings")]
+    public Animator animator;
+
+    public void Start()
+    {
+        Initialize(); // base class function
+
+        stateMachine = new StateMachine();
+        stateMachine.ChangeState(new Idle(this));
+
+        animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
+    }
+
+    public void Update()
+    {
+        UpdateCharacter(); // base class function
+
+        stateMachine.Update();
+    }
+
+    /// <summary>
+    /// Shoots a bullet projectile towards the target gameObject
+    /// </summary>
+    public void Shoot()
+    {
+        equippedGun.info.reserveAmmo = 1000; // NPCs have infinite ammo
+
+        equippedGun.Shoot((target.transform.position - equippedGun.muzzle.position).normalized);
+    }
+
+    // State Machine States
+
+    // Just sitting around.
+    // Switches to InCombatWithTarget if we catch eyesight.
+    // Switches to Wandering after sitting around for a bit.
+    class Idle : IState
+    {
+        Enemy_Gunner owner;
+
+        public Idle(Enemy_Gunner owner) { this.owner = owner; }
+
+        private float wanderTimer = 0.0f;
+        private readonly float wanderTimerStart = 5.0f;
+        private readonly float wanderTimerVariance = 2.0f;
+
+        void IState.Enter()
+        {
+            owner.groundPathfinder.EndPathfinding();
+            wanderTimer = wanderTimerStart + wanderTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
+        }
+
+        void IState.Execute()
+        {
+            wanderTimer -= Time.deltaTime;
+
+            if (owner.LookForTarget()) // if we see a target
+            {
+                owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
+            }
+            else if (wanderTimer <= 0) // if it's time to wander
+            {
+                owner.stateMachine.ChangeState(new Wandering(owner));
+            }
+        }
+
+        void IState.Exit()
+        {
+
+        }
+    }
+
+    // Actively moves along the path to the destination.
+    // Will switch to InCombatWithTarget if we have eyesight with the target.
+    // Switches to Idle when we reach the target node.
+    class Wandering : IState
+    {
+        Enemy_Gunner owner;
+
+        public Wandering(Enemy_Gunner owner) { this.owner = owner; }
+
+        private Vector2 destination;
+
+        void IState.Enter()
+        {
+            List<PathNode> nodes = owner.groundPathfinder.GetAllPathfindNodes();
+            if (nodes.Count == 0) owner.stateMachine.ChangeState(new Idle(owner));
+
+            destination = nodes[UnityEngine.Random.Range(0, nodes.Count)].transform.position;
+            if (destination != null) owner.groundPathfinder.StartPathfinding(destination);
+        }
+
+        void IState.Execute()
+        {
+            if (owner.LookForTarget()) // If we see the target
+            {
+                owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
+            }
+            else
+            {
+                owner.groundPathfinder.MoveAlongPath(owner, owner.middle, owner.satisfiedNodeDistance);
+                if (owner.groundPathfinder.GetCurrentPath().Count == 0) owner.stateMachine.ChangeState(new Idle(owner));
+            }
+        }
+
+        void IState.Exit()
+        {
+
+        }
+    }
+
+    // Moves semi-randomly and a little erratically. Continuously tries to fire at the target.
+    // Will switch to Wander if it hasn't seen the target in a bit.
+    class InCombatWithTarget : IState
+    {
+        Enemy_Gunner owner;
+
+        public InCombatWithTarget(Enemy_Gunner owner) { this.owner = owner; }
+
+        private float moveTimer = 0.0f;
+        private float moveTimerThreshold = 2.0f;
+        private float moveTimerVariance = 1.0f;
+
+        private float lastSeenTargetTimer = 0.0f;
+        private float lastSeenTargetTimeThreshold = 5.0f;
+        private Vector2 lastSeenPosition = Vector2.zero;
+
+        void IState.Enter()
+        {
+            lastSeenPosition = owner.target.position;
+        }
+
+        void IState.Execute()
+        {
+            lastSeenTargetTimer += Time.deltaTime;
+            moveTimer += Time.deltaTime;
+
+            if (moveTimer >= moveTimerThreshold)
+            {
+                moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
+                // move to a random nearby node
+                PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
+                int size = n.connections.Count;
+                n = n.connections[UnityEngine.Random.Range(0, size - 1)].node;
+
+                owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
+                if (!owner.groundPathfinder.currentlyPathfinding && n != null) 
+                    owner.groundPathfinder.StartPathfinding(n.transform.position);
+            }
+
+            if (owner.CanSeeTarget())
+            {
+                lastSeenTargetTimer = 0.0f;
+                lastSeenPosition = owner.target.position;
+
+                owner.Shoot();
+            }
+            else // can't see the target
+            {
+                if (lastSeenTargetTimer >= lastSeenTargetTimeThreshold)
+                {
+                    owner.stateMachine.ChangeState(new Idle(owner));
+                    owner.target = null;
+                }
+                else // move to the last seen position if we lost sight of them not too long ago.
+                    owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
+            }
+
+            owner.groundPathfinder.MoveAlongPath(owner, owner.middle, owner.satisfiedNodeDistance);
+        }
+
+        void IState.Exit()
+        {
+
+        }
+    }
+}

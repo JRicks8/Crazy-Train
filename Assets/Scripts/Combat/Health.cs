@@ -7,9 +7,9 @@ public class Health : MonoBehaviour
     public GameObject healthbar;
     public Transform slider;
 
-    public delegate void OnHealthEventDelegate(GameObject entity);
-    public OnHealthEventDelegate OnDeath;
-    public OnHealthEventDelegate OnDamageTaken;
+    public delegate void HealthEventDelegate(GameObject entity);
+    public HealthEventDelegate OnDeath;
+    public HealthEventDelegate OnDamageTaken;
 
     [SerializeField]
     private float health = 10;
