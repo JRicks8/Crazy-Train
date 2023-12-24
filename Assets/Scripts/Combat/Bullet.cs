@@ -43,7 +43,10 @@ public class Bullet : MonoBehaviour
         {
             if (other.CompareTag(tag))
             {
-                // deal damage or something idk
+                if (other.TryGetComponent(out Health otherHealth))
+                {
+                    otherHealth.TakeDamage(damage); break;
+                }
             }
         }
         Destroy(gameObject);

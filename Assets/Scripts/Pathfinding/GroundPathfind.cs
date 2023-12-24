@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 public class GroundPathfind : MonoBehaviour
@@ -175,29 +174,6 @@ public class GroundPathfind : MonoBehaviour
         return closest;
     }
 
-    /// <summary>
-    /// Finds the closest node in the node data that is at least d distance away.
-    /// </summary>
-    /// <param name="p"></param>
-    /// <param name="d"></param>
-    /// <returns></returns>
-    public PathNode FindClosestNode(Vector2 p, float d)
-    {
-        if (pathNodes.Count == 0) return null;
-        PathNode closest = pathNodes[0];
-        float closestDistance = ((Vector2)closest.transform.position - p).magnitude;
-        foreach (PathNode n in pathNodes)
-        {
-            float dist = ((Vector2)n.transform.position - p).magnitude;
-            if (dist < closestDistance && dist > d)
-            {
-                closest = n;
-                closestDistance = dist;
-            }
-        }
-        return closest;
-    }
-
     public PathNode FindFurthestNode(Vector2 p)
     {
         if (pathNodes.Count == 0) return null;
@@ -227,7 +203,7 @@ public class GroundPathfind : MonoBehaviour
     }
 
     // Moves along the path. Return value is the success of movement.
-    public bool MoveAlongPath(Character character, Transform trans, float satisfiedDist)
+    public bool MoveAlongPath(Character character, Transform satisfiedDistComparator, float satisfiedDist)
     {
         if (path == null)
         {
@@ -235,7 +211,7 @@ public class GroundPathfind : MonoBehaviour
             return false;
         }
         if (path.Count == 0) return true;
-        float dist = Vector2.Distance(path[0].transform.position, trans.position);
+        float dist = Vector2.Distance(path[0].transform.position, satisfiedDistComparator.position);
         if (dist <= satisfiedDist)
         {
             if (path.Count > 1)
@@ -256,7 +232,7 @@ public class GroundPathfind : MonoBehaviour
 
         float dir = path[0].transform.position.x - transform.position.x;
         dir /= Mathf.Abs(dir);
-        character.Move((int)dir);
+        character.Move(new Vector2((int)dir, 0));
         return true;
     }
 

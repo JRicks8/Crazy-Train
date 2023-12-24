@@ -18,7 +18,7 @@ TagManager:
   - PlayerProjectile
   - NeutralProjectile
   - Terrain
-  - 
+  - TerrainOnly
   - 
   - Neutral
   - Friendly

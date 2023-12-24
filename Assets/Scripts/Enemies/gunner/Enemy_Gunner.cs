@@ -1,29 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy_Gunner : Character
 {
-    [Header("State Machine")]
-    public StateMachine stateMachine;
     [Header("Gunner Settings")]
+    public StateMachine stateMachine;
+    public GroundPathfind groundPathfinder;
     public Animator animator;
 
-    public void Start()
+    private void Start()
     {
         Initialize(); // base class function
+
+        groundPathfinder = GetComponent<GroundPathfind>();
 
         stateMachine = new StateMachine();
         stateMachine.ChangeState(new Idle(this));
 
         animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
+
+        equippedGun = GetComponentInChildren<Gun_Revolver>();
+        if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
+        equippedGun.SetReferences(this);
     }
 
-    public void Update()
+    private void Update()
     {
         UpdateCharacter(); // base class function
 
         stateMachine.Update();
+    }
+
+    private void FixedUpdate()
+    {
+        FixedUpdateCharacter();
+
+        if (isDead)
+        {
+            rb.velocity = new Vector2(idleDrag * rb.velocity.x, rb.velocity.y);
+            return;
+        }
+
+        // don't recalculate pathfinding while airborne
+        groundPathfinder.pausePathfinding = !grounded;
     }
 
     /// <summary>

@@ -9,49 +9,74 @@ public class Character : MonoBehaviour
     [Header("Movement Settings")]
     public float acceleration;
     public float jumpPower;
-    public float maxHorizontalSpeed;
+    public float maxHorizontalSpeed; // 0 is uncapped
+    public float maxVelocityMag; // 0 is uncapped. overrides maxHorizontalSpeed
+    public float idleDrag = 0.75f; // value from 0.0 - 1.0. value is multiplied every fixed frame the character isn't adding acceleration for movement
+    public bool canFly;
     public bool grounded;
-    [Header("Other Settings")]
+    [Header("Hand Settings")]
+    public Transform hand;
     public float handOffset;
     [Header("Object References")]
     public Transform target;
     public Transform bottom;
     public Transform middle;
-    public Transform hand;
     public Gun equippedGun;
     public Rigidbody2D rb;
     public SpriteRenderer sRenderer;
+    public Health healthScript;
     [Header("Pathfinding")]
     public float satisfiedNodeDistance = 0.5f;
 
-    [HideInInspector]
-    public GroundPathfind groundPathfinder;
-    private bool movedThisFrame = false;
+    private Vector2 moveDir = Vector2.zero;
     private bool facingLeft = false;
+    protected bool isDead = false;
 
     protected void Initialize()
     {
-        groundPathfinder = GetComponent<GroundPathfind>();
         rb = GetComponent<Rigidbody2D>();
-
-        equippedGun = GetComponentInChildren<Gun_Revolver>();
-        if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
-        equippedGun.SetReferences(this);
+        if (TryGetComponent(out healthScript))
+        {
+            healthScript.OnDeath += OnCharacterDeath;
+        }
     }
 
     protected void UpdateCharacter()
     {
-        movedThisFrame = false;
-
-        grounded = CheckGrounded();
-
-        // don't recalculate pathfinding while airborne
-        groundPathfinder.pausePathfinding = !grounded;
+        if (isDead) return;
 
         UpdateHandAndGun();
 
+        sRenderer.flipX = facingLeft;
+    }
+
+    protected void FixedUpdateCharacter()
+    {
+        if (isDead) return;
+
+        grounded = CheckGrounded();
+
+        if (moveDir != Vector2.zero) 
+        {
+            rb.velocity += moveDir;
+        }
         // If not attempting to move, actively stifle the velocity to prevent excessive sliding
-        if (!movedThisFrame) rb.velocity = new Vector2(0.98f * rb.velocity.x, rb.velocity.y);
+        else
+        {
+            if (canFly) rb.velocity *= idleDrag;
+            else rb.velocity = new Vector2(idleDrag * rb.velocity.x, rb.velocity.y);
+        }
+        moveDir = Vector2.zero;
+
+        // cap velocity
+        if (maxVelocityMag > 0 && rb.velocity.magnitude > maxVelocityMag)
+        {
+            rb.velocity = rb.velocity.normalized * maxVelocityMag;
+        }
+        else if (Math.Abs(rb.velocity.x) > maxHorizontalSpeed && maxHorizontalSpeed > 0)
+        {
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed), rb.velocity.y);
+        }
 
         if (target != null) // if there is a target, always face the target
         {
@@ -64,12 +89,12 @@ public class Character : MonoBehaviour
             if (rb.velocity.x > 0.1f) facingLeft = false;
             else if (rb.velocity.x < -0.1f) facingLeft = true;
         }
-        sRenderer.flipX = facingLeft;
     }
 
-    private void UpdateHandAndGun()
+    protected void UpdateHandAndGun()
     {
         // Update gun
+        if (equippedGun == null) return;
         equippedGun.UpdateGun();
         equippedGun.transform.position = hand.position;
         equippedGun.sRenderer.flipY = facingLeft;
@@ -87,9 +112,6 @@ public class Character : MonoBehaviour
         }
         else // We don't have a target
         {
-            // Neutral aiming position
-            equippedGun.transform.rotation = Quaternion.identity;
-
             // Neutral hand position
             if (facingLeft) hand.localPosition = new Vector2(handOffset * -1, 0);
             else hand.localPosition = new Vector2(handOffset, 0);
@@ -101,13 +123,13 @@ public class Character : MonoBehaviour
     /// and returns true. Else, it returns false.
     /// </summary>
     /// <returns></returns>
-    public bool LookForTarget()
+    protected bool LookForTarget()
     {
         GameObject t = GameObject.FindGameObjectWithTag("Player");
         if (t != null)
         {
             LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain" });
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, t.transform.position, mask);
+            RaycastHit2D hit = Physics2D.Linecast(middle.position, t.transform.position, mask);
             Debug.DrawLine(transform.position, t.transform.position, Color.blue);
             //Debug.Log("Ray Info: " + hit.collider.gameObject.name);
             if (hit.collider.gameObject == t)
@@ -126,7 +148,7 @@ public class Character : MonoBehaviour
         if (target == null) return false;
 
         LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain" });
-        RaycastHit2D hit = Physics2D.Linecast(transform.position, target.transform.position, mask);
+        RaycastHit2D hit = Physics2D.Linecast(middle.position, target.transform.position, mask);
         if (hit.collider.transform.position == target.position)
         {
             return true;
@@ -134,14 +156,9 @@ public class Character : MonoBehaviour
         return false;
     }
 
-    public void Move(int direction)
+    public void Move(Vector2 direction)
     {
-        movedThisFrame = true;
-        rb.velocity += new Vector2(acceleration * direction * Time.deltaTime * rb.mass, 0);
-        if (Math.Abs(rb.velocity.x) > maxHorizontalSpeed)
-        {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed), rb.velocity.y);
-        }
+        moveDir = acceleration * rb.mass * Time.deltaTime * direction;
     }
 
     public void Jump()
@@ -153,6 +170,7 @@ public class Character : MonoBehaviour
 
     public bool CheckGrounded()
     {
+        if (canFly) return false;
         LayerMask mask = LayerMask.GetMask(new string[] { "Terrain" });
         RaycastHit2D hit = Physics2D.Linecast(bottom.position, bottom.position + new Vector3(0, -0.2f), mask);
 
@@ -160,5 +178,15 @@ public class Character : MonoBehaviour
         else Debug.DrawLine(bottom.position, bottom.position + new Vector3(0, -0.2f), Color.green);
 
         return hit.collider != null;
+    }
+
+    private void OnCharacterDeath(GameObject character)
+    {
+        healthScript.SetCanSeeHealthbar(false);
+        if (hand != null) hand.gameObject.SetActive(false);
+        if (equippedGun != null) equippedGun.gameObject.SetActive(false);
+        gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
+        gameObject.tag = "Untagged";
+        isDead = true;
     }
 }
