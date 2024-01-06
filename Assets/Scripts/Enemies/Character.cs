@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Acts as a base for any character
@@ -21,15 +22,21 @@ public class Character : MonoBehaviour
     public Transform target;
     public Transform bottom;
     public Transform middle;
+    public List<Gun> guns = new List<Gun>();
     public Gun equippedGun;
     public Rigidbody2D rb;
     public SpriteRenderer sRenderer;
     public Health healthScript;
     [Header("Pathfinding")]
     public float satisfiedNodeDistance = 0.5f;
+    [Header("Other Settings")]
+    public bool fadeOnDeath = true;
+    public float deathFadeTime = 3.0f;
+    private float deathFadeTimer;
 
     private Vector2 moveDir = Vector2.zero;
     private bool facingLeft = false;
+    private bool aimingLeft = false;
     protected bool isDead = false;
 
     protected void Initialize()
@@ -39,11 +46,36 @@ public class Character : MonoBehaviour
         {
             healthScript.OnDeath += OnCharacterDeath;
         }
+
+        guns = GetComponentsInChildren<Gun>().ToList();
+
+        foreach (Gun gun in guns) PickupGun(gun);
+
+        if (guns.Count > 0)
+        {
+            equippedGun = guns[0];
+            equippedGun.gameObject.SetActive(true);
+        }
     }
 
     protected void UpdateCharacter()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            if (fadeOnDeath)
+            {
+                deathFadeTimer -= Time.deltaTime;
+                if (deathFadeTimer <= 0)
+                {
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    sRenderer.color = new Color(sRenderer.color.r, sRenderer.color.g, sRenderer.color.b, deathFadeTimer / deathFadeTime);
+                }
+            }
+            return;
+        }
 
         UpdateHandAndGun();
 
@@ -78,17 +110,23 @@ public class Character : MonoBehaviour
             rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed), rb.velocity.y);
         }
 
-        if (target != null) // if there is a target, always face the target
+        if (target != null) // if there is a target, face the target when not moving
         {
             float difX = (target.position - middle.position).x;
-            if (difX < -0.1f) facingLeft = true;
-            else if (difX > 0.1f) facingLeft = false;
+            if (difX < -0.1f)
+            {
+                facingLeft = true;
+                aimingLeft = true;
+            }
+            else if (difX > 0.1f)
+            {
+                facingLeft = false;
+                aimingLeft = false;
+            }
         }
-        else // no target, so just face where we're moving
-        {
-            if (rb.velocity.x > 0.1f) facingLeft = false;
-            else if (rb.velocity.x < -0.1f) facingLeft = true;
-        }
+
+        if (rb.velocity.x > 0.1f) facingLeft = false;
+        else if (rb.velocity.x < -0.1f) facingLeft = true;
     }
 
     protected void UpdateHandAndGun()
@@ -97,13 +135,14 @@ public class Character : MonoBehaviour
         if (equippedGun == null) return;
         equippedGun.UpdateGun();
         equippedGun.transform.position = hand.position;
-        equippedGun.sRenderer.flipY = facingLeft;
 
         // Conditional updates
         if (target != null) // We have a target
         {
             // Face the gun towards the target
-            equippedGun.transform.rotation = Quaternion.LookRotation(Vector3.forward, (target.position - equippedGun.transform.position).normalized) * Quaternion.Euler(0, 0, 90);
+            equippedGun.sRenderer.flipX = false;
+            equippedGun.sRenderer.flipY = aimingLeft;
+            equippedGun.transform.rotation = Quaternion.LookRotation(Vector3.forward, (target.position - equippedGun.transform.position).normalized) * Quaternion.Euler(0, 0, 90f);
 
             // Depending on the target location, change the position of the hand
             float difX = (target.position - middle.position).x;
@@ -115,7 +154,23 @@ public class Character : MonoBehaviour
             // Neutral hand position
             if (facingLeft) hand.localPosition = new Vector2(handOffset * -1, 0);
             else hand.localPosition = new Vector2(handOffset, 0);
+
+            equippedGun.transform.rotation = Quaternion.identity;
+            equippedGun.sRenderer.flipX = facingLeft;
+            equippedGun.sRenderer.flipY = false;
         }
+    }
+
+    // Sets defaults for guns on pickup. Default for the base class character is for enemies, but should be overridden for neutral or friendly ones.
+    protected virtual void PickupGun(Gun gun)
+    {
+        gun.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
+        gun.gameObject.SetActive(false);
+
+        gun.ignoreTags = new List<string>() { "Enemy" };
+        gun.hitTags = new List<string>() { "Player" };
+        gun.bulletCollisionLayer = LayerMask.NameToLayer("EnemyProjectile");
+        gun.transform.parent = transform;
     }
 
     /// <summary>
@@ -188,5 +243,6 @@ public class Character : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;
+        deathFadeTimer = deathFadeTime;
     }
 }

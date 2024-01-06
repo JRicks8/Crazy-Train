@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.XR;
 
 // This gun is fully commented. Use this gun as an example for future guns.
@@ -22,12 +23,12 @@ public class Gun_Revolver : Gun
         else muzzle.localPosition = new Vector2(0.75f, 0.27f);
     }
 
-    public override void SetReferences(Character charScript)
+    public override void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)    
     {
-        base.SetReferences(charScript);
+        base.SetReferences(rb, sRenderer);
 
         animScript = animator.GetBehaviour<AnimRevolverBehavior>(); // Behavior script attached to the animation controller
-        animScript.SetReferences(charScript, this);
+        animScript.SetReferences(rb, sRenderer, this);
     }
 
     public override bool Shoot(Vector2 direction)
@@ -37,17 +38,6 @@ public class Gun_Revolver : Gun
         if (success)
         {
             animator.SetTrigger("shootTrigger");
-
-            // TODO: fire projectile
-            GameObject b = Instantiate(bulletPrefab);
-            Bullet bulletScript = b.GetComponent<Bullet>();
-            bulletScript.AddIgnoreTag("Enemy");
-            bulletScript.AddHitTag("Player");
-
-            b.layer = LayerMask.NameToLayer("EnemyProjectile");
-            b.transform.position = muzzle.position;
-            b.SetActive(true);
-            bulletScript.SetVelocity(direction * info.bulletSpeed);
         }
 
         return success;

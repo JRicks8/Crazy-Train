@@ -1,6 +1,5 @@
-using System.Runtime.Serialization.Json;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 // Base class for all gun scripts
 public class Gun : MonoBehaviour
@@ -11,10 +10,15 @@ public class Gun : MonoBehaviour
     public SpriteRenderer sRenderer;
     public Animator animator;
 
+    public float chargeTime = 0.0f;
     public float shootTimer = 0.0f;
     public float reloadTimer = 0.0f;
     public bool reloading = false;
     public bool shooting = false;
+
+    public int bulletCollisionLayer;
+    public List<string> hitTags = new List<string>();
+    public List<string> ignoreTags = new List<string>();
 
     public virtual void UpdateGun()
     {
@@ -26,7 +30,7 @@ public class Gun : MonoBehaviour
     }
 
     // Called by the parent character
-    public virtual void SetReferences(Character charScript)
+    public virtual void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)
     {
         
     }
@@ -42,12 +46,19 @@ public class Gun : MonoBehaviour
         }
         else if (shootTimer <= 0 && !shooting)
         {
+            chargeTime = 0.0f;
             shooting = true;
             shootTimer = 1.0f / info.baseFireRate;
             info.ammo--;
+            FireBullet(direction);
             return true;
         }
         else return false;
+    }
+
+    public virtual void ChargeShot(float dt)
+    {
+        chargeTime += dt;
     }
 
     // Should be overridden
@@ -61,5 +72,18 @@ public class Gun : MonoBehaviour
         info.reserveAmmo -= info.clipSize - info.ammo;
         info.ammo = info.clipSize;
         return true;
+    }
+
+    protected virtual void FireBullet(Vector2 direction)
+    {
+        GameObject b = Instantiate(bulletPrefab);
+        Bullet bulletScript = b.GetComponent<Bullet>();
+        foreach (string tag in ignoreTags) bulletScript.AddIgnoreTag(tag);
+        foreach (string tag in hitTags) bulletScript.AddHitTag(tag);
+
+        b.layer = bulletCollisionLayer;
+        b.transform.position = muzzle.position;
+        b.SetActive(true);
+        bulletScript.SetVelocity(direction * info.bulletSpeed);
     }
 }

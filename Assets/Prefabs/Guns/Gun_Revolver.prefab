@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5686849681697033061}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 828969895281361918}
   - component: {fileID: 7479152698238109035}
   - component: {fileID: 6617420854123438251}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Gun_Revolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b4894058283d9744796c2bc1c2cfe576, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -161,11 +161,17 @@ MonoBehaviour:
     reloadDurationSeconds: 2
     bulletSpeed: 5
     showHand: 1
+    autoFire: 0
+    canCharge: 0
   bulletPrefab: {fileID: 5860073430992698012, guid: fb8a61e306bfd63478f890ccd2bbdcb6, type: 3}
   muzzle: {fileID: 5686849681697033061}
   sRenderer: {fileID: 828969895281361918}
   animator: {fileID: 7479152698238109035}
+  chargeTime: 0
   shootTimer: 0
   reloadTimer: 0
   reloading: 0
   shooting: 0
+  bulletCollisionLayer: 0
+  hitTags: []
+  ignoreTags: []

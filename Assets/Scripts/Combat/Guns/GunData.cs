@@ -15,6 +15,8 @@ public struct GunInfo
     public float reloadDurationSeconds;
     public float bulletSpeed;
     public bool showHand;
+    public bool autoFire; // if the player can hold down the fire button to fire automatically
+    public bool canCharge; // if the player can hold down the fire button to charge a shot
 }
 
 // this script is made to store gun prefab references for other scripts.
@@ -35,7 +37,9 @@ public class GunData : MonoBehaviour
         baseFireRate = 0,
         reloadDurationSeconds = 0,
         bulletSpeed = 0,
-        showHand = true
+        showHand = true,
+        autoFire = false,
+        canCharge = false,
     };
 
     public static GunInfo RevolverInfo => new()
@@ -48,6 +52,8 @@ public class GunData : MonoBehaviour
         baseFireRate = 2,
         reloadDurationSeconds = 1,
         bulletSpeed = 5,
-        showHand = true
+        showHand = true,
+        autoFire = false,
+        canCharge = false,
     };
 }

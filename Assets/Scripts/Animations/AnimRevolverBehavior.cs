@@ -13,10 +13,10 @@ public class AnimRevolverBehavior : StateMachineBehaviour
     private Animator gunAnimator;
 
     // This function is called by the Gun_Revolver script
-    public void SetReferences(Character charScript, Gun_Revolver gunScript)
+    public void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer, Gun_Revolver gunScript)
     {
-        rb = charScript.rb;
-        sRenderer = charScript.sRenderer;
+        this.rb = rb;
+        this.sRenderer = sRenderer;
         gunAnimator = gunScript.animator;
 
         // Add an animation event that triggers at the end of the animation and executes OnFinishReloadAnimation()
@@ -42,9 +42,5 @@ public class AnimRevolverBehavior : StateMachineBehaviour
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
-
-        // update sprite orientation
-        if (rb.velocity.x < -0.1) sRenderer.flipX = true;
-        else if (rb.velocity.x > 0.1) sRenderer.flipX = false;
     }
 }

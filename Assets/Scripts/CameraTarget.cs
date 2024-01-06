@@ -6,23 +6,22 @@ public class CameraTarget : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private Transform player;
-    [SerializeField] private float Thresholdx;
-    [SerializeField] private float Thresholdy;
+    [SerializeField] private float maxXOffset;
+    [SerializeField] private float maxYOffset;
+    [SerializeField][Range(0f, 1f)] private float intensity;
 
-    // Start is called before the first frame update
-    void Update()
+    private void Awake()
     {
-        AimLogic();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    private void AimLogic()
+    private void Update()
     {
-        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 midPos = (player.position + mousePos) / 2;
+        Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
+        Vector2 mouseOffset = (Vector2)Input.mousePosition - screenCenter;
+        mouseOffset = new Vector2(mouseOffset.x / screenCenter.x, mouseOffset.y / screenCenter.y);
 
-        midPos.x = Mathf.Clamp(midPos.x, -Thresholdx + player.position.x, Thresholdx + player.position.x);
-        midPos.y = Mathf.Clamp(midPos.y, -Thresholdy + player.position.y, Thresholdy + player.position.y);
-
-        this.transform.position = midPos;
+        Vector2 desiredPosition = mouseOffset * new Vector2(maxXOffset, maxYOffset) + (Vector2)player.position;
+        transform.position = Vector2.Lerp(player.position, desiredPosition, intensity);
     }
 }

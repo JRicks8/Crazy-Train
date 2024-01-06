@@ -10,7 +10,7 @@ public class Enemy_Gunner : Character
     public GroundPathfind groundPathfinder;
     public Animator animator;
 
-    private void Start()
+    private void Awake()
     {
         Initialize(); // base class function
 
@@ -18,12 +18,14 @@ public class Enemy_Gunner : Character
 
         stateMachine = new StateMachine();
         stateMachine.ChangeState(new Idle(this));
+    }
 
+    private void Start()
+    {
         animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
 
-        equippedGun = GetComponentInChildren<Gun_Revolver>();
         if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
-        equippedGun.SetReferences(this);
+        equippedGun.SetReferences(rb, sRenderer);
     }
 
     private void Update()
@@ -169,11 +171,15 @@ public class Enemy_Gunner : Character
                 // move to a random nearby node
                 PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
                 int size = n.connections.Count;
-                n = n.connections[UnityEngine.Random.Range(0, size - 1)].node;
+                if (size > 0)
+                {
+                    n = n.connections[UnityEngine.Random.Range(0, size - 1)].node;
 
-                owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
-                if (!owner.groundPathfinder.currentlyPathfinding && n != null) 
-                    owner.groundPathfinder.StartPathfinding(n.transform.position);
+                    owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
+                    if (!owner.groundPathfinder.currentlyPathfinding && n != null)
+                        owner.groundPathfinder.StartPathfinding(n.transform.position);
+                }
+                else moveTimer = 0.0f;
             }
 
             if (owner.CanSeeTarget())

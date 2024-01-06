@@ -57,7 +57,7 @@ public class AnimGunnerBehavior : StateMachineBehaviour
         gunnerAnimator.SetFloat(Parameters.velocityMag.ToString(), charScript.rb.velocity.magnitude);
         gunnerAnimator.SetBool(Parameters.grounded.ToString(), charScript.grounded);
         float speed = Mathf.Abs(gunnerAnimator.GetFloat(Parameters.horizSpeed.ToString()));
-        float newMulti = Map(speed, minSpeedForAnimMulti, maxSpeedForAnimMulti, minRunSpeedAnimMulti, maxRunSpeedAnimMulti);
+        float newMulti = MathUtility.Map(speed, minSpeedForAnimMulti, maxSpeedForAnimMulti, minRunSpeedAnimMulti, maxRunSpeedAnimMulti);
         gunnerAnimator.SetFloat(Parameters.runAnimSpeedMulti.ToString(), newMulti);
 
         // Try to play the idle animation if we've been standing still for a while
@@ -89,11 +89,5 @@ public class AnimGunnerBehavior : StateMachineBehaviour
     public void OnGunnerDamageTaken(GameObject enemy)
     {
         gunnerAnimator.SetTrigger(Parameters.ouchTrigger.ToString());
-    }
-
-    // Math utility
-    private float Map(float s, float a1, float a2, float b1, float b2)
-    {
-        return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
 }
