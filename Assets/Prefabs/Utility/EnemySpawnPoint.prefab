@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 2479190449567649164}
   m_Layer: 0
   m_Name: EnemySpawnPoint
-  m_TagString: Untagged
+  m_TagString: Spawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,3 +142,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea3315ccf85b9254c8716934807842d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityPrefab: {fileID: 0}
+  canSpawn: 0
+  maxNumberOfEntities: 0
+  spawnInterval: 0
+  shouldSpawnImmediatelyAfterDeath: 0
+  numEntities: 0
+  spawnTimer: 0

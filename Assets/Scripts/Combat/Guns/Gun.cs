@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.XR;
 
 // Base class for all gun scripts
 public class Gun : MonoBehaviour
@@ -7,26 +10,50 @@ public class Gun : MonoBehaviour
     public GunInfo info;
     public GameObject bulletPrefab; // The bullet prefab can only be set in the editor.
     public Transform muzzle;
+    public Transform handle;
+    public Transform spriteObject;
     public SpriteRenderer sRenderer;
     public Animator animator;
 
-    public float chargeTime = 0.0f;
-    public float shootTimer = 0.0f;
-    public float reloadTimer = 0.0f;
-    public bool reloading = false;
-    public bool shooting = false;
+    protected float chargeTime = 0.0f;
+    protected float shootTimer = 0.0f;
+    protected float reloadTimer = 0.0f;
+    protected bool reloading = false;
+    protected bool shooting = false;
+    protected bool handOnLeft = false;
+    private bool lastHandOnLeft = false;
 
-    public int bulletCollisionLayer;
-    public List<string> hitTags = new List<string>();
-    public List<string> ignoreTags = new List<string>();
+    protected int bulletCollisionLayer;
+    [SerializeField] protected List<string> hitTags = new List<string>();
+    [SerializeField] protected List<string> ignoreTags = new List<string>();
 
-    public virtual void UpdateGun()
+    public virtual void UpdateGun(Vector2 aimPoint, Vector2 aimingFrom, Vector2 handPosition, bool handOnLeft)
     {
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, (aimPoint - aimingFrom).normalized) * Quaternion.Euler(0, 0, 90f);
+        transform.position = handPosition;
+
         if (shootTimer > 0.0f) shootTimer -= Time.deltaTime;
         else shooting = false;
 
         if (reloadTimer > 0.0f) reloadTimer -= Time.deltaTime;
         else reloading = false;
+
+        sRenderer.flipY = handOnLeft;
+        if (handOnLeft && !lastHandOnLeft)
+        {
+            spriteObject.localPosition = new Vector2(handle.localPosition.x * -1, handle.localPosition.y);
+
+            // flip the muzzles y position to match the sprite's new orientation
+            // do this every time we switch aiming directions
+            muzzle.localPosition = new Vector2(muzzle.localPosition.x, muzzle.localPosition.y * -1);
+        }
+        else if (!handOnLeft && lastHandOnLeft)
+        {
+            spriteObject.localPosition = handle.localPosition * -1;
+            muzzle.localPosition = new Vector2(muzzle.localPosition.x, muzzle.localPosition.y * -1);
+        }
+
+        lastHandOnLeft = handOnLeft;
     }
 
     // Called by the parent character
@@ -85,5 +112,40 @@ public class Gun : MonoBehaviour
         b.transform.position = muzzle.position;
         b.SetActive(true);
         bulletScript.SetVelocity(direction * info.bulletSpeed);
+    }
+
+    public void SetBulletCollisionLayer(int layer)
+    {
+        bulletCollisionLayer = layer;
+    }
+
+    public void SetHitTags(List<string> hitTags)
+    {
+        this.hitTags = hitTags;
+    }
+
+    public void AddHitTag(string tag)
+    {
+        hitTags.Add(tag);
+    }
+
+    public bool RemoveHitTag(string tag)
+    {
+        return hitTags.Remove(tag);
+    }
+    
+    public void SetIgnoreTags(List<string> ignoreTags)
+    {
+        this.ignoreTags = ignoreTags;
+    }
+
+    public void AddIgnoreTag(string tag)
+    {
+        ignoreTags.Add(tag);
+    }
+
+    public bool RemoveIgnoreTag(string tag)
+    {
+        return ignoreTags.Remove(tag);
     }
 }

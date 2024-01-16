@@ -6,7 +6,9 @@ TagManager:
   tags:
   - Enemy
   - PathfindData
-  - GunData
+  - GunPickup
+  - Spawner
+  - TrainCar
   layers:
   - Default
   - TransparentFX

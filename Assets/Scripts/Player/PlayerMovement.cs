@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 	[Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
 	[SerializeField] private bool airControl = false;
 	[SerializeField] private LayerMask whatIsGround;
-	[SerializeField] private BoxCollider2D groundCheck;
+	[SerializeField] private BoxCollider2D groundCheckCollider;
 
 	private bool grounded;
 	private Rigidbody2D rb;
@@ -32,13 +32,13 @@ public class PlayerMovement : MonoBehaviour
 		bool wasGrounded = grounded;
 		grounded = false;
 
-		if (groundCheck != null)
+		if (groundCheckCollider != null)
 		{
 			List<Collider2D> colliders = new List<Collider2D>();
 			ContactFilter2D filter = new ContactFilter2D();
 			filter.SetLayerMask(whatIsGround);
 			filter.useLayerMask = true;
-            groundCheck.OverlapCollider(filter, colliders);
+            groundCheckCollider.OverlapCollider(filter, colliders);
             if (colliders.Count > 0)
 			{
                 grounded = true;

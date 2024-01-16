@@ -55,7 +55,7 @@ public class AnimGunnerBehavior : StateMachineBehaviour
         gunnerAnimator.SetFloat(Parameters.horizSpeed.ToString(), charScript.rb.velocity.x);
         gunnerAnimator.SetFloat(Parameters.vertSpeed.ToString(), charScript.rb.velocity.y);
         gunnerAnimator.SetFloat(Parameters.velocityMag.ToString(), charScript.rb.velocity.magnitude);
-        gunnerAnimator.SetBool(Parameters.grounded.ToString(), charScript.grounded);
+        gunnerAnimator.SetBool(Parameters.grounded.ToString(), charScript.IsGrounded());
         float speed = Mathf.Abs(gunnerAnimator.GetFloat(Parameters.horizSpeed.ToString()));
         float newMulti = MathUtility.Map(speed, minSpeedForAnimMulti, maxSpeedForAnimMulti, minRunSpeedAnimMulti, maxRunSpeedAnimMulti);
         gunnerAnimator.SetFloat(Parameters.runAnimSpeedMulti.ToString(), newMulti);

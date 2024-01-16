@@ -25,14 +25,14 @@ public class AnimRevolverBehavior : StateMachineBehaviour
             if (clip.name == "anim_revolver_reload")
             {
                 AnimationEvent reloadFinishedEvent = new AnimationEvent();
-                reloadFinishedEvent.functionName = nameof(Gun_Revolver.OnFinishReloadAnimation);
+                reloadFinishedEvent.functionName = nameof(AnimEventHandler_Revolver.OnFinishReloadAnimation);
                 reloadFinishedEvent.time = clip.length - 0.01f; // Add to the end of the clip
                 clip.AddEvent(reloadFinishedEvent);
             }
             else if (clip.name == "anim_revolver_shoot")
             {
                 AnimationEvent shootFinishedEvent = new AnimationEvent();
-                shootFinishedEvent.functionName = nameof(Gun_Revolver.OnFinishShootAnimation);
+                shootFinishedEvent.functionName = nameof(AnimEventHandler_Revolver.OnFinishShootAnimation);
                 shootFinishedEvent.time = clip.length - 0.01f; // Add to the end of the clip
                 clip.AddEvent(shootFinishedEvent);
             }

@@ -11,6 +11,7 @@ public class Enemy_Crow : Character
 
     private void Start()
     {
+        info = CharacterData.crow;
         Initialize();
 
         stateMachine = new StateMachine();
@@ -32,8 +33,9 @@ public class Enemy_Crow : Character
 
         if (isDead)
         {
+            info.maxVelocityMag = 0;
             rb.gravityScale = 1.0f;
-            rb.velocity *= idleDrag;
+            rb.velocity *= info.idleDrag;
             return;
         }
 

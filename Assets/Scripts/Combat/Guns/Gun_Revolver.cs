@@ -1,8 +1,4 @@
-﻿using System.Reflection;
-using Unity.VisualScripting;
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.XR;
+﻿using UnityEngine;
 
 // This gun is fully commented. Use this gun as an example for future guns.
 // The animation controller of the gun MUST have trigger parameters with names "reloadTrigger" and "shootTrigger" for the animations to play
@@ -14,13 +10,6 @@ public class Gun_Revolver : Gun
     private void Start()
     {
         info = GunData.RevolverInfo;
-    }
-
-    private void Update()
-    {
-        // Adjust position of muzzle because flipping Y changes the required position to be -Y
-        if (sRenderer.flipY) muzzle.localPosition = new Vector2(0.75f, -0.27f);
-        else muzzle.localPosition = new Vector2(0.75f, 0.27f);
     }
 
     public override void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)    
@@ -53,7 +42,7 @@ public class Gun_Revolver : Gun
         return success;
     }
 
-    // Function is called by the animation event attached to the animation clip by the AnimRevolverBehavior script
+    // Function is called by the animation event handler attached to the sprite gameobject
     public void OnFinishReloadAnimation()
     {
         

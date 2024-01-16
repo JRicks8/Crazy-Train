@@ -199,18 +199,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b394a6d18eca3498d13d3ce695f39e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 400
-  jumpPower: 0
-  maxHorizontalSpeed: 0
-  maxVelocityMag: 7
-  idleDrag: 0.75
-  canFly: 1
-  grounded: 0
-  hand: {fileID: 2180217954444329399}
-  handOffset: 0
+  info:
+    enemyID: 2
+    acceleration: 0
+    jumpPower: 0
+    maxHorizontalSpeed: 0
+    maxVelocityMag: 0
+    idleDrag: 0
+    handOffset: 0
+    canFly: 0
+    fadeOnDeath: 0
+    deathFadeTime: 0
   target: {fileID: 0}
   bottom: {fileID: 351286480361805403}
   middle: {fileID: 5387167032994330569}
+  hand: {fileID: 2180217954444329399}
   equippedGun: {fileID: 0}
   rb: {fileID: 816776606225201441}
   sRenderer: {fileID: 6601257100900944701}

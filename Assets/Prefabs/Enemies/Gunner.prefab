@@ -209,7 +209,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: d4cdc66fce5ed81479a15d486f747f4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -368,18 +368,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d1e3d1a4ce9d8439cb0027b1a63dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 400
-  jumpPower: 10
-  maxHorizontalSpeed: 3.5
-  maxVelocityMag: 0
-  idleDrag: 0.75
-  canFly: 0
-  grounded: 1
-  hand: {fileID: 6097933887227454138}
-  handOffset: 0.57
+  info:
+    charID: 0
+    name: 
+    acceleration: 0
+    jumpPower: 0
+    maxHorizontalSpeed: 0
+    maxVelocityMag: 0
+    idleDrag: 0
+    maxHealth: 0
+    bulletDamage: 0
+    dealsContactDamage: 0
+    contactDamage: 0
+    handOffset: 0
+    canFly: 0
+    fadeOnDeath: 0
+    deathFadeTime: 0
   target: {fileID: 0}
   bottom: {fileID: 1417813405991019793}
   middle: {fileID: 227584653541910093}
+  hand: {fileID: 6097933887227454138}
   equippedGun: {fileID: 0}
   rb: {fileID: 2911732194316374304}
   sRenderer: {fileID: 9019841845842132170}
@@ -401,8 +409,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthbar: {fileID: 962923480847403014}
   scrollerContainer: {fileID: 900763094949377950}
-  health: 10
-  maxHealth: 10
+  health: 6
+  maxHealth: 6
 --- !u!114 &3968494191814527807
 MonoBehaviour:
   m_ObjectHideFlags: 0

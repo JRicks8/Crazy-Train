@@ -50,6 +50,13 @@ public class Health : MonoBehaviour
         if (health <= 0) OnDeath?.Invoke(gameObject);
     }
 
+    public void SetMaxHealth(int maxHealth, bool adjustCurrentHealth)
+    {
+        this.maxHealth = maxHealth;
+        if (adjustCurrentHealth)
+            health = maxHealth;
+    }
+
     public void SetCanSeeHealthbar(bool canSee)
     {
         healthbar.SetActive(canSee);
@@ -63,11 +70,12 @@ public class Health : MonoBehaviour
             return;
         }
 
-        scrollerContainer.localScale = new Vector3(Mathf.Clamp01(health / maxHealth), scrollerContainer.localScale.y, scrollerContainer.localScale.z);
+        scrollerContainer.localScale = new Vector3(Mathf.Clamp01(health / maxHealth), scrollerContainer.localScale.y, 1);
     }
 
     private void OnDestroy()
     {
+        if (health <= 0) return; // if already dead don't invoke the ondeath delegate
         OnDeath?.Invoke(gameObject);
     }
 }

@@ -12,6 +12,7 @@ public class Enemy_Gunner : Character
 
     private void Awake()
     {
+        info = CharacterData.gunner;
         Initialize(); // base class function
 
         groundPathfinder = GetComponent<GroundPathfind>();
@@ -41,7 +42,7 @@ public class Enemy_Gunner : Character
 
         if (isDead)
         {
-            rb.velocity = new Vector2(idleDrag * rb.velocity.x, rb.velocity.y);
+            rb.velocity = new Vector2(info.idleDrag * rb.velocity.x, rb.velocity.y);
             return;
         }
 
@@ -56,7 +57,7 @@ public class Enemy_Gunner : Character
     {
         equippedGun.info.reserveAmmo = 1000; // NPCs have infinite ammo
 
-        equippedGun.Shoot((target.transform.position - equippedGun.muzzle.position).normalized);
+        equippedGun.Shoot(equippedGun.transform.right);
     }
 
     // State Machine States
@@ -154,10 +155,13 @@ public class Enemy_Gunner : Character
         private float lastSeenTargetTimer = 0.0f;
         private float lastSeenTargetTimeThreshold = 5.0f;
         private Vector2 lastSeenPosition = Vector2.zero;
+        private Rigidbody2D targetRb;
 
         void IState.Enter()
         {
-            lastSeenPosition = owner.target.position;
+            targetRb = owner.target.GetComponent<Rigidbody2D>();
+            // factor in the velocity for the last seen position so that we don't walk to the edge of a platform and sit there
+            lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity; 
         }
 
         void IState.Execute()
@@ -165,15 +169,15 @@ public class Enemy_Gunner : Character
             lastSeenTargetTimer += Time.deltaTime;
             moveTimer += Time.deltaTime;
 
-            if (moveTimer >= moveTimerThreshold)
+            if (moveTimer >= moveTimerThreshold) // if it's time to move...
             {
                 moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
                 // move to a random nearby node
                 PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
-                int size = n.connections.Count;
-                if (size > 0)
+                int numConnections = n.connections.Count;
+                if (numConnections > 0)
                 {
-                    n = n.connections[UnityEngine.Random.Range(0, size - 1)].node;
+                    n = n.connections[UnityEngine.Random.Range(0, numConnections)].node;
 
                     owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
                     if (!owner.groundPathfinder.currentlyPathfinding && n != null)
@@ -182,10 +186,10 @@ public class Enemy_Gunner : Character
                 else moveTimer = 0.0f;
             }
 
-            if (owner.CanSeeTarget())
+            if (owner.CanSeeTarget()) // if we can see the target
             {
                 lastSeenTargetTimer = 0.0f;
-                lastSeenPosition = owner.target.position;
+                lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
 
                 owner.Shoot();
             }

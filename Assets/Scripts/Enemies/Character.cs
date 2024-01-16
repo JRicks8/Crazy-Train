@@ -1,43 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // Acts as a base for any character
 // Should not be attached to any character directly, this class is meant to be inherited (See Enemy_Gunner.cs for example)
 public class Character : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float acceleration;
-    public float jumpPower;
-    public float maxHorizontalSpeed; // 0 is uncapped
-    public float maxVelocityMag; // 0 is uncapped. overrides maxHorizontalSpeed
-    public float idleDrag = 0.75f; // value from 0.0 - 1.0. value is multiplied every fixed frame the character isn't adding acceleration for movement
-    public bool canFly;
-    public bool grounded;
-    [Header("Hand Settings")]
-    public Transform hand;
-    public float handOffset;
+    [Header("Enemy Info")]
+    public EnemyInfo info;
+
+    [Space]
     [Header("Object References")]
     public Transform target;
     public Transform bottom;
     public Transform middle;
-    public List<Gun> guns = new List<Gun>();
+    public Transform hand;
     public Gun equippedGun;
     public Rigidbody2D rb;
     public SpriteRenderer sRenderer;
     public Health healthScript;
     [Header("Pathfinding")]
     public float satisfiedNodeDistance = 0.5f;
-    [Header("Other Settings")]
-    public bool fadeOnDeath = true;
-    public float deathFadeTime = 3.0f;
-    private float deathFadeTimer;
 
-    private Vector2 moveDir = Vector2.zero;
-    private bool facingLeft = false;
-    private bool aimingLeft = false;
+    protected Vector2 moveDir = Vector2.zero;
+    protected float deathFadeTimer;
+    protected bool facingLeft = false;
+    protected bool grounded;
     protected bool isDead = false;
+    private bool handOnLeftSide = false;
 
     protected void Initialize()
     {
@@ -45,15 +37,13 @@ public class Character : MonoBehaviour
         if (TryGetComponent(out healthScript))
         {
             healthScript.OnDeath += OnCharacterDeath;
+            healthScript.SetMaxHealth(info.maxHealth, true);
         }
 
-        guns = GetComponentsInChildren<Gun>().ToList();
-
-        foreach (Gun gun in guns) PickupGun(gun);
-
-        if (guns.Count > 0)
+        equippedGun = GetComponentInChildren<Gun>();
+        if (equippedGun != null)
         {
-            equippedGun = guns[0];
+            PickupGun(equippedGun);
             equippedGun.gameObject.SetActive(true);
         }
     }
@@ -62,7 +52,7 @@ public class Character : MonoBehaviour
     {
         if (isDead)
         {
-            if (fadeOnDeath)
+            if (info.fadeOnDeath)
             {
                 deathFadeTimer -= Time.deltaTime;
                 if (deathFadeTimer <= 0)
@@ -71,7 +61,7 @@ public class Character : MonoBehaviour
                 }
                 else
                 {
-                    sRenderer.color = new Color(sRenderer.color.r, sRenderer.color.g, sRenderer.color.b, deathFadeTimer / deathFadeTime);
+                    sRenderer.color = new Color(sRenderer.color.r, sRenderer.color.g, sRenderer.color.b, deathFadeTimer / info.deathFadeTime);
                 }
             }
             return;
@@ -95,19 +85,19 @@ public class Character : MonoBehaviour
         // If not attempting to move, actively stifle the velocity to prevent excessive sliding
         else
         {
-            if (canFly) rb.velocity *= idleDrag;
-            else rb.velocity = new Vector2(idleDrag * rb.velocity.x, rb.velocity.y);
+            if (info.canFly) rb.velocity *= info.idleDrag;
+            else rb.velocity = new Vector2(info.idleDrag * rb.velocity.x, rb.velocity.y);
         }
         moveDir = Vector2.zero;
 
         // cap velocity
-        if (maxVelocityMag > 0 && rb.velocity.magnitude > maxVelocityMag)
+        if (info.maxVelocityMag > 0 && rb.velocity.magnitude > info.maxVelocityMag)
         {
-            rb.velocity = rb.velocity.normalized * maxVelocityMag;
+            rb.velocity = rb.velocity.normalized * info.maxVelocityMag;
         }
-        else if (Math.Abs(rb.velocity.x) > maxHorizontalSpeed && maxHorizontalSpeed > 0)
+        else if (Math.Abs(rb.velocity.x) > info.maxHorizontalSpeed && info.maxHorizontalSpeed > 0)
         {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxHorizontalSpeed, maxHorizontalSpeed), rb.velocity.y);
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -info.maxHorizontalSpeed, info.maxHorizontalSpeed), rb.velocity.y);
         }
 
         if (target != null) // if there is a target, face the target when not moving
@@ -116,12 +106,10 @@ public class Character : MonoBehaviour
             if (difX < -0.1f)
             {
                 facingLeft = true;
-                aimingLeft = true;
             }
             else if (difX > 0.1f)
             {
                 facingLeft = false;
-                aimingLeft = false;
             }
         }
 
@@ -133,32 +121,45 @@ public class Character : MonoBehaviour
     {
         // Update gun
         if (equippedGun == null) return;
-        equippedGun.UpdateGun();
+        
+        Vector2 gunAimPoint = Vector2.zero;
         equippedGun.transform.position = hand.position;
 
         // Conditional updates
         if (target != null) // We have a target
         {
             // Face the gun towards the target
-            equippedGun.sRenderer.flipX = false;
-            equippedGun.sRenderer.flipY = aimingLeft;
-            equippedGun.transform.rotation = Quaternion.LookRotation(Vector3.forward, (target.position - equippedGun.transform.position).normalized) * Quaternion.Euler(0, 0, 90f);
+            gunAimPoint = target.position;
 
             // Depending on the target location, change the position of the hand
             float difX = (target.position - middle.position).x;
-            if (difX < -0.1f) hand.localPosition = new Vector2(handOffset * -1, 0);
-            else if (difX > 0.1f) hand.localPosition = new Vector2(handOffset, 0);
+            if (difX < -0.1f && !handOnLeftSide)
+            {
+                handOnLeftSide = true;
+                hand.localPosition = new Vector2(info.handOffset * -1, 0);
+            }
+            else if (difX > 0.1f && handOnLeftSide)
+            {
+                handOnLeftSide = false;
+                hand.localPosition = new Vector2(info.handOffset, 0);
+            }
         }
         else // We don't have a target
         {
             // Neutral hand position
-            if (facingLeft) hand.localPosition = new Vector2(handOffset * -1, 0);
-            else hand.localPosition = new Vector2(handOffset, 0);
-
-            equippedGun.transform.rotation = Quaternion.identity;
-            equippedGun.sRenderer.flipX = facingLeft;
-            equippedGun.sRenderer.flipY = false;
+            if (facingLeft)
+            {
+                hand.localPosition = new Vector2(info.handOffset * -1, 0);
+                gunAimPoint = equippedGun.transform.position + Vector3.left;
+            }
+            else
+            {
+                hand.localPosition = new Vector2(info.handOffset, 0);
+                gunAimPoint = equippedGun.transform.position + Vector3.right;
+            }
         }
+
+        equippedGun.UpdateGun(gunAimPoint, transform.position, hand.position, handOnLeftSide);
     }
 
     // Sets defaults for guns on pickup. Default for the base class character is for enemies, but should be overridden for neutral or friendly ones.
@@ -167,9 +168,9 @@ public class Character : MonoBehaviour
         gun.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
         gun.gameObject.SetActive(false);
 
-        gun.ignoreTags = new List<string>() { "Enemy" };
-        gun.hitTags = new List<string>() { "Player" };
-        gun.bulletCollisionLayer = LayerMask.NameToLayer("EnemyProjectile");
+        gun.SetIgnoreTags(new List<string>() { "Enemy" });
+        gun.SetHitTags(new List<string>() { "Player" });
+        gun.SetBulletCollisionLayer(LayerMask.NameToLayer("EnemyProjectile"));
         gun.transform.parent = transform;
     }
 
@@ -213,19 +214,19 @@ public class Character : MonoBehaviour
 
     public void Move(Vector2 direction)
     {
-        moveDir = acceleration * rb.mass * Time.deltaTime * direction;
+        moveDir = info.acceleration * rb.mass * Time.deltaTime * direction;
     }
 
     public void Jump()
     {
         if (!grounded) return;
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.AddForce(new Vector2(0, jumpPower), ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(0, info.jumpPower), ForceMode2D.Impulse);
     }
 
-    public bool CheckGrounded()
+    protected bool CheckGrounded()
     {
-        if (canFly) return false;
+        if (info.canFly) return false;
         LayerMask mask = LayerMask.GetMask(new string[] { "Terrain" });
         RaycastHit2D hit = Physics2D.Linecast(bottom.position, bottom.position + new Vector3(0, -0.2f), mask);
 
@@ -233,6 +234,11 @@ public class Character : MonoBehaviour
         else Debug.DrawLine(bottom.position, bottom.position + new Vector3(0, -0.2f), Color.green);
 
         return hit.collider != null;
+    }
+
+    public bool IsGrounded()
+    {
+        return grounded;
     }
 
     private void OnCharacterDeath(GameObject character)
@@ -243,6 +249,6 @@ public class Character : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;
-        deathFadeTimer = deathFadeTime;
+        deathFadeTimer = info.deathFadeTime;
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 public struct GunInfo
 {
     public int gunID;
+    public string gunName;
     public int clipSize;
     public int ammo;
     public int reserveAmmo;
@@ -30,6 +31,7 @@ public class GunData : MonoBehaviour
     public static GunInfo NoGunInfo => new()
     {
         gunID = 0,
+        gunName = "",
         clipSize = 0,
         ammo = 0,
         reserveAmmo = 0,
@@ -45,13 +47,14 @@ public class GunData : MonoBehaviour
     public static GunInfo RevolverInfo => new()
     {
         gunID = 1,
+        gunName = "Revolver",
         clipSize = 6,
         ammo = 6,
         reserveAmmo = 72,
         baseDamage = 1,
         baseFireRate = 2,
         reloadDurationSeconds = 1,
-        bulletSpeed = 5,
+        bulletSpeed = 10,
         showHand = true,
         autoFire = false,
         canCharge = false,
