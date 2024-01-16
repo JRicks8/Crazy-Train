@@ -7,7 +7,7 @@ public class Gun_Revolver : Gun
 {
     private AnimRevolverBehavior animScript;
 
-    private void Start()
+    private void Awake()
     {
         info = GunData.RevolverInfo;
     }

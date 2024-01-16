@@ -18,8 +18,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private List<Character> livingEnemies = new();
     [SerializeField] private EnemyWave currentWave;
     [SerializeField] private bool waveActive = false;
+    private int waveNum = 0;
 
     // Other
+    private IEnumerator spawnEnemiesRecursively;
     private IEnumerator makeAnnouncement;
 
     private void Awake()
@@ -36,14 +38,21 @@ public class GameController : MonoBehaviour
             waveQueue.Enqueue(waves[randomIndex]);
         }
 
-        StartNextWave(); // Starts the first wave in the queue
+        StartNextWave();
     }
 
     private void Update()
     {
         if (waveActive)
         {
-            enemiesLeftText.text = "Enemies: " + currentWave.GetTotalNumEnemies().ToString();
+            enemiesLeftText.text = "Enemies: " + livingEnemies.Count.ToString();
+            if (livingEnemies.Count == 0 && enemiesToSpawn.Count == 0)
+            {
+                if (!StartNextWave()) // if we completed all of the waves
+                {
+                    Debug.Log("All Done");
+                }
+            }
         }
         else
         {
@@ -51,16 +60,22 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void StartNextWave()
+    // returns true if the next wave started successfully, returns false if all the waves are complete.
+    private bool StartNextWave()
     {
-        makeAnnouncement = MakeAnnouncement("Wave 1", 5.0f);
-        StartCoroutine(makeAnnouncement);
-
+        Debug.Log("Trying to start next wave");
         if (waveQueue.Count == 0)
         {
-            Debug.LogError("Error: Attempt to start a wave in queue that does not exist.");
-            return;
+            makeAnnouncement = MakeAnnouncement("Waves Complete", 5.0f);
+            StartCoroutine(makeAnnouncement);
+            waveActive = false;
+            return false;
         }
+
+        waveNum++;
+        makeAnnouncement = MakeAnnouncement("Wave " + waveNum.ToString(), 5.0f);
+        StartCoroutine(makeAnnouncement);
+
         currentWave = waveQueue.Dequeue();
         waveActive = true;
 
@@ -72,7 +87,6 @@ public class GameController : MonoBehaviour
         {
             spawners.AddRange(car.GetComponentsInChildren<Spawner>());
         }
-        Debug.Log(spawners.Count);
         
         // get list of character prefabs to spawn
         foreach (var item in currentWave.waveContents)
@@ -83,15 +97,36 @@ public class GameController : MonoBehaviour
             }
         }
 
+        spawnEnemiesRecursively = SpawnEnemiesRecursively(spawners, 3.0f);
+        StartCoroutine(spawnEnemiesRecursively);
+        return true;
+    }
+
+    private void OnWaveCharacterDeath(GameObject charObject)
+    {
+        if (charObject.TryGetComponent(out Character c))
+        {
+            livingEnemies.Remove(c);
+        }
+    }
+
+    IEnumerator SpawnEnemiesRecursively(List<Spawner> spawners, float spawnInterval)
+    {
         // start spawning enemies
         while (enemiesToSpawn.Count > 0)
         {
+            yield return new WaitForSeconds(spawnInterval);
+
             // spawn all enemies in random order at random spawners
             int randEnemyIndex = UnityEngine.Random.Range(0, enemiesToSpawn.Count);
             int randSpawnerIndex = UnityEngine.Random.Range(0, spawners.Count);
 
-            if (spawners[randSpawnerIndex].SpawnEntity(enemiesToSpawn[randEnemyIndex])) // If spawn is successful
+            GameObject e = spawners[randSpawnerIndex].SpawnEntity(enemiesToSpawn[randEnemyIndex]);
+            if (e != null) // If spawn is successful
             {
+                Character charScript = e.GetComponent<Character>();
+                livingEnemies.Add(charScript);
+                charScript.healthScript.OnDeath += OnWaveCharacterDeath;
                 enemiesToSpawn.RemoveAt(randEnemyIndex);
             }
             else
@@ -102,17 +137,9 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void OnWaveCharacterDeath(GameObject charObject)
-    {
-        Debug.Log("Enemy Died!");
-        if (charObject.TryGetComponent(out Character c))
-            livingEnemies.Remove(c);
-    }
-
     IEnumerator MakeAnnouncement(string textContent, float duration)
     {
-        Debug.Log("making announcement");
-        GameObject announcement = Instantiate(announcementTextPrefab, transform);
+        GameObject announcement = Instantiate(announcementTextPrefab, GUICanvas.transform);
         TextMeshProUGUI text = announcement.GetComponent<TextMeshProUGUI>();
         text.text = textContent;
         yield return new WaitForSeconds(duration);

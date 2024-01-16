@@ -52,7 +52,7 @@ public class GunData : MonoBehaviour
         ammo = 6,
         reserveAmmo = 72,
         baseDamage = 1,
-        baseFireRate = 2,
+        baseFireRate = 3,
         reloadDurationSeconds = 1,
         bulletSpeed = 10,
         showHand = true,

@@ -107,6 +107,7 @@ public class Gun : MonoBehaviour
         Bullet bulletScript = b.GetComponent<Bullet>();
         foreach (string tag in ignoreTags) bulletScript.AddIgnoreTag(tag);
         foreach (string tag in hitTags) bulletScript.AddHitTag(tag);
+        bulletScript.damage = info.baseDamage;
 
         b.layer = bulletCollisionLayer;
         b.transform.position = muzzle.position;

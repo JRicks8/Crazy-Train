@@ -30,6 +30,7 @@ public class Enemy_Gunner : Character
 
         // override gun defaults
         equippedGun.info.bulletSpeed = 5;
+        equippedGun.info.baseFireRate = 1.5f;
     }
 
     private void Update()

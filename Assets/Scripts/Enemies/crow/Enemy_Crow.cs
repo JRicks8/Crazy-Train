@@ -98,7 +98,7 @@ public class Enemy_Crow : Character
         {
             if (owner.path.Count == 0) owner.stateMachine.ChangeState(new Idle(owner));
 
-            destination = owner.transform.position + new Vector3(UnityEngine.Random.Range(-5.0f, 5.0f), UnityEngine.Random.Range(-5.0f, 5.0f), 0);
+            destination = owner.transform.position + new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f), 0);
             if (destination != null)
             {
                 owner.pathfinder.SetStartPosition(owner.transform.position);
@@ -128,7 +128,7 @@ public class Enemy_Crow : Character
         }
     }
 
-    // Moves semi-randomly and a little erratically. Continuously tries to fire at the target.
+    // Moves directly towards the player, damaging on contact.
     // Will switch to Wander if it hasn't seen the target in a bit.
     class InCombatWithTarget : IState
     {
