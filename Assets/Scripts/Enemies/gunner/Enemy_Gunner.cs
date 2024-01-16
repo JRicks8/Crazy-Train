@@ -27,6 +27,9 @@ public class Enemy_Gunner : Character
 
         if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
         equippedGun.SetReferences(rb, sRenderer);
+
+        // override gun defaults
+        equippedGun.info.bulletSpeed = 5;
     }
 
     private void Update()

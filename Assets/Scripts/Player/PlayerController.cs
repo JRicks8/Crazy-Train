@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Object References")]
     [SerializeField] private TextMeshProUGUI overheadPrompt;
+    [SerializeField] private TextMeshProUGUI ammoClipText;
+    [SerializeField] private TextMeshProUGUI ammoReserveText;
     [SerializeField] private Image gunDisplayImage;
 
     // Objects
@@ -105,12 +107,20 @@ public class PlayerController : MonoBehaviour
             {
                 equippedGun.Shoot(equippedGun.transform.right);
             }
+            else if (Input.GetButtonDown("Reload") 
+                && equippedGun.info.ammo < equippedGun.info.clipSize
+                && equippedGun.info.reserveAmmo > 0)
+            {
+                equippedGun.Reload();
+            }
         }
 
         // Update UI
         DisplayOverheadPrompt();
         gunDisplayImage.sprite = equippedGun.sRenderer.sprite;
         gunDisplayImage.color = equippedGun.sRenderer.color;
+        ammoClipText.text = equippedGun.info.ammo.ToString() + " / " + equippedGun.info.clipSize.ToString();
+        ammoReserveText.text = equippedGun.info.reserveAmmo.ToString();
     }
 
     private void FixedUpdate()
