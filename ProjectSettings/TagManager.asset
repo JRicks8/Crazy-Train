@@ -9,6 +9,9 @@ TagManager:
   - GunPickup
   - Spawner
   - TrainCar
+  - Door
+  - RightConnector
+  - LeftConnector
   layers:
   - Default
   - TransparentFX
@@ -21,11 +24,11 @@ TagManager:
   - NeutralProjectile
   - Terrain
   - TerrainOnly
-  - 
+  - OneWayTerrain
   - Neutral
   - Friendly
   - Enemy
-  - 
+  - Door
   - 
   - 
   - 

@@ -45,7 +45,12 @@ public class PathNode : MonoBehaviour
 
     public void OnDrawGizmosSelected()
     {
-        foreach (var conn in connections) 
-            Gizmos.DrawLine(transform.position, conn.node.transform.position);
+        foreach (var conn in connections)
+        {
+            //if (conn.node != null)
+            //{
+                  Gizmos.DrawLine(transform.position, conn.node.transform.position);
+            //}
+        }
     }
 }

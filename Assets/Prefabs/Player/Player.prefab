@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8112768675789752311}
   - component: {fileID: 1667951137471401283}
-  - component: {fileID: 5050367533722691239}
+  - component: {fileID: 7390511978357666865}
   - component: {fileID: 2451067668224160242}
   - component: {fileID: 262462241866056604}
   - component: {fileID: 8541696678100592040}
@@ -68,8 +68,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &5050367533722691239
-BoxCollider2D:
+--- !u!70 &7390511978357666865
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -101,18 +101,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.5, y: 1}
+  m_Direction: 0
 --- !u!58 &2451067668224160242
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -125,11 +115,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -165,8 +155,9 @@ MonoBehaviour:
   airControl: 1
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 2560
   groundCheckCollider: {fileID: 3860729780467167511}
+  sRenderer: {fileID: 2155507905423862557}
   OnLandEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -187,6 +178,7 @@ MonoBehaviour:
   ammoClipText: {fileID: 8971335350221674427}
   ammoReserveText: {fileID: 2435075471355466787}
   gunDisplayImage: {fileID: 2974156131969436082}
+  defaultGun: {fileID: 6381472025034332572, guid: cec10bebc8dbb1841a6103260ca6d508, type: 3}
   hand: {fileID: 5083223064566272579}
   overlappingInteractibles: []
   equippedGun: {fileID: 0}
@@ -773,7 +765,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

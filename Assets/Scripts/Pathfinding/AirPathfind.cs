@@ -7,15 +7,15 @@ public class AirPathfind : MonoBehaviour
 {
     public Seeker seeker;
 
-    private List<Vector3> path = new List<Vector3>();
+    [SerializeField] private List<Vector3> path = new List<Vector3>();
 
-    private bool shouldStopPathfinding = false;
-    private bool isPathfinding = false;
+    [SerializeField] private bool shouldStopPathfinding = false;
+    [SerializeField] private bool isPathfinding = false;
 
-    private float pathfindCooldown = 0.2f;
+    [SerializeField] private float pathfindCooldown = 0.2f;
 
-    private Vector3 startPosition;
-    private Vector3 endPosition;
+    [SerializeField] private Vector3 startPosition;
+    [SerializeField] private Vector3 endPosition;
 
     public void StartPathfinding()
     {
@@ -63,7 +63,7 @@ public class AirPathfind : MonoBehaviour
         }
         if (path.Count <= 2) return true;
 
-        Vector2 dir = (path[1] - character.middle.position).normalized;
+        Vector2 dir = (path[1] - character.GetMiddle().position).normalized;
         character.Move(dir);
         return true;
     }
@@ -89,7 +89,7 @@ public class AirPathfind : MonoBehaviour
         return path;
     }
 
-    public bool GetIsPathfinding()
+    public bool IsPathfinding()
     {
         return isPathfinding;
     }

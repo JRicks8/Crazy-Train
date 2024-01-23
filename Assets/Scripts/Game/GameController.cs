@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -11,6 +13,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Transform GUICanvas;
     [SerializeField] private TextMeshProUGUI enemiesLeftText;
     private WaveData waveData;
+    private TrainCarData trainCarData;
 
     [Header("Wave Management")]
     [SerializeField] private Queue<EnemyWave> waveQueue = new();
@@ -20,6 +23,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool waveActive = false;
     private int waveNum = 0;
 
+    [Header("Globals")]
+    public static GameObject[] groundPathfindDataObjects;
+    public static List<PathNode> pathNodes = new List<PathNode>();
+
     // Other
     private IEnumerator spawnEnemiesRecursively;
     private IEnumerator makeAnnouncement;
@@ -27,10 +34,13 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         waveData = GetComponent<WaveData>();
+        trainCarData = GetComponent<TrainCarData>();
     }
 
     private void Start()
     {
+        GenerateTrain();
+
         List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
         for (int i = 0; i < 3; i++) // Add three waves from the pool to the queue
         {
@@ -60,10 +70,26 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void GenerateTrain()
+    {
+        SearchForPathfindData();
+    }
+
+    private void SearchForPathfindData()
+    {
+        groundPathfindDataObjects = GameObject.FindGameObjectsWithTag("PathfindData");
+
+        pathNodes = new List<PathNode>();
+        for (int i = 0; i < groundPathfindDataObjects.Length; i++)
+        {
+            var nodes = groundPathfindDataObjects[i].GetComponentsInChildren<PathNode>();
+            pathNodes.AddRange(nodes);
+        }
+    }
+
     // returns true if the next wave started successfully, returns false if all the waves are complete.
     private bool StartNextWave()
     {
-        Debug.Log("Trying to start next wave");
         if (waveQueue.Count == 0)
         {
             makeAnnouncement = MakeAnnouncement("Waves Complete", 5.0f);
@@ -126,7 +152,7 @@ public class GameController : MonoBehaviour
             {
                 Character charScript = e.GetComponent<Character>();
                 livingEnemies.Add(charScript);
-                charScript.healthScript.OnDeath += OnWaveCharacterDeath;
+                charScript.GetHealthScript().OnDeath += OnWaveCharacterDeath;
                 enemiesToSpawn.RemoveAt(randEnemyIndex);
             }
             else

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,10 +10,10 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private bool airControl = false;
 	[SerializeField] private LayerMask whatIsGround;
 	[SerializeField] private BoxCollider2D groundCheckCollider;
+    [SerializeField] private SpriteRenderer sRenderer;
 
-	private bool grounded;
+    private bool grounded;
 	private Rigidbody2D rb;
-	private SpriteRenderer sRenderer;
 	private bool facingRight = true;
 	private Vector3 velocity = Vector3.zero;
 
@@ -22,32 +23,37 @@ public class PlayerMovement : MonoBehaviour
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
-		sRenderer = GetComponent<SpriteRenderer>();
 
         OnLandEvent ??= new UnityEvent();
 	}
 
     private void FixedUpdate()
 	{
-		bool wasGrounded = grounded;
-		grounded = false;
+		CheckGround();
+    }
 
-		if (groundCheckCollider != null)
-		{
-			List<Collider2D> colliders = new List<Collider2D>();
-			ContactFilter2D filter = new ContactFilter2D();
-			filter.SetLayerMask(whatIsGround);
-			filter.useLayerMask = true;
+	public GameObject CheckGround()
+	{
+        bool wasGrounded = grounded;
+        grounded = false;
+
+        if (groundCheckCollider != null)
+        {
+            List<Collider2D> colliders = new List<Collider2D>();
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.SetLayerMask(whatIsGround);
+            filter.useLayerMask = true;
             groundCheckCollider.OverlapCollider(filter, colliders);
             if (colliders.Count > 0)
-			{
+            {
                 grounded = true;
                 if (!wasGrounded)
                     OnLandEvent.Invoke();
+				return colliders[0].gameObject;
             }
         }
-	}
-
+		return null;
+    }
 
 	public void Move(float move, bool jump)
 	{

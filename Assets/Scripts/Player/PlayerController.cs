@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,10 +12,12 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     [Header("Object References")]
+    private Rigidbody2D rb;
     [SerializeField] private TextMeshProUGUI overheadPrompt;
     [SerializeField] private TextMeshProUGUI ammoClipText;
     [SerializeField] private TextMeshProUGUI ammoReserveText;
     [SerializeField] private Image gunDisplayImage;
+    [SerializeField] private GameObject defaultGun;
 
     // Objects
     [SerializeField] private Transform hand;
@@ -27,7 +30,8 @@ public class PlayerController : MonoBehaviour
     // action the player can use on the weapon.
     private Dictionary<string, string> overheadPrompts = new Dictionary<string, string>()
     {
-        { "GunPickup", "E - Pickup Weapon" }
+        { "GunPickup", "E - Pickup Weapon" },
+        { "Door", "E - Open/Close Door" }
     };
 
     // Gun
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
         col = GetComponent<Collider2D>();
         List<Gun> childGuns = GetComponentsInChildren<Gun>().ToList();
@@ -51,6 +56,11 @@ public class PlayerController : MonoBehaviour
         if (guns.Count > 0)
         {
             equippedGun = guns[0];
+            equippedGun.gameObject.SetActive(true);
+        }
+        else
+        {
+            equippedGun = Instantiate(defaultGun, transform).GetComponent<Gun>();
             equippedGun.gameObject.SetActive(true);
         }
     }
@@ -81,14 +91,31 @@ public class PlayerController : MonoBehaviour
             EquipGun(guns[equippedGunIndex]);
         }
 
+        // Do Interact Action
         if (Input.GetButtonDown("Interact"))
         {
             Interact();
         }
 
+        // Do Jump Action
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
+        }
+
+        if (Input.GetButtonDown("Crouch") && movement.IsGrounded())
+        {
+            GameObject o = movement.CheckGround();
+            if (o != null && o.TryGetComponent(out OneWayPlatform p))
+            {
+                p.DisableCollision(gameObject, true);
+            }
+        }
+
+        // Stifle upwards y velocity when letting up on Jump button
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Pow(rb.velocity.y, 0.7f));
         }
         
         if (equippedGun != null)
@@ -166,7 +193,9 @@ public class PlayerController : MonoBehaviour
 
     private void Interact()
     {
-        if (closestInteractObject != null && closestInteractObject.CompareTag("GunPickup"))
+        if (closestInteractObject == null) return;
+
+        if (closestInteractObject.CompareTag("GunPickup"))
         {
             if (closestInteractObject.TryGetComponent(out GunPickup gunPickup))
             {
@@ -179,8 +208,15 @@ public class PlayerController : MonoBehaviour
                     EquipGun(gunScriptCopy);
                 }
             }
-            Destroy(closestInteractObject);
+            Destroy(closestInteractObject, 0.01f);
             closestInteractObject = null;
+        }
+        else if (closestInteractObject.CompareTag("Door"))
+        {
+            if (closestInteractObject.TryGetComponent(out DynamicDoor doorScript))
+            {
+                doorScript.OnDoorInteract();
+            }
         }
     }
 
@@ -199,16 +235,18 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (closestCollider != null) 
+        // if there is a collider and an entry in the overhead prompts dictionary
+        if (closestCollider != null 
+            && overheadPrompts.TryGetValue(closestCollider.gameObject.tag, out string value))
+        {
             closestInteractObject = closestCollider.gameObject;
-        else
+            overheadPrompt.text = value;
+            overheadPrompt.enabled = true;
+        }
+        else // else, set object to null and disable the overhead prompt.
         {
             closestInteractObject = null;
             overheadPrompt.enabled = false;
-            return;
         }
-
-        overheadPrompt.text = overheadPrompts[closestCollider.gameObject.tag];
-        overheadPrompt.enabled = true;
     }
 }

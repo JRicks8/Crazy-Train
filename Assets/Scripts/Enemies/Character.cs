@@ -13,21 +13,26 @@ public class Character : MonoBehaviour
 
     [Space]
     [Header("Object References")]
-    public Transform target;
-    public Transform bottom;
-    public Transform middle;
-    public Transform hand;
-    public Gun equippedGun;
-    public Rigidbody2D rb;
-    public SpriteRenderer sRenderer;
-    public Health healthScript;
+    [SerializeField] protected Transform target;
+    [SerializeField] protected Transform bottom;
+    [SerializeField] protected Transform middle;
+    [SerializeField] protected Transform hand;
+    [SerializeField] protected BoxCollider2D groundCheckCollider;
+    [SerializeField] protected Gun equippedGun;
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected SpriteRenderer sRenderer;
+    [SerializeField] protected Health healthScript;
     [Header("Pathfinding")]
     public float satisfiedNodeDistance = 0.5f;
+    [Header("Other Settings")]
+    [SerializeField] private LayerMask whatIsGround;
+    private LayerMask doorLayer;
 
     protected Vector2 moveDir = Vector2.zero;
     protected float deathFadeTimer;
     protected bool facingLeft = false;
-    protected bool grounded;
+    public GameObject ground = null;
+    protected bool grounded = false;
     protected bool isDead = false;
     private bool handOnLeftSide = false;
 
@@ -46,6 +51,14 @@ public class Character : MonoBehaviour
             PickupGun(equippedGun);
             equippedGun.gameObject.SetActive(true);
         }
+
+        if (info.canFly)
+        {
+            // If we can fly, don't hit the one way platforms
+            GetComponent<Collider2D>().excludeLayers = LayerMask.GetMask(new string[] { "OneWayTerrain" });
+        }
+
+        doorLayer = LayerMask.GetMask(new string[] { "Door" });
     }
 
     protected void UpdateCharacter()
@@ -76,7 +89,8 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
-        grounded = CheckGrounded();
+        ground = CheckGround();
+        grounded = ground != null;
 
         if (moveDir != Vector2.zero) 
         {
@@ -115,6 +129,15 @@ public class Character : MonoBehaviour
 
         if (rb.velocity.x > 0.1f) facingLeft = false;
         else if (rb.velocity.x < -0.1f) facingLeft = true;
+
+        // See if we are next to a door
+        Collider2D[] collider = new Collider2D[1];
+        Physics2D.OverlapPointNonAlloc(transform.position, collider, doorLayer);
+        if (collider[0] != null && collider[0].TryGetComponent(out DynamicDoor d))
+        {
+            if (!d.IsOpen())
+                d.OnDoorInteract();
+        }
     }
 
     protected void UpdateHandAndGun()
@@ -184,9 +207,9 @@ public class Character : MonoBehaviour
         GameObject t = GameObject.FindGameObjectWithTag("Player");
         if (t != null)
         {
-            LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain" });
+            LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain", "Door" });
             RaycastHit2D hit = Physics2D.Linecast(middle.position, t.transform.position, mask);
-            Debug.DrawLine(transform.position, t.transform.position, Color.blue);
+            Debug.DrawLine(transform.position, (t.transform.position - transform.position).normalized * hit.distance, Color.blue);
             //Debug.Log("Ray Info: " + hit.collider.gameObject.name);
             if (hit.collider.gameObject == t)
             {
@@ -195,6 +218,17 @@ public class Character : MonoBehaviour
                 return true;
             }
             //else Debug.Log("Hit distance is <= 0 or the hit collider is not the same as the .");
+        }
+        return false;
+    }
+
+    protected bool LookForTargetNoHitTest()
+    {
+        GameObject t = GameObject.FindGameObjectWithTag("Player");
+        if (t != null)
+        {
+            target = t.transform;
+            return true;
         }
         return false;
     }
@@ -224,21 +258,52 @@ public class Character : MonoBehaviour
         rb.AddForce(new Vector2(0, info.jumpPower), ForceMode2D.Impulse);
     }
 
-    protected bool CheckGrounded()
+    protected GameObject CheckGround()
     {
-        if (info.canFly) return false;
-        LayerMask mask = LayerMask.GetMask(new string[] { "Terrain" });
-        RaycastHit2D hit = Physics2D.Linecast(bottom.position, bottom.position + new Vector3(0, -0.2f), mask);
+        bool wasGrounded = grounded;
+        grounded = false;
 
-        if (hit.collider == null) Debug.DrawLine(bottom.position, bottom.position + new Vector3(0, -0.2f), Color.red);
-        else Debug.DrawLine(bottom.position, bottom.position + new Vector3(0, -0.2f), Color.green);
-
-        return hit.collider != null;
+        if (groundCheckCollider != null)
+        {
+            List<Collider2D> colliders = new List<Collider2D>();
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.SetLayerMask(whatIsGround);
+            filter.useLayerMask = true;
+            groundCheckCollider.OverlapCollider(filter, colliders);
+            if (colliders.Count > 0)
+            {
+                grounded = true;
+                //if (!wasGrounded)
+                //    OnLandEvent.Invoke();
+                return colliders[0].gameObject;
+            }
+        }
+        return null;
     }
 
     public bool IsGrounded()
     {
         return grounded;
+    }
+
+    public Health GetHealthScript()
+    {
+        return healthScript;
+    }
+
+    public Rigidbody2D GetRigidbody()
+    {
+        return rb;
+    }
+
+    public Transform GetMiddle()
+    {
+        return middle;
+    }
+
+    public GameObject GetGround()
+    {
+        return ground;
     }
 
     private void OnCharacterDeath(GameObject character)

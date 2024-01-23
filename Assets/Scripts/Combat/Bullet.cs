@@ -35,18 +35,16 @@ public class Bullet : MonoBehaviour
         hitTags.Add(tag);
     }
 
+    // TODO: Enemy bullets can't hit the player
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject other = collision.gameObject;
         foreach (string tag in ignoreTags) if (other.CompareTag(tag)) return; // if collision is to be ignored
         foreach (string tag in hitTags)
         {
-            if (other.CompareTag(tag))
+            if (other.CompareTag(tag) && other.TryGetComponent(out Health otherHealth))
             {
-                if (other.TryGetComponent(out Health otherHealth))
-                {
-                    otherHealth.TakeDamage(damage); break;
-                }
+                otherHealth.TakeDamage(damage); break;
             }
         }
         Destroy(gameObject);

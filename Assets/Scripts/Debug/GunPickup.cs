@@ -45,7 +45,7 @@ public class GunPickup : MonoBehaviour
 
     private void FixedUpdate()
     {
-        LayerMask mask = LayerMask.GetMask(new string[] { "Terrain" });
+        LayerMask mask = LayerMask.GetMask(new string[] { "Terrain", "OneWayTerrain" });
         ray = Physics2D.Raycast(transform.position, Vector2.down, floatingHeight, mask);
 
         if (ray.transform != null)

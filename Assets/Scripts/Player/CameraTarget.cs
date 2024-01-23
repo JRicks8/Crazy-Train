@@ -12,11 +12,14 @@ public class CameraTarget : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject != null)
+            player = playerObject.transform;
     }
 
     private void Update()
     {
+        if (player == null) return;
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         Vector2 mouseOffset = (Vector2)Input.mousePosition - screenCenter;
         mouseOffset = new Vector2(mouseOffset.x / screenCenter.x, mouseOffset.y / screenCenter.y);

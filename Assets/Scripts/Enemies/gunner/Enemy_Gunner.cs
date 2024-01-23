@@ -54,6 +54,17 @@ public class Enemy_Gunner : Character
         groundPathfinder.pausePathfinding = !grounded;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out DynamicDoor door))
+        {
+            if (door.IsOpen())
+            {
+                door.OnDoorInteract();
+            }
+        }
+    }
+
     /// <summary>
     /// Shoots a bullet projectile towards the target gameObject
     /// </summary>

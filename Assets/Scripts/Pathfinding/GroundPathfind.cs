@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class GroundPathfind : MonoBehaviour
 {
-    private GameObject pathfindData;
-    private List<PathNode> pathNodes = new List<PathNode>();
-
     private List<PathNode> path = new List<PathNode>();
 
     private Vector2 targetPosition;
@@ -22,12 +19,6 @@ public class GroundPathfind : MonoBehaviour
     private void Start()
     {
         pathFindCoroutine = PathFindCoroutine();
-        SearchForPathfindData();
-        if (pathfindData == null) InvokeRepeating(nameof(SearchForPathfindData), 1.0f, 1.0f);
-        else
-        {
-            pathNodes = pathfindData.GetComponentsInChildren<PathNode>().ToList();
-        }
     }
 
     public void StartPathfinding(Vector2 p)
@@ -60,7 +51,7 @@ public class GroundPathfind : MonoBehaviour
             //Debug.Log("start node is at position " + startNode.transform.position);
             //Debug.Log("end node is at position " + endNode.transform.position);
 
-            if (startNode == null || endNode == null || pathNodes.Count <= 0)
+            if (startNode == null || endNode == null || GameController.pathNodes.Count <= 0)
             {
                 Debug.LogError("Error: start node, end node, or pathnodes data is null. Aborting pathfinding.");
                 currentlyPathfinding = false;
@@ -159,10 +150,10 @@ public class GroundPathfind : MonoBehaviour
     /// <returns></returns>
     public PathNode FindClosestNode(Vector2 p)
     {
-        if (pathNodes.Count == 0) return null;
-        PathNode closest = pathNodes[0];
+        if (GameController.pathNodes.Count == 0) return null;
+        PathNode closest = GameController.pathNodes[0];
         float closestDistance = ((Vector2)closest.transform.position - p).magnitude;
-        foreach (PathNode n in pathNodes)
+        foreach (PathNode n in GameController.pathNodes)
         {
             float dist = ((Vector2)n.transform.position - p).magnitude;
             if (dist < closestDistance)
@@ -176,10 +167,10 @@ public class GroundPathfind : MonoBehaviour
 
     public PathNode FindFurthestNode(Vector2 p)
     {
-        if (pathNodes.Count == 0) return null;
-        PathNode furthest = pathNodes[0];
+        if (GameController.pathNodes.Count == 0) return null;
+        PathNode furthest = GameController.pathNodes[0];
         float furthestDistance = ((Vector2)furthest.transform.position - p).magnitude;
-        foreach (PathNode n in pathNodes)
+        foreach (PathNode n in GameController.pathNodes)
         {
             float dist = ((Vector2)n.transform.position - p).magnitude;
             if (dist > furthestDistance)
@@ -189,17 +180,6 @@ public class GroundPathfind : MonoBehaviour
             }
         }
         return furthest;
-    }
-
-    private void SearchForPathfindData()
-    {
-        pathfindData = GameObject.FindGameObjectWithTag("PathfindData");
-
-        if (pathfindData != null)
-        {
-            pathNodes = pathfindData.GetComponentsInChildren<PathNode>().ToList();
-            CancelInvoke(nameof(SearchForPathfindData));
-        }
     }
 
     // Moves along the path. Return value is the success of movement.
@@ -219,9 +199,19 @@ public class GroundPathfind : MonoBehaviour
                 List<Connection> connections = path[0].connections;
                 foreach (Connection connection in connections)
                 {
-                    if (connection.moveType == MoveType.JUMP && connection.node == path[1])
+                    if (connection.node == path[1])
                     {
-                        character.Jump();
+                        GameObject currentGround = character.GetGround();
+                        if (connection.moveType == MoveType.JUMP)
+                        {
+                            character.Jump();
+                        }
+                        else if (connection.node.transform.position.y < path[0].transform.position.y
+                            && currentGround != null 
+                            && currentGround.TryGetComponent(out OneWayPlatform p))
+                        {
+                            p.DisableCollision(character.gameObject, true, 0.4f);
+                        }
                     }
                 }
             }
@@ -248,6 +238,6 @@ public class GroundPathfind : MonoBehaviour
 
     public List<PathNode> GetAllPathfindNodes()
     {
-        return pathNodes;
+        return GameController.pathNodes;
     }
 }

@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 6499059529036852993}
   - component: {fileID: 3265700236167145417}
   - component: {fileID: 1080611993032145323}
+  - component: {fileID: 553536609150812659}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -333,3 +334,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66154f7f90b286f42b5036efd4cdb9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &553536609150812659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6707032165601020347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1491799c735dbaa428b4d8747322a758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CaboosePool:
+  - {fileID: 4155807694058225867, guid: dee81f06397b3fb4baa7203950b55cd9, type: 3}
+  Area1CarPool:
+  - {fileID: 5668290165873600889, guid: 65612a85fc04a834faefd9c16fd9975c, type: 3}
