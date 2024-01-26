@@ -9,7 +9,7 @@ public struct EnemyInfo
     public string name;
     [Header("Movement")]
     public float acceleration;
-    public float jumpPower;
+    public float maxJumpPower;
     public float maxHorizontalSpeed; // 0 is uncapped
     public float maxVelocityMag; // 0 is uncapped. overrides maxHorizontalSpeed
     [Range(0.0f, 1.0f)] public float idleDrag;
@@ -37,7 +37,7 @@ public class CharacterData : MonoBehaviour
         charID = 0,
         name = "Dummy",
         acceleration = 0,
-        jumpPower = 0,
+        maxJumpPower = 0,
         maxHorizontalSpeed = 0,
         maxVelocityMag = 0,
         idleDrag = 0,
@@ -51,8 +51,9 @@ public class CharacterData : MonoBehaviour
     public static EnemyInfo gunner => new()
     {
         charID = 1,
+        name = "Gunner",
         acceleration = 400f,
-        jumpPower = 10f,
+        maxJumpPower = 10f,
         maxHorizontalSpeed = 3.5f,
         maxVelocityMag = 0f,
         idleDrag = 0.75f,
@@ -66,8 +67,9 @@ public class CharacterData : MonoBehaviour
     public static EnemyInfo crow => new()
     {
         charID = 2,
+        name = "Crow",
         acceleration = 100.0f,
-        jumpPower = 0f,
+        maxJumpPower = 0f,
         maxHorizontalSpeed = 0f,
         maxVelocityMag = 5.0f,
         idleDrag = 0.4f,

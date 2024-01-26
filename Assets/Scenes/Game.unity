@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Follow: {fileID: 807119081}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 7.53
+    OrthographicSize: 5.625
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -370,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8321992433799217402, guid: 6ff8fa29d9144c547a232fcb9e6f5e6b, type: 3}
       propertyPath: data.dataString
-      value: UEsDBBQAAAgIAACYn+txCcefUgIAAA8FAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VE1z2jAQ/SuMzqVjk0Ca3logpAcCE6eTiy9CWmMNsuSRZL4y/PeuZBu7tDnZevt2973V2h9EKFsCc9osjOBLzYF8HxD/Tr4MuuAzHOlWq0ScoeW8C+5yT6KB80qd0IjHPs3qApwR7IfaSk+OEKyUyLQp5nwLU22dRTij0gKGjHY+WyH0MSBHfAwffcqpST375+CCbwyUA9Px/s+qFJO0KIF7vR357qFhx+NAU+ikYXjVTEspbCODuFMZbCZlDga8Ty4ougrdo69jBHIQ29zhcdTPXmWZBddoMvQ0EwbHU5clP3U9s4LaXS1sT2XlG43jURBVF13+Ex/GIZwZXTy3fePI93C5YLtXemLUut5Q+/Cskx6H+Ryo3NGNhPcc1IteGF0pjkFnKp9aWRjNuuPV2jQHtuvwWuoNWJWf3473cAnuj1Mpik0TwmMidRh3uHYweDG/UG5YCtuwEPUaflt4o9v+9jSBJ2Gsw1DjUXlxG10ZTyXzMDHvpXJTbRSYfoUSFJXutMY67vYGb2KfZz1R/6E03ZtYu/83KQHu+FF0E1rrw/WubK4PS7D5qnJSKOgG7QMvOKipVqpesL6lNi2pTEZZL21bCf73ZpEJo49RdBfBZHQ/QfYwAhht2H3Mosk3/jAek7B6QqFPKte10GY8eG2qK65wzdr/x2BhaBmWnRt6WIhzoW3HFCrTCTMAalVXuAoHg03wq+RzLnBACTgnVLhw8pESqdkOeHotlAan86MzNO2qpKQUe+08kpJp+GekxMPXVV4b2As4+OZtsQu5/AFQSwMEFAAACAgAAJif611epkptAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTXUVBKL0osyCgGihiCOKWZKSB2tJJZcqKlgYGxQaqZkYlZWmKyrkFqqlFSsolhsoGZRYq5qalSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nntRZoo7yGil2FoAUEsBAi0AFAAACAgAAJif63EJx59SAgAADwUAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAJif611epkptAAAAeAAAAAkAJAAAAAAAAAAAAAAAnwIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAABXAwAAAAA=
+      value: UEsDBBQAAAgIAACYn+s6QZ7iUQIAABEFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQF1VE1z2jAQ/SuMzqVjk0Ca3logpAcCE6eTiy9CWtsaZMkjyXxl+O9dyQa7tDnZeu/t6u2H/UGEshUwp83CCL7UHMj3AfHv5MugI5/hQHOtEnGCi+ZdcFd4EQ2aV+qERjz2YVaX4IxgP1QuvThCsFYi06ac8xym2jqLcEalBaSMdj5aIfQxIAd8DB99yLENPfnn4IxvDJQD0+n+r6oVk7SsgHu/nfjuoVXH4yBTWEmr8K6ZllLY1gZxxyqUmVQFGPB1ckGxqnB79HWMQAEiLxweR/3oVZZZcK0nQ48zYbA9TVryUzc9K6ndNsZ2VNb+onE8CqaapMt/+GEc6Mzo8vlybxz5O1wh2PaVHhm1rtfUPjzrrMehP3sqt3Qj4b0A9aIXRteKI+lM7UNrC6NZd7yWNi2AbTu8sXoD1tXn0/E1nEP1h6kU5aal8JhIHdodxg4GB/ML7YalsK0KUe/ht4U3mve3pyWehLEOqbZG5c1tdG28lMxDx3wttZtqo8D0M1SgqHTHNeZxtxO84T6PeqL+Q2lvb7nL/t+EBLjTR9ENtdb766xsofdLsMWqdlKofjLPvGCnplqpZsPsDevjktpklPXj8lrwv3eLTBh9jKK7CCaj+wnKhxHAaMPuYxZNvvGH8ZiE5RMKK6Vy3VhtG4SDU934FS7a5Q8yWBhahXXnhu4X4lRq2ymFynTCDIBaNRmuzsHgJfhd8jkX2KIEnBMqjJx8pERqtgWeXhOlodT5wRmadllSUomddh5JyTT8NVLi4esyrw3sBOz95ZdkZ3L+A1BLAwQUAAAICAAAmJ/rXV6mSm0AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IzNNdRUEovSizIKAaKGII4pZkpIHa0kllyoqWBgbFBqpmRiVlaYrKuQWqqUVKyiWGygZlFirmpqVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAmJ/rOkGe4lECAAARBQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAmJ/rXV6mSm0AAAB4AAAACQAkAAAAAAAAAAAAAACeAgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAAFYDAAAAAA==
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -518,7 +518,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.53
+  orthographic size: 5.625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -691,7 +691,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6171636938019627825, guid: dee81f06397b3fb4baa7203950b55cd9, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dee81f06397b3fb4baa7203950b55cd9, type: 3}
@@ -795,13 +796,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1667951137471401283, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4686956061961764537, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648575421639502672, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8112768675789752311, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8112768675789752311, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8112768675789752311, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
       propertyPath: m_LocalPosition.z
@@ -895,7 +908,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 5.9953847
+    OrthographicSize: 5.625
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -930,11 +943,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.5
+      value: 1.125
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000011920929
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalPosition.z
@@ -942,19 +955,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.99999994
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.00043584403
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -966,7 +979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6120722758269800034, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -992,6 +1005,10 @@ PrefabInstance:
     - target: {fileID: 2594759548064585504, guid: d995c591f05b19d47a06ec4b8ffefffa, type: 3}
       propertyPath: m_Name
       value: EnemiesLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 4564288511412117551, guid: d995c591f05b19d47a06ec4b8ffefffa, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5747752012197083572, guid: d995c591f05b19d47a06ec4b8ffefffa, type: 3}
       propertyPath: m_LocalPosition.x

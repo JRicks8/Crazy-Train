@@ -1,46 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GroundPathfind : MonoBehaviour
 {
-    private List<PathNode> path = new List<PathNode>();
+    [SerializeField] private List<PathNode> path = new List<PathNode>();
 
-    private Vector2 targetPosition;
+    [SerializeField] private Vector2 targetPosition;
 
     private float recalculateCooldown = 0.5f;
-    private bool continuouslyUpdate = true;
-    public bool currentlyPathfinding = false;
-    public bool pausePathfinding = false;
+    [SerializeField] private bool continuouslyUpdate = true;
+    [SerializeField] private bool isPathfinding = false;
+    [SerializeField] private bool isPaused = false;
 
     private IEnumerator pathFindCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         pathFindCoroutine = PathFindCoroutine();
     }
 
-    public void StartPathfinding(Vector2 p)
+    public void StartPathfinding()
     {
-        targetPosition = p;
-        if (pathFindCoroutine != null) StartCoroutine(pathFindCoroutine);
+        StartCoroutine(pathFindCoroutine);
     }
 
     public void EndPathfinding()
     {
-        if (pathFindCoroutine != null) StopCoroutine(pathFindCoroutine);
+        StopCoroutine(pathFindCoroutine);
     }
 
     IEnumerator PathFindCoroutine()
     {
-        if (currentlyPathfinding) yield break;
-        currentlyPathfinding = true;
+        if (isPathfinding) yield break;
+        isPathfinding = true;
         //Debug.Log("Starting Pathfind Coroutine");
         while (true)
         {
-            //float timeStart = Time.time;
-
+            // Wait for the pathnode data
+            while (GameController.pathNodes.Count == 0) yield return new WaitForSeconds(recalculateCooldown);
             PathNode startNode = FindClosestNode(transform.position);
             PathNode endNode = FindClosestNode(targetPosition);
             List<PathNode> openList = new List<PathNode>();
@@ -51,10 +51,10 @@ public class GroundPathfind : MonoBehaviour
             //Debug.Log("start node is at position " + startNode.transform.position);
             //Debug.Log("end node is at position " + endNode.transform.position);
 
-            if (startNode == null || endNode == null || GameController.pathNodes.Count <= 0)
+            if (startNode == null || endNode == null)
             {
                 Debug.LogError("Error: start node, end node, or pathnodes data is null. Aborting pathfinding.");
-                currentlyPathfinding = false;
+                isPathfinding = false;
                 StopCoroutine(pathFindCoroutine);
                 yield break;
             }
@@ -126,6 +126,7 @@ public class GroundPathfind : MonoBehaviour
                 }
             }
 
+            Debug.Log("Done pathfinding.");
             for (int i = 0; i < path.Count - 1; i++)
             {
                 Debug.DrawLine(path[i].transform.position, path[i + 1].transform.position, Color.red, 0.5f);
@@ -138,9 +139,9 @@ public class GroundPathfind : MonoBehaviour
             else
                 break;
 
-            while (pausePathfinding) yield return new WaitForSeconds(recalculateCooldown);
+            while (isPaused) yield return new WaitForSeconds(recalculateCooldown);
         }
-        currentlyPathfinding = false;
+        isPathfinding = false;
     }
 
     /// <summary>
@@ -182,7 +183,7 @@ public class GroundPathfind : MonoBehaviour
         return furthest;
     }
 
-    // Moves along the path. Return value is the success of movement.
+    // Moves along the path. Return value is whether we've reached the target destination or not
     public bool MoveAlongPath(Character character, Transform satisfiedDistComparator, float satisfiedDist)
     {
         if (path == null)
@@ -204,10 +205,12 @@ public class GroundPathfind : MonoBehaviour
                         GameObject currentGround = character.GetGround();
                         if (connection.moveType == MoveType.JUMP)
                         {
-                            character.Jump();
+                            float jumpPower = (path[1].transform.position - path[0].transform.position).magnitude * 3;
+                            Debug.Log(jumpPower);
+                            character.Jump(jumpPower);
                         }
                         else if (connection.node.transform.position.y < path[0].transform.position.y
-                            && currentGround != null 
+                            && currentGround != null
                             && currentGround.TryGetComponent(out OneWayPlatform p))
                         {
                             p.DisableCollision(character.gameObject, true, 0.4f);
@@ -220,9 +223,14 @@ public class GroundPathfind : MonoBehaviour
         }
         if (path.Count == 0) return true;
 
-        float dir = path[0].transform.position.x - transform.position.x;
-        dir /= Mathf.Abs(dir);
-        character.Move(new Vector2((int)dir, 0));
+        // If our x distance is greater than a certain threshold, then we move towards the destination
+        if (Mathf.Abs((path[0].transform.position - satisfiedDistComparator.position).x) > 0.1f)
+        {
+            float dir = path[0].transform.position.x - transform.position.x;
+            dir /= Mathf.Abs(dir);
+            character.Move(new Vector2((int)dir, 0));
+        }
+
         return true;
     }
 
@@ -239,5 +247,20 @@ public class GroundPathfind : MonoBehaviour
     public List<PathNode> GetAllPathfindNodes()
     {
         return GameController.pathNodes;
+    }
+
+    public bool IsPathfinding()
+    {
+        return isPathfinding;
+    }
+
+    public void PausePathfinding(bool paused)
+    {
+        isPaused = paused;
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
     }
 }

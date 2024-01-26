@@ -450,7 +450,7 @@ MonoBehaviour:
     charID: 0
     name: 
     acceleration: 0
-    jumpPower: 0
+    maxJumpPower: 0
     maxHorizontalSpeed: 0
     maxVelocityMag: 0
     idleDrag: 0
@@ -478,6 +478,7 @@ MonoBehaviour:
   ground: {fileID: 0}
   groundPathfinder: {fileID: 3968494191814527807}
   animator: {fileID: 1360392510752121541}
+  range: 10
 --- !u!114 &3759116774164141502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,8 +507,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d4958df8cd17c4d81300dfcd2267e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentlyPathfinding: 0
-  pausePathfinding: 0
+  targetPosition: {x: 0, y: 0}
+  continuouslyUpdate: 1
+  isPathfinding: 0
+  isPaused: 0
 --- !u!1001 &5508173507339391497
 PrefabInstance:
   m_ObjectHideFlags: 0

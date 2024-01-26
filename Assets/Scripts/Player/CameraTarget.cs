@@ -17,7 +17,7 @@ public class CameraTarget : MonoBehaviour
             player = playerObject.transform;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (player == null) return;
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
@@ -25,6 +25,7 @@ public class CameraTarget : MonoBehaviour
         mouseOffset = new Vector2(mouseOffset.x / screenCenter.x, mouseOffset.y / screenCenter.y);
 
         Vector2 desiredPosition = mouseOffset * new Vector2(maxXOffset, maxYOffset) + (Vector2)player.position;
-        transform.position = Vector2.Lerp(player.position, desiredPosition, intensity);
+        Vector2 lerpedPosition = Vector2.Lerp(player.position, desiredPosition, intensity);
+        transform.position = lerpedPosition;
     }
 }

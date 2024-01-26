@@ -1,6 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class Enemy_Gunner : Character
@@ -9,6 +8,8 @@ public class Enemy_Gunner : Character
     public StateMachine stateMachine;
     public GroundPathfind groundPathfinder;
     public Animator animator;
+
+    public float range = 5.0f;
 
     private void Awake()
     {
@@ -23,6 +24,9 @@ public class Enemy_Gunner : Character
 
     private void Start()
     {
+        groundPathfinder.PausePathfinding(true);
+        groundPathfinder.StartPathfinding();
+
         animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
 
         if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
@@ -51,18 +55,8 @@ public class Enemy_Gunner : Character
         }
 
         // don't recalculate pathfinding while airborne
-        groundPathfinder.pausePathfinding = !grounded;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out DynamicDoor door))
-        {
-            if (door.IsOpen())
-            {
-                door.OnDoorInteract();
-            }
-        }
+        groundPathfinder.PausePathfinding(!grounded);
+        if (!groundPathfinder.IsPathfinding()) groundPathfinder.StartPathfinding();
     }
 
     /// <summary>
@@ -92,7 +86,7 @@ public class Enemy_Gunner : Character
 
         void IState.Enter()
         {
-            owner.groundPathfinder.EndPathfinding();
+            owner.groundPathfinder.PausePathfinding(true);
             wanderTimer = wanderTimerStart + wanderTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
         }
 
@@ -133,7 +127,8 @@ public class Enemy_Gunner : Character
             if (nodes.Count == 0) owner.stateMachine.ChangeState(new Idle(owner));
 
             destination = nodes[UnityEngine.Random.Range(0, nodes.Count)].transform.position;
-            if (destination != null) owner.groundPathfinder.StartPathfinding(destination);
+            owner.groundPathfinder.UpdatePathfindDestination(destination);
+            owner.groundPathfinder.PausePathfinding(false);
         }
 
         void IState.Execute()
@@ -151,7 +146,7 @@ public class Enemy_Gunner : Character
 
         void IState.Exit()
         {
-
+            
         }
     }
 
@@ -175,38 +170,49 @@ public class Enemy_Gunner : Character
         void IState.Enter()
         {
             targetRb = owner.target.GetComponent<Rigidbody2D>();
-            // factor in the velocity for the last seen position so that we don't walk to the edge of a platform and sit there
-            lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity; 
+            // Factor in the velocity for the last seen position so that we don't walk to the edge of a platform and sit there
+            lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
+
+            owner.groundPathfinder.PausePathfinding(false);
         }
 
+        private bool wasInRange = false;
         void IState.Execute()
         {
-            lastSeenTargetTimer += Time.deltaTime;
-            moveTimer += Time.deltaTime;
+            if (!owner.groundPathfinder.IsPaused()) lastSeenTargetTimer += Time.deltaTime;
 
-            if (moveTimer >= moveTimerThreshold) // if it's time to move...
+            bool inRange = Vector2.Distance(owner.target.position, owner.middle.position) <= owner.range;
+            if (inRange)
             {
-                moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
-                // move to a random nearby node
-                PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
-                int numConnections = n.connections.Count;
-                if (numConnections > 0)
+                //if (!wasInRange)
+                //    owner.groundPathfinder.UpdatePathfindDestination(owner.transform.position);
+
+                moveTimer += Time.deltaTime;
+                if (moveTimer >= moveTimerThreshold) // If it's time to move a bit randomly
                 {
-                    n = n.connections[UnityEngine.Random.Range(0, numConnections)].node;
+                    Debug.Log(moveTimer);
+                    moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
+                    // move to a random nearby node
+                    PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
+                    int numConnections = n.connections.Count;
+                    if (numConnections > 0)
+                    {
+                        n = n.connections[UnityEngine.Random.Range(0, numConnections)].node;
 
-                    owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
-                    if (!owner.groundPathfinder.currentlyPathfinding && n != null)
-                        owner.groundPathfinder.StartPathfinding(n.transform.position);
+                        owner.groundPathfinder.UpdatePathfindDestination(n.transform.position);
+                    }
+                    else moveTimer = 0.0f;
                 }
-                else moveTimer = 0.0f;
             }
+            else
+                owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
 
-            if (owner.CanSeeTarget()) // if we can see the target
+            if (owner.LookForTarget()) // if we can see the target
             {
                 lastSeenTargetTimer = 0.0f;
                 lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
 
-                owner.Shoot();
+                if (inRange) owner.Shoot();
             }
             else // can't see the target
             {
@@ -215,10 +221,11 @@ public class Enemy_Gunner : Character
                     owner.stateMachine.ChangeState(new Idle(owner));
                     owner.target = null;
                 }
-                else // move to the last seen position if we lost sight of them not too long ago.
-                    owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
+                // move to the last seen position if we lost sight of them not too long ago.
+                owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
             }
 
+            wasInRange = inRange;
             owner.groundPathfinder.MoveAlongPath(owner, owner.middle, owner.satisfiedNodeDistance);
         }
 

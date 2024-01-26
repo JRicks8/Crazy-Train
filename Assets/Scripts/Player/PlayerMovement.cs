@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
 	private Rigidbody2D rb;
 	private bool facingRight = true;
-	private Vector3 velocity = Vector3.zero;
+	private Vector3 currentVelocity = Vector3.zero;
 
 	[Header("Events")]
 	public UnityEvent OnLandEvent;
@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
 		CheckGround();
     }
 
-	public GameObject CheckGround()
+    public GameObject CheckGround()
 	{
         bool wasGrounded = grounded;
         grounded = false;
@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
 			// Move the character by finding the target velocity
 			Vector3 targetVelocity = new Vector2(move * 10f, rb.velocity.y);
 			// And then smoothing it out and applying it to the character
-			rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
+			rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
 
 			// If the input is moving the player right and the player is facing left...
 			if (move > 0 && !facingRight)

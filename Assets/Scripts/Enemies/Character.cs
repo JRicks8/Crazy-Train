@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 // Acts as a base for any character
@@ -198,23 +199,24 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// If there is a gameObject with the "Player" tag, this function sets the target gameObject reference to the found gameObject
-    /// and returns true. Else, it returns false.
+    /// Tests against the Friendly, Terrain, and Door layers for the GameObject with the "Player" Tag. If there are no obstructions and there is 
+    /// a clear line of sight to the player, returns true and sets the target. Else returns false.
     /// </summary>
     /// <returns></returns>
     protected bool LookForTarget()
     {
-        GameObject t = GameObject.FindGameObjectWithTag("Player");
-        if (t != null)
+        GameObject playerCharacter = GameObject.FindGameObjectWithTag("Player");
+        if (playerCharacter != null)
         {
             LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain", "Door" });
-            RaycastHit2D hit = Physics2D.Linecast(middle.position, t.transform.position, mask);
-            Debug.DrawLine(transform.position, (t.transform.position - transform.position).normalized * hit.distance, Color.blue);
+            RaycastHit2D hit = Physics2D.Linecast(middle.position, playerCharacter.transform.position, mask);
+            Debug.DrawLine(transform.position, (playerCharacter.transform.position - transform.position).normalized * hit.distance + transform.position, Color.blue);
             //Debug.Log("Ray Info: " + hit.collider.gameObject.name);
-            if (hit.collider.gameObject == t)
+            if (hit.collider.gameObject == playerCharacter)
             {
+                //Debug.Log(hit.collider.gameObject.name + " " + playerCharacter.name);
                 //Debug.Log("Successful raycast hit the player gameobject");
-                target = t.transform;
+                target = playerCharacter.transform;
                 return true;
             }
             //else Debug.Log("Hit distance is <= 0 or the hit collider is not the same as the .");
@@ -233,29 +235,17 @@ public class Character : MonoBehaviour
         return false;
     }
 
-    public bool CanSeeTarget()
-    {
-        if (target == null) return false;
-
-        LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain" });
-        RaycastHit2D hit = Physics2D.Linecast(middle.position, target.transform.position, mask);
-        if (hit.collider.transform.position == target.position)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public void Move(Vector2 direction)
     {
         moveDir = info.acceleration * rb.mass * Time.deltaTime * direction;
     }
 
-    public void Jump()
+    public void Jump(float jumpPower)
     {
         if (!grounded) return;
+        jumpPower = Mathf.Clamp(jumpPower, 0.0f, info.maxJumpPower);
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.AddForce(new Vector2(0, info.jumpPower), ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(0, jumpPower * rb.mass), ForceMode2D.Impulse);
     }
 
     protected GameObject CheckGround()
