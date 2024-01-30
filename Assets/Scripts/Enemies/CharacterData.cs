@@ -72,7 +72,7 @@ public class CharacterData : MonoBehaviour
         maxJumpPower = 0f,
         maxHorizontalSpeed = 0f,
         maxVelocityMag = 5.0f,
-        idleDrag = 0.4f,
+        idleDrag = 0.9f,
         maxHealth = 5,
         handOffset = 0f,
         canFly = true,

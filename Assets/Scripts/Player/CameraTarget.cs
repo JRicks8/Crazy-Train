@@ -10,11 +10,21 @@ public class CameraTarget : MonoBehaviour
     [SerializeField] private float maxYOffset;
     [SerializeField][Range(0f, 1f)] private float intensity;
 
-    private void Awake()
+    private IEnumerator lookForPlayer;
+
+    private void Start()
     {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject != null)
-            player = playerObject.transform;
+        lookForPlayer = LookForPlayerRecursive();
+        StartCoroutine(lookForPlayer);
+    }
+
+    IEnumerator LookForPlayerRecursive()
+    {
+        while (player == null) 
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            yield return new WaitForSeconds(1.0f);
+        }
     }
 
     private void LateUpdate()

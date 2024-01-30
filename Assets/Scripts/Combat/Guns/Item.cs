@@ -5,7 +5,7 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.XR;
 
 // Base class for all gun scripts
-public class Gun : MonoBehaviour
+public class Item : MonoBehaviour
 {
     public GunInfo info;
     public GameObject bulletPrefab; // The bullet prefab can only be set in the editor.

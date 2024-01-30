@@ -150,7 +150,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 2.125, y: 2}
     newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 835cc9f1036b4ed459a39748278f1e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 6381472025034332572, guid: 1688b9e0e32ab2d44a0ed4a6689b82f3, type: 3}
+  itemPrefab: {fileID: 6381472025034332572, guid: 1688b9e0e32ab2d44a0ed4a6689b82f3, type: 3}
   floatingHeight: 1.5
   floatingForce: 5
+  price: 0

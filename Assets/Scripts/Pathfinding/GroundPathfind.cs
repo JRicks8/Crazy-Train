@@ -126,7 +126,6 @@ public class GroundPathfind : MonoBehaviour
                 }
             }
 
-            Debug.Log("Done pathfinding.");
             for (int i = 0; i < path.Count - 1; i++)
             {
                 Debug.DrawLine(path[i].transform.position, path[i + 1].transform.position, Color.red, 0.5f);
@@ -206,7 +205,6 @@ public class GroundPathfind : MonoBehaviour
                         if (connection.moveType == MoveType.JUMP)
                         {
                             float jumpPower = (path[1].transform.position - path[0].transform.position).magnitude * 3;
-                            Debug.Log(jumpPower);
                             character.Jump(jumpPower);
                         }
                         else if (connection.node.transform.position.y < path[0].transform.position.y
@@ -223,13 +221,9 @@ public class GroundPathfind : MonoBehaviour
         }
         if (path.Count == 0) return true;
 
-        // If our x distance is greater than a certain threshold, then we move towards the destination
-        if (Mathf.Abs((path[0].transform.position - satisfiedDistComparator.position).x) > 0.1f)
-        {
-            float dir = path[0].transform.position.x - transform.position.x;
-            dir /= Mathf.Abs(dir);
-            character.Move(new Vector2((int)dir, 0));
-        }
+        float dir = path[0].transform.position.x - transform.position.x;
+        dir /= Mathf.Abs(dir);
+        character.Move(new Vector2((int)dir, 0));
 
         return true;
     }

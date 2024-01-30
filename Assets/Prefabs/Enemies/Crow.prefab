@@ -203,7 +203,7 @@ MonoBehaviour:
     charID: 0
     name: 
     acceleration: 0
-    jumpPower: 0
+    maxJumpPower: 0
     maxHorizontalSpeed: 0
     maxVelocityMag: 0
     idleDrag: 0
@@ -219,11 +219,16 @@ MonoBehaviour:
   bottom: {fileID: 351286480361805403}
   middle: {fileID: 5387167032994330569}
   hand: {fileID: 2180217954444329399}
+  groundCheckCollider: {fileID: 0}
   equippedGun: {fileID: 0}
   rb: {fileID: 816776606225201441}
   sRenderer: {fileID: 6601257100900944701}
   healthScript: {fileID: 1324471756361120596}
-  satisfiedNodeDistance: 0.5
+  satisfiedNodeDistance: 0.3
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  ground: {fileID: 0}
   pathfinder: {fileID: 5557921362072690970}
 --- !u!114 &1324471756361120596
 MonoBehaviour:

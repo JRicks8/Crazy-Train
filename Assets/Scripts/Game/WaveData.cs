@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public struct EnemyWave
 {
     // List of tuples that correspond to the enemy prefab gameobjects and the number of that type of enemy.

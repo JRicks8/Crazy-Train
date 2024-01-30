@@ -50,7 +50,29 @@ public class AirPathfind : MonoBehaviour
             return;
         }
 
-        seeker.StartPath(startPosition, endPosition, OnPathCalculated, GraphMask.everything);
+        // Astar can't use multiple graphs in pathfinding calculations, so we need to select only
+        // the graph that this character is in.
+        NNConstraint constraint = NNConstraint.Default;
+        constraint.graphMask = GetNearestGraphMask(startPosition); // Find the nearest pathfinding graph
+        NNInfo closestNode = AstarPath.active.GetNearest(endPosition, constraint);
+        seeker.StartPath(startPosition, closestNode.position, OnPathCalculated, constraint.graphMask); // Path to that graph node
+    }
+
+    private GraphMask GetNearestGraphMask(Vector3 p)
+    {
+        GraphMask mask = new GraphMask();
+        GridGraph nearestGraph = null;
+        for (int i = 0; i < AstarPath.active.graphs.Length; i++)
+        {
+            GridGraph g = (GridGraph)AstarPath.active.graphs[i];
+
+            if (nearestGraph == null || Vector3.Distance(g.center, p) < Vector3.Distance(nearestGraph.center, p))
+            {
+                nearestGraph = g;
+                mask = GraphMask.FromGraph(nearestGraph);
+            }
+        }
+        return mask;
     }
 
     // Moves along the path. Return value is the success of movement.

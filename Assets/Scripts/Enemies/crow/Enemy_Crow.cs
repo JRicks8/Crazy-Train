@@ -86,10 +86,17 @@ public class Enemy_Crow : Character
                 owner.stateMachine.ChangeState(new Idle(owner));
             }
 
-            owner.pathfinder.SetStartPosition(owner.transform.position);
-            owner.pathfinder.SetEndPosition(owner.target.position);
-            if (!owner.pathfinder.IsPathfinding()) owner.pathfinder.StartPathfinding();
-            owner.pathfinder.MoveAlongPath(owner);
+            if (owner.LookForTarget())
+            {
+                owner.Move((owner.target.position - owner.transform.position).normalized);
+            }
+            else
+            {
+                owner.pathfinder.SetStartPosition(owner.transform.position);
+                owner.pathfinder.SetEndPosition(owner.target.position);
+                if (!owner.pathfinder.IsPathfinding()) owner.pathfinder.StartPathfinding();
+                owner.pathfinder.MoveAlongPath(owner);
+            }
         }
 
         void IState.Exit()

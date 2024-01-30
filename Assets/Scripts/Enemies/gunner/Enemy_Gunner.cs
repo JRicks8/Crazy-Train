@@ -176,21 +176,26 @@ public class Enemy_Gunner : Character
             owner.groundPathfinder.PausePathfinding(false);
         }
 
-        private bool wasInRange = false;
         void IState.Execute()
         {
             if (!owner.groundPathfinder.IsPaused()) lastSeenTargetTimer += Time.deltaTime;
 
+            bool canSeeTarget = owner.LookForTarget();
             bool inRange = Vector2.Distance(owner.target.position, owner.middle.position) <= owner.range;
-            if (inRange)
+            
+            // If in range and can see target...
+            // Shoot.
+            // If we want to move, pick a nearby node to move to.
+            if (inRange && canSeeTarget)
             {
-                //if (!wasInRange)
-                //    owner.groundPathfinder.UpdatePathfindDestination(owner.transform.position);
+                owner.Shoot();
+
+                lastSeenTargetTimer = 0.0f;
+                lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
 
                 moveTimer += Time.deltaTime;
                 if (moveTimer >= moveTimerThreshold) // If it's time to move a bit randomly
                 {
-                    Debug.Log(moveTimer);
                     moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
                     // move to a random nearby node
                     PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
@@ -204,28 +209,25 @@ public class Enemy_Gunner : Character
                     else moveTimer = 0.0f;
                 }
             }
-            else
-                owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
-
-            if (owner.LookForTarget()) // if we can see the target
+            else if (canSeeTarget) // if we can see the target and we're not in range, move to the target.
             {
                 lastSeenTargetTimer = 0.0f;
                 lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
 
-                if (inRange) owner.Shoot();
+                owner.groundPathfinder.UpdatePathfindDestination(owner.target.position);
             }
-            else // can't see the target
+            else // can't see the target and we're not in range
             {
+                // Idle if we haven't seen the player in a bit
                 if (lastSeenTargetTimer >= lastSeenTargetTimeThreshold)
                 {
                     owner.stateMachine.ChangeState(new Idle(owner));
                     owner.target = null;
                 }
-                // move to the last seen position if we lost sight of them not too long ago.
+                // move to the last seen position.
                 owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);
             }
 
-            wasInRange = inRange;
             owner.groundPathfinder.MoveAlongPath(owner, owner.middle, owner.satisfiedNodeDistance);
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.PlasticSCM.Editor.WebApi;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,27 +19,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ammoReserveText;
     [SerializeField] private Image gunDisplayImage;
     [SerializeField] private GameObject defaultGun;
-
-    // Objects
     [SerializeField] private Transform hand;
+    [SerializeField] private List<Collider2D> overlappingInteractibles = new List<Collider2D>();
+
+    [Header("Other")]
+    [SerializeField] private float currency;
+
     private PlayerMovement movement;
     private Collider2D col;
     private GameObject closestInteractObject = null;
-    [SerializeField] private List<Collider2D> overlappingInteractibles = new List<Collider2D>();
-
+    
     // Dictionary uses a gameobject's tag as the key and the value is the overhead prompt associated with the 
     // action the player can use on the weapon.
     private Dictionary<string, string> overheadPrompts = new Dictionary<string, string>()
     {
         { "GunPickup", "E - Pickup Weapon" },
-        { "Door", "E - Open/Close Door" }
+        { "Door", "E - Open/Close Door" },
+        { "ShopItem", "" } // The text for this overhead prompt is set dynamically
     };
 
     // Gun
     [Header("Guns")]
-    private int equippedGunIndex = 0;
-    [SerializeField] private Gun equippedGun = null;
-    [SerializeField] private List<Gun> guns = new List<Gun>();
+    private int equippedItemIndex = 0;
+    [SerializeField] private Item equippedItem = null;
+    [SerializeField] private List<Item> items = new List<Item>();
 
     // Variables
     private float horizontalMove = 0f;
@@ -49,19 +53,19 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
         col = GetComponent<Collider2D>();
-        List<Gun> childGuns = GetComponentsInChildren<Gun>().ToList();
+        List<Item> childGuns = GetComponentsInChildren<Item>().ToList();
 
-        foreach (Gun gun in childGuns) PickupGun(gun);
+        foreach (Item gun in childGuns) PickupItem(gun);
 
-        if (guns.Count > 0)
+        if (items.Count > 0)
         {
-            equippedGun = guns[0];
-            equippedGun.gameObject.SetActive(true);
+            equippedItem = items[0];
+            equippedItem.gameObject.SetActive(true);
         }
         else
         {
-            equippedGun = Instantiate(defaultGun, transform).GetComponent<Gun>();
-            equippedGun.gameObject.SetActive(true);
+            equippedItem = Instantiate(defaultGun, transform).GetComponent<Item>();
+            equippedItem.gameObject.SetActive(true);
         }
     }
 
@@ -70,25 +74,25 @@ public class PlayerController : MonoBehaviour
         Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Update gun stuff
-        equippedGun.UpdateGun(mouseWorldPosition, transform.position, hand.position, mouseWorldPosition.x <= hand.position.x);
+        equippedItem.UpdateGun(mouseWorldPosition, transform.position, hand.position, mouseWorldPosition.x <= hand.position.x);
 
         // Handle input
         float mouseScroll = Input.GetAxisRaw("Mouse ScrollWheel");
-        if (mouseScroll != 0f && guns.Count > 1)
+        if (mouseScroll != 0f && items.Count > 1)
         {
             if (mouseScroll > 0f)
             {
-                equippedGunIndex++;
-                while (equippedGunIndex >= guns.Count) 
-                    equippedGunIndex -= guns.Count;
+                equippedItemIndex++;
+                while (equippedItemIndex >= items.Count) 
+                    equippedItemIndex -= items.Count;
             }
             else
             {
-                equippedGunIndex--;
-                while (equippedGunIndex < 0)
-                    equippedGunIndex += guns.Count;
+                equippedItemIndex--;
+                while (equippedItemIndex < 0)
+                    equippedItemIndex += items.Count;
             }
-            EquipGun(guns[equippedGunIndex]);
+            EquipItem(items[equippedItemIndex]);
         }
 
         // Do Interact Action
@@ -118,36 +122,36 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Pow(rb.velocity.y, 0.7f));
         }
         
-        if (equippedGun != null)
+        if (equippedItem != null)
         {
-            Vector2 muzzleToMouse = (mouseWorldPosition - (Vector2)equippedGun.muzzle.position).normalized;
+            Vector2 muzzleToMouse = (mouseWorldPosition - (Vector2)equippedItem.muzzle.position).normalized;
 
-            if (equippedGun.info.canCharge)
+            if (equippedItem.info.canCharge)
             {
-                if (Input.GetButton("Fire1")) equippedGun.ChargeShot(Time.deltaTime);
+                if (Input.GetButton("Fire1")) equippedItem.ChargeShot(Time.deltaTime);
                 else if (Input.GetButtonUp("Fire1"))
                 {
-                    equippedGun.Shoot(equippedGun.transform.right);
+                    equippedItem.Shoot(equippedItem.transform.right);
                 }
             }
             else if (Input.GetButtonDown("Fire1")) 
             {
-                equippedGun.Shoot(equippedGun.transform.right);
+                equippedItem.Shoot(equippedItem.transform.right);
             }
             else if (Input.GetButtonDown("Reload") 
-                && equippedGun.info.ammo < equippedGun.info.clipSize
-                && equippedGun.info.reserveAmmo > 0)
+                && equippedItem.info.ammo < equippedItem.info.clipSize
+                && equippedItem.info.reserveAmmo > 0)
             {
-                equippedGun.Reload();
+                equippedItem.Reload();
             }
         }
 
         // Update UI
         DisplayOverheadPrompt();
-        gunDisplayImage.sprite = equippedGun.sRenderer.sprite;
-        gunDisplayImage.color = equippedGun.sRenderer.color;
-        ammoClipText.text = equippedGun.info.ammo.ToString() + " / " + equippedGun.info.clipSize.ToString();
-        ammoReserveText.text = equippedGun.info.reserveAmmo.ToString();
+        gunDisplayImage.sprite = equippedItem.sRenderer.sprite;
+        gunDisplayImage.color = equippedItem.sRenderer.color;
+        ammoClipText.text = equippedItem.info.ammo.ToString() + " / " + equippedItem.info.clipSize.ToString();
+        ammoReserveText.text = equippedItem.info.reserveAmmo.ToString();
     }
 
     private void FixedUpdate()
@@ -169,7 +173,7 @@ public class PlayerController : MonoBehaviour
             overlappingInteractibles.Remove(other);
     }
 
-    private void PickupGun(Gun gun)
+    private void PickupItem(Item gun)
     {
         gun.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
 
@@ -178,17 +182,17 @@ public class PlayerController : MonoBehaviour
         gun.SetBulletCollisionLayer(LayerMask.NameToLayer("PlayerProjectile"));
         gun.transform.parent = transform;
         gun.transform.localPosition = Vector3.zero;
-        guns.Add(gun);
+        items.Add(gun);
     }
 
-    private void EquipGun(Gun gun)
+    private void EquipItem(Item item)
     {
-        int i = guns.IndexOf(gun);
+        int i = items.IndexOf(item);
         if (i == -1) return;
-        if (equippedGun != null) equippedGun.gameObject.SetActive(false);
-        gun.gameObject.SetActive(true);
-        equippedGun = gun;
-        equippedGunIndex = i;
+        if (equippedItem != null) equippedItem.gameObject.SetActive(false);
+        item.gameObject.SetActive(true);
+        equippedItem = item;
+        equippedItemIndex = i;
     }
 
     private void Interact()
@@ -197,27 +201,39 @@ public class PlayerController : MonoBehaviour
 
         if (closestInteractObject.CompareTag("GunPickup"))
         {
-            if (closestInteractObject.TryGetComponent(out GunPickup gunPickup))
+            if (closestInteractObject.TryGetComponent(out ItemPickup itemPickup))
+                PickupItem(itemPickup);
+        }
+        else if (closestInteractObject.CompareTag("ShopItem"))
+        {
+            if (closestInteractObject.TryGetComponent(out ItemPickup itemPickup))
             {
-                GameObject gunPrefab = gunPickup.GetGunPrefab();
-                if (gunPrefab.TryGetComponent(out Gun gunScript)) // make sure the gun has a gun script before instantiating
-                {
-                    GameObject gunCopy = Instantiate(gunPrefab);
-                    Gun gunScriptCopy = gunCopy.GetComponent<Gun>();
-                    PickupGun(gunScriptCopy);
-                    EquipGun(gunScriptCopy);
-                }
+                float price = itemPickup.GetPrice();
+                if (currency >= price) currency -= price;
+                else return;
+
+                PickupItem(itemPickup);
             }
-            Destroy(closestInteractObject, 0.01f);
-            closestInteractObject = null;
         }
         else if (closestInteractObject.CompareTag("Door"))
         {
             if (closestInteractObject.TryGetComponent(out DynamicDoor doorScript))
-            {
                 doorScript.OnDoorInteract();
-            }
         }
+    }
+
+    private void PickupItem(ItemPickup itemPickup)
+    {
+        GameObject itemPrefab = itemPickup.GetItemPrefab();
+        if (itemPrefab.TryGetComponent(out Item itemScript)) // make sure the gun has a gun script before instantiating
+        {
+            GameObject itemCopy = Instantiate(itemPrefab);
+            Item itemScriptCopy = itemCopy.GetComponent<Item>();
+            PickupItem(itemScriptCopy);
+            EquipItem(itemScriptCopy);
+        }
+        Destroy(closestInteractObject, 0.01f);
+        closestInteractObject = null;
     }
 
     private void DisplayOverheadPrompt()
@@ -241,6 +257,13 @@ public class PlayerController : MonoBehaviour
         {
             closestInteractObject = closestCollider.gameObject;
             overheadPrompt.text = value;
+            if (closestInteractObject.CompareTag("ShopItem"))
+            {
+                ItemPickup itemPickupScript = closestInteractObject.GetComponent<ItemPickup>();
+                float price = itemPickupScript.GetPrice();
+                string itemName = itemPickupScript.GetItemPrefab().GetComponent<Item>().info.itemName;
+                overheadPrompt.text = "E - Buy " + itemName + ": " + price.ToString();
+            }
             overheadPrompt.enabled = true;
         }
         else // else, set object to null and disable the overhead prompt.

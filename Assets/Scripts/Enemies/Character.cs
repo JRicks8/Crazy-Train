@@ -19,7 +19,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected Transform middle;
     [SerializeField] protected Transform hand;
     [SerializeField] protected BoxCollider2D groundCheckCollider;
-    [SerializeField] protected Gun equippedGun;
+    [SerializeField] protected Item equippedGun;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SpriteRenderer sRenderer;
     [SerializeField] protected Health healthScript;
@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
             healthScript.SetMaxHealth(info.maxHealth, true);
         }
 
-        equippedGun = GetComponentInChildren<Gun>();
+        equippedGun = GetComponentInChildren<Item>();
         if (equippedGun != null)
         {
             PickupGun(equippedGun);
@@ -187,7 +187,7 @@ public class Character : MonoBehaviour
     }
 
     // Sets defaults for guns on pickup. Default for the base class character is for enemies, but should be overridden for neutral or friendly ones.
-    protected virtual void PickupGun(Gun gun)
+    protected virtual void PickupGun(Item gun)
     {
         gun.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
         gun.gameObject.SetActive(false);

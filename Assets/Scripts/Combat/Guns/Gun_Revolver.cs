@@ -3,7 +3,7 @@
 // This gun is fully commented. Use this gun as an example for future guns.
 // The animation controller of the gun MUST have trigger parameters with names "reloadTrigger" and "shootTrigger" for the animations to play
 // The triggers also have to be properly set up to each other for the animations to work (see the aCon_revolver asset)
-public class Gun_Revolver : Gun
+public class Gun_Revolver : Item
 {
     private AnimRevolverBehavior animScript;
 

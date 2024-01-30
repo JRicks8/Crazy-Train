@@ -12,6 +12,7 @@ TagManager:
   - Door
   - RightConnector
   - LeftConnector
+  - ShopItem
   layers:
   - Default
   - TransparentFX

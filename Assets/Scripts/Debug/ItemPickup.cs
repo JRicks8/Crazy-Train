@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GunPickup : MonoBehaviour
+public class ItemPickup : MonoBehaviour
 {
     [Header("Gun To Pickup")]
-    [SerializeField] private GameObject gunPrefab;
+    [SerializeField] private GameObject itemPrefab;
     [Space]
     [Header("Pickup Attributes")]
     [Range(1f, 10f)] public float floatingHeight;
     [Range(1f, 50f)] public float floatingForce;
+    [SerializeField] private float price; // Applicable if this pickup is marked as a shop item
     // Use the linear drag variable in the rigidbody to effect the damping
 
     private SpriteRenderer spriteRenderer;
@@ -26,8 +27,8 @@ public class GunPickup : MonoBehaviour
         polygonCollider = GetComponent<PolygonCollider2D>();
         rb = GetComponent<Rigidbody2D>();
 
-        if (gunPrefab != null) 
-            spriteRenderer.sprite = gunPrefab.GetComponent<Gun>().sRenderer.sprite;
+        if (itemPrefab != null) 
+            spriteRenderer.sprite = itemPrefab.GetComponent<Item>().sRenderer.sprite;
 
         aSpriteChanged += RecalculateCollision;
         spriteRenderer.RegisterSpriteChangeCallback(aSpriteChanged);
@@ -81,11 +82,21 @@ public class GunPickup : MonoBehaviour
 
     public void SetGunPrefab(GameObject gun)
     {
-        this.gunPrefab = gun;
+        this.itemPrefab = gun;
     }
 
-    public GameObject GetGunPrefab()
+    public GameObject GetItemPrefab()
     {
-        return gunPrefab;
+        return itemPrefab;
+    }
+
+    public void SetPrice(float value)
+    {
+        price = value;
+    }
+
+    public float GetPrice()
+    {
+        return price;
     }
 }
