@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class ItemPickup : MonoBehaviour
 {
-    [Header("Gun To Pickup")]
+    [Header("Item To Pickup")]
     [SerializeField] private GameObject itemPrefab;
     [Space]
     [Header("Pickup Attributes")]

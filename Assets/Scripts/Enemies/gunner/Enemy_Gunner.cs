@@ -29,12 +29,16 @@ public class Enemy_Gunner : Character
 
         animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
 
-        if (!equippedGun.info.showHand) hand.gameObject.SetActive(false);
-        equippedGun.SetReferences(rb, sRenderer);
+        if (!equippedItem.itemInfo.showHand) hand.gameObject.SetActive(false);
+        equippedItem.SetReferences(rb, sRenderer);
 
         // override gun defaults
-        equippedGun.info.bulletSpeed = 5;
-        equippedGun.info.baseFireRate = 1.5f;
+        Gun gun = equippedItem as Gun;
+        if (gun != null)
+        {
+            gun.gunInfo.bulletSpeed = 5;
+            gun.gunInfo.baseFireRate = 1.5f;
+        }
     }
 
     private void Update()
@@ -64,9 +68,11 @@ public class Enemy_Gunner : Character
     /// </summary>
     public void Shoot()
     {
-        equippedGun.info.reserveAmmo = 1000; // NPCs have infinite ammo
+        Gun gun = equippedItem as Gun;
+        if (gun != null)
+            gun.gunInfo.reserveAmmo = 1000; // NPCs have infinite ammo
 
-        equippedGun.Shoot(equippedGun.transform.right);
+        equippedItem.Use(equippedItem.transform.right);
     }
 
     // State Machine States

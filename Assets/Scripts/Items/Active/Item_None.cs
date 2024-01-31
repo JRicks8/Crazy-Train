@@ -2,10 +2,10 @@
 using UnityEngine;
 
 // The gun to equip when there is no gun to equip.
-public class Gun_NoGun : Item
+public class Item_None : Item
 {
     private void Awake()
     {
-        info = GunData.NoGunInfo;
+        itemInfo = ItemData.NoneInfo;
     }
 }

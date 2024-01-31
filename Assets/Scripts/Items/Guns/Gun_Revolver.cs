@@ -3,13 +3,14 @@
 // This gun is fully commented. Use this gun as an example for future guns.
 // The animation controller of the gun MUST have trigger parameters with names "reloadTrigger" and "shootTrigger" for the animations to play
 // The triggers also have to be properly set up to each other for the animations to work (see the aCon_revolver asset)
-public class Gun_Revolver : Item
+public class Gun_Revolver : Gun
 {
-    private AnimRevolverBehavior animScript;
+    [Header("Revolver")]
+    [SerializeField] private AnimRevolverBehavior animScript;
 
     private void Awake()
     {
-        info = GunData.RevolverInfo;
+        gunInfo = GunData.RevolverInfo;
     }
 
     public override void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)    
@@ -20,9 +21,9 @@ public class Gun_Revolver : Item
         animScript.SetReferences(rb, sRenderer, this);
     }
 
-    public override bool Shoot(Vector2 direction)
+    public override bool Use(Vector2 direction)
     {
-        bool success = base.Shoot(direction);
+        bool success = base.Use(direction);
         
         if (success)
         {

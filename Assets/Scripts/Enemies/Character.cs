@@ -19,7 +19,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected Transform middle;
     [SerializeField] protected Transform hand;
     [SerializeField] protected BoxCollider2D groundCheckCollider;
-    [SerializeField] protected Item equippedGun;
+    [SerializeField] protected Item equippedItem;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SpriteRenderer sRenderer;
     [SerializeField] protected Health healthScript;
@@ -46,11 +46,11 @@ public class Character : MonoBehaviour
             healthScript.SetMaxHealth(info.maxHealth, true);
         }
 
-        equippedGun = GetComponentInChildren<Item>();
-        if (equippedGun != null)
+        equippedItem = GetComponentInChildren<Item>();
+        if (equippedItem != null)
         {
-            PickupGun(equippedGun);
-            equippedGun.gameObject.SetActive(true);
+            PickupItem(equippedItem);
+            equippedItem.gameObject.SetActive(true);
         }
 
         if (info.canFly)
@@ -144,10 +144,10 @@ public class Character : MonoBehaviour
     protected void UpdateHandAndGun()
     {
         // Update gun
-        if (equippedGun == null) return;
+        if (equippedItem == null) return;
         
         Vector2 gunAimPoint = Vector2.zero;
-        equippedGun.transform.position = hand.position;
+        equippedItem.transform.position = hand.position;
 
         // Conditional updates
         if (target != null) // We have a target
@@ -174,28 +174,34 @@ public class Character : MonoBehaviour
             if (facingLeft)
             {
                 hand.localPosition = new Vector2(info.handOffset * -1, 0);
-                gunAimPoint = equippedGun.transform.position + Vector3.left;
+                gunAimPoint = equippedItem.transform.position + Vector3.left;
             }
             else
             {
                 hand.localPosition = new Vector2(info.handOffset, 0);
-                gunAimPoint = equippedGun.transform.position + Vector3.right;
+                gunAimPoint = equippedItem.transform.position + Vector3.right;
             }
         }
 
-        equippedGun.UpdateGun(gunAimPoint, transform.position, hand.position, handOnLeftSide);
+        equippedItem.UpdateItem(gunAimPoint, transform.position, hand.position, handOnLeftSide);
     }
 
     // Sets defaults for guns on pickup. Default for the base class character is for enemies, but should be overridden for neutral or friendly ones.
-    protected virtual void PickupGun(Item gun)
+    protected virtual void PickupItem(Item item)
     {
-        gun.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
-        gun.gameObject.SetActive(false);
+        item.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
+        item.gameObject.SetActive(false);
 
-        gun.SetIgnoreTags(new List<string>() { "Enemy" });
-        gun.SetHitTags(new List<string>() { "Player" });
-        gun.SetBulletCollisionLayer(LayerMask.NameToLayer("EnemyProjectile"));
-        gun.transform.parent = transform;
+        // If it's a gun, setup the gun part
+        Gun gun = item as Gun;
+        if (gun != null)
+        {
+            gun.SetIgnoreTags(new List<string>() { "Enemy" });
+            gun.SetHitTags(new List<string>() { "Player" });
+            gun.SetBulletCollisionLayer(LayerMask.NameToLayer("EnemyProjectile"));
+        }
+
+        item.transform.parent = transform;
     }
 
     /// <summary>
@@ -300,7 +306,7 @@ public class Character : MonoBehaviour
     {
         healthScript.SetCanSeeHealthbar(false);
         if (hand != null) hand.gameObject.SetActive(false);
-        if (equippedGun != null) equippedGun.gameObject.SetActive(false);
+        if (equippedItem != null) equippedItem.gameObject.SetActive(false);
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;

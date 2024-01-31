@@ -174,15 +174,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 30
+  rb: {fileID: 0}
   overheadPrompt: {fileID: 6638383899593136605}
   ammoClipText: {fileID: 8971335350221674427}
   ammoReserveText: {fileID: 2435075471355466787}
-  gunDisplayImage: {fileID: 2974156131969436082}
-  defaultGun: {fileID: 6381472025034332572, guid: cec10bebc8dbb1841a6103260ca6d508, type: 3}
+  itemDisplayImage: {fileID: 2974156131969436082}
+  defaultItem: {fileID: 6381472025034332572, guid: cec10bebc8dbb1841a6103260ca6d508, type: 3}
   hand: {fileID: 5083223064566272579}
   overlappingInteractibles: []
-  equippedGun: {fileID: 0}
-  guns: []
+  col: {fileID: 0}
+  movement: {fileID: 0}
+  closestInteractObject: {fileID: 0}
+  equippedItemIndex: 0
+  equippedItem: {fileID: 0}
+  items: []
+  horizontalMove: 0
+  currency: 0
+  jump: 0
 --- !u!1 &955082768661290047
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,7 +831,7 @@ GameObject:
   - component: {fileID: 1489978536604491582}
   - component: {fileID: 5699686292469144716}
   m_Layer: 5
-  m_Name: Gun Display
+  m_Name: Item Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

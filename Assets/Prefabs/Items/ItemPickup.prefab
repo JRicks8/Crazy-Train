@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7851874014621401355}
   - component: {fileID: 7952200348996088263}
   m_Layer: 0
-  m_Name: GunPickup
+  m_Name: ItemPickup
   m_TagString: GunPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

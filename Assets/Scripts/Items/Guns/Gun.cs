@@ -1,33 +1,23 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.XR;
 
-// Base class for all gun scripts
-public class Item : MonoBehaviour
+public class Gun : Item
 {
-    public GunInfo info;
+    [Header("Gun")]
+    public GunInfo gunInfo;
     public GameObject bulletPrefab; // The bullet prefab can only be set in the editor.
     public Transform muzzle;
-    public Transform handle;
-    public Transform spriteObject;
-    public SpriteRenderer sRenderer;
-    public Animator animator;
-
-    protected float chargeTime = 0.0f;
-    protected float shootTimer = 0.0f;
-    protected float reloadTimer = 0.0f;
-    protected bool reloading = false;
-    protected bool shooting = false;
-    protected bool handOnLeft = false;
-    private bool lastHandOnLeft = false;
-
-    protected int bulletCollisionLayer;
+    [SerializeField] protected float chargeTime = 0.0f;
+    [SerializeField] protected float shootTimer = 0.0f;
+    [SerializeField] protected float reloadTimer = 0.0f;
+    [SerializeField] protected bool reloading = false;
+    [SerializeField] protected bool shooting = false;
+    [SerializeField] protected int bulletCollisionLayer;
     [SerializeField] protected List<string> hitTags = new List<string>();
     [SerializeField] protected List<string> ignoreTags = new List<string>();
 
-    public virtual void UpdateGun(Vector2 aimPoint, Vector2 aimingFrom, Vector2 handPosition, bool handOnLeft)
+    public override void UpdateItem(Vector2 aimPoint, Vector2 aimingFrom, Vector2 handPosition, bool handOnLeft)
     {
         transform.rotation = Quaternion.LookRotation(Vector3.forward, (aimPoint - aimingFrom).normalized) * Quaternion.Euler(0, 0, 90f);
         transform.position = handPosition;
@@ -56,17 +46,10 @@ public class Item : MonoBehaviour
         lastHandOnLeft = handOnLeft;
     }
 
-    // Called by the parent character
-    public virtual void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)
-    {
-        
-    }
-
-    // return value is whether the shot was successful or not
-    public virtual bool Shoot(Vector2 direction)
+    public override bool Use(Vector2 direction)
     {
         if (reloading) return false;
-        if (info.ammo <= 0)
+        if (gunInfo.ammo <= 0)
         {
             Reload();
             return false;
@@ -75,15 +58,15 @@ public class Item : MonoBehaviour
         {
             chargeTime = 0.0f;
             shooting = true;
-            shootTimer = 1.0f / info.baseFireRate;
-            info.ammo--;
+            shootTimer = 1.0f / gunInfo.baseFireRate;
+            gunInfo.ammo--;
             FireBullet(direction);
             return true;
         }
         else return false;
     }
 
-    public virtual void ChargeShot(float dt)
+    public virtual void ChargeUse(float dt)
     {
         chargeTime += dt;
     }
@@ -91,13 +74,13 @@ public class Item : MonoBehaviour
     // Should be overridden
     public virtual bool Reload()
     {
-        if (info.reserveAmmo <= 0 || reloading || reloadTimer > 0.0f) return false;
+        if (gunInfo.reserveAmmo <= 0 || reloading || reloadTimer > 0.0f) return false;
 
         reloading = true;
-        reloadTimer = info.reloadDurationSeconds;
+        reloadTimer = gunInfo.reloadDurationSeconds;
 
-        info.reserveAmmo -= info.clipSize - info.ammo;
-        info.ammo = info.clipSize;
+        gunInfo.reserveAmmo -= gunInfo.clipSize - gunInfo.ammo;
+        gunInfo.ammo = gunInfo.clipSize;
         return true;
     }
 
@@ -107,12 +90,17 @@ public class Item : MonoBehaviour
         Bullet bulletScript = b.GetComponent<Bullet>();
         foreach (string tag in ignoreTags) bulletScript.AddIgnoreTag(tag);
         foreach (string tag in hitTags) bulletScript.AddHitTag(tag);
-        bulletScript.damage = info.baseDamage;
+        bulletScript.damage = gunInfo.baseDamage;
 
         b.layer = bulletCollisionLayer;
         b.transform.position = muzzle.position;
         b.SetActive(true);
-        bulletScript.SetVelocity(direction * info.bulletSpeed);
+        bulletScript.SetVelocity(direction * gunInfo.bulletSpeed);
+    }
+
+    public override void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)
+    {
+        base.SetReferences(rb, sRenderer);
     }
 
     public void SetBulletCollisionLayer(int layer)
@@ -134,7 +122,7 @@ public class Item : MonoBehaviour
     {
         return hitTags.Remove(tag);
     }
-    
+
     public void SetIgnoreTags(List<string> ignoreTags)
     {
         this.ignoreTags = ignoreTags;
