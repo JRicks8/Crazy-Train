@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -10,17 +11,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runSpeed = 40f;
 
     [Space]
-    [Header("Object References")]
-    [SerializeField] private Rigidbody2D rb;
+    [Header("Object References To Set")]
     [SerializeField] private TextMeshProUGUI overheadPrompt;
     [SerializeField] private TextMeshProUGUI ammoClipText;
     [SerializeField] private TextMeshProUGUI ammoReserveText;
     [SerializeField] private Image itemDisplayImage;
     [SerializeField] private GameObject defaultItem;
     [SerializeField] private Transform hand;
-    [SerializeField] private List<Collider2D> overlappingInteractibles = new List<Collider2D>();
-    [SerializeField] private Collider2D col;
+    [SerializeField] private Animator animator;
+
+    [Header("Other Object References")]
+    [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerMovement movement;
+    [SerializeField] private List<Collider2D> overlappingInteractibles = new List<Collider2D>();
     [SerializeField] private GameObject closestInteractObject = null;
 
     [Header("Items")]
@@ -46,7 +49,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
-        col = GetComponent<Collider2D>();
         List<Item> childGuns = GetComponentsInChildren<Item>().ToList();
 
         foreach (Item gun in childGuns) PickupItem(gun);
@@ -61,6 +63,8 @@ public class PlayerController : MonoBehaviour
             equippedItem = Instantiate(defaultItem, transform).GetComponent<Item>();
             equippedItem.gameObject.SetActive(true);
         }
+
+        animator.GetBehaviour<AnimCowboyBehavior>().SetReferences(gameObject);
     }
 
     private void Update()
@@ -288,4 +292,6 @@ public class PlayerController : MonoBehaviour
             overheadPrompt.enabled = false;
         }
     }
+
+    public Animator GetAnimator() { return animator; }
 }

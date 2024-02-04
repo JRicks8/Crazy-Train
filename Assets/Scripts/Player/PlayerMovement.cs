@@ -5,26 +5,31 @@ using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
 {
+	[Header("Settings")]
 	[SerializeField] private float jumpForce = 1300f;
 	[Range(0, .3f)] [SerializeField] private float movementSmoothing = .05f;
 	[SerializeField] private bool airControl = false;
-	[SerializeField] private LayerMask whatIsGround;
-	[SerializeField] private BoxCollider2D groundCheckCollider;
+
+	[Header("Object References To Set")]
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private BoxCollider2D groundCheckCollider;
     [SerializeField] private SpriteRenderer sRenderer;
 
-    private bool grounded;
-	private Rigidbody2D rb;
-	private bool facingRight = true;
-	private Vector3 currentVelocity = Vector3.zero;
+    [Header("Other Object References")]
+    [SerializeField] private Rigidbody2D rb;
 
-	[Header("Events")]
-	public UnityEvent OnLandEvent;
+	[Header("Details")]
+    [SerializeField] private bool grounded;
+    [SerializeField] private bool facingRight = true;
+    [SerializeField] private Vector3 currentVelocity = Vector3.zero;
+
+	// Delegates
+    public delegate void MovementEventDelegate(GameObject entity);
+    public MovementEventDelegate OnLand;
 
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
-
-        OnLandEvent ??= new UnityEvent();
 	}
 
     private void FixedUpdate()
@@ -48,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 grounded = true;
                 if (!wasGrounded)
-                    OnLandEvent.Invoke();
+                    OnLand?.Invoke(gameObject);
 				return colliders[0].gameObject;
             }
         }

@@ -13,54 +13,54 @@ public class AnimCowboyBehavior : StateMachineBehaviour
         grounded,
         dieTrigger,
         ouchTrigger,
+        landTrigger,
     }
 
-    //private PlayerController pController;
     private PlayerMovement pMovement;
     private Health pHealth;
 
+    private Animator playerAnimator;
     private Rigidbody2D pRigidbody;
-    // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        
-    }
 
-    // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
-
-        // Update Parameters
 
         animator.SetFloat(Parameters.horizSpeed.ToString(), pRigidbody.velocity.x);
         animator.SetFloat(Parameters.vertSpeed.ToString(), pRigidbody.velocity.y);
         animator.SetFloat(Parameters.velocityMag.ToString(), pRigidbody.velocity.magnitude);
         animator.SetBool(Parameters.grounded.ToString(), pMovement.IsGrounded());
-
-
-
     }
 
     public void SetReferences(GameObject player)
     {
+        PlayerController pController = player.GetComponent<PlayerController>();
+
         pRigidbody = player.GetComponent<Rigidbody2D>();
         pHealth = player.GetComponent<Health>();
         pMovement = player.GetComponent<PlayerMovement>();
+        playerAnimator = pController.GetAnimator();
 
-        //TODO: make on death function
-        //pHealth.OnDeath += 
+        foreach (Component comp in player.GetComponents<Component>())
+            Debug.Log(comp.GetType());
 
-
-
-        //charScript = gunner.GetComponent<Character>();
-        //healthScript = gunner.GetComponent<Health>();
-        //
-        //healthScript.OnDeath += OnGunnerDie;
-        //healthScript.OnDamageTaken += OnGunnerDamageTaken;
-        //
-        //this.renderer = renderer;
-        //gunnerAnimator = animator;
+        pHealth.OnDeath += OnCowboyDie;
+        pHealth.OnDamageTaken += OnCowboyDamageTaken;
+        pMovement.OnLand += OnCowboyLand;
     }
 
+    public void OnCowboyDie(GameObject entity)
+    {
+        playerAnimator.SetTrigger(Parameters.dieTrigger.ToString());
+    }
+
+    public void OnCowboyDamageTaken(GameObject entity)
+    {
+        playerAnimator.SetTrigger(Parameters.ouchTrigger.ToString());
+    }
+
+    public void OnCowboyLand(GameObject entity)
+    {
+        playerAnimator.SetTrigger(Parameters.landTrigger.ToString());
+    }
 }
