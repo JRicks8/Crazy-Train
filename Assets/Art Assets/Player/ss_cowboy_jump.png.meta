@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 69d9aa3c888714492815a5a6cc046cee
+guid: c3faf5c70f3949b48bf25e0571ad7e1d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ss_cowboy_ouch_0
+      name: ss_cowboy_jump_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 32e33cb3af25a436aa9bf92902c68ae4
-      internalID: 1116824503
+      spriteID: 0b845e8ba338a8c4ab8183c63c409907
+      internalID: 2050597979
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ss_cowboy_ouch_1
+      name: ss_cowboy_jump_1
       rect:
         serializedVersion: 2
         x: 32
@@ -145,8 +145,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eaa1ba0f5a4d24fde9fffe9b93608674
-      internalID: -1883186292
+      spriteID: 1e66389621f09c243a2c0e6fdb8065d2
+      internalID: -1506349011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_cowboy_jump_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4868052d254b3f4dbfb3ad9833a4ea0
+      internalID: -141317832
       vertices: []
       indices: 
       edges: []
@@ -162,8 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ss_cowboy_ouch_0: 1116824503
-      ss_cowboy_ouch_1: -1883186292
+      ss_cowboy_jump_0: 2050597979
+      ss_cowboy_jump_1: -1506349011
+      ss_cowboy_jump_2: -141317832
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -115,7 +115,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -134,9 +134,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 45
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -155,9 +155,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 90
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -176,9 +176,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 135
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -197,9 +197,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_4
       rect:
         serializedVersion: 2
-        x: 128
+        x: 180
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -218,9 +218,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_5
       rect:
         serializedVersion: 2
-        x: 160
+        x: 225
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -239,9 +239,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_6
       rect:
         serializedVersion: 2
-        x: 192
+        x: 270
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -260,9 +260,9 @@ TextureImporter:
       name: ss_cowboy_deathfront_7
       rect:
         serializedVersion: 2
-        x: 224
+        x: 315
         y: 0
-        width: 32
+        width: 45
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
