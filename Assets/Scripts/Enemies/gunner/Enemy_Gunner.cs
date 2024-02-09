@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class Enemy_Gunner : Character
@@ -27,13 +26,13 @@ public class Enemy_Gunner : Character
         groundPathfinder.PausePathfinding(true);
         groundPathfinder.StartPathfinding();
 
-        animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, sRenderer, animator);
+        animator.GetBehaviour<AnimGunnerBehavior>().SetReferences(gameObject, animator);
 
-        if (!equippedItem.itemInfo.showHand) hand.gameObject.SetActive(false);
-        equippedItem.SetReferences(rb, sRenderer);
+        if (!equippedWeapon.itemInfo.showHand) hand.gameObject.SetActive(false);
+        equippedWeapon.SetReferences(rb, sRenderer);
 
         // override gun defaults
-        Gun gun = equippedItem as Gun;
+        Gun gun = equippedWeapon as Gun;
         if (gun != null)
         {
             gun.gunInfo.bulletSpeed = 5;
@@ -68,11 +67,11 @@ public class Enemy_Gunner : Character
     /// </summary>
     public void Shoot()
     {
-        Gun gun = equippedItem as Gun;
+        Gun gun = equippedWeapon as Gun;
         if (gun != null)
             gun.gunInfo.reserveAmmo = 1000; // NPCs have infinite ammo
 
-        equippedItem.Use(equippedItem.transform.right);
+        equippedWeapon.Use(equippedWeapon.transform.right);
     }
 
     // State Machine States
@@ -99,7 +98,6 @@ public class Enemy_Gunner : Character
         void IState.Execute()
         {
             wanderTimer -= Time.deltaTime;
-
             if (owner.LookForTarget()) // if we see a target
             {
                 owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
@@ -132,7 +130,7 @@ public class Enemy_Gunner : Character
             List<PathNode> nodes = owner.groundPathfinder.GetAllPathfindNodes();
             if (nodes.Count == 0) owner.stateMachine.ChangeState(new Idle(owner));
 
-            destination = nodes[UnityEngine.Random.Range(0, nodes.Count)].transform.position;
+            destination = nodes[Random.Range(0, nodes.Count)].transform.position;
             owner.groundPathfinder.UpdatePathfindDestination(destination);
             owner.groundPathfinder.PausePathfinding(false);
         }
@@ -192,7 +190,13 @@ public class Enemy_Gunner : Character
             // If in range and can see target...
             // Shoot.
             // If we want to move, pick a nearby node to move to.
-            if (inRange && canSeeTarget)
+            // If we have any outstanding effects that change movement, resolve those instead.
+            if (owner.HasEffect(Effect.Fear))
+            {
+                Vector2 moveDirection = (owner.transform.position - owner.target.transform.position).normalized * 3;
+                owner.groundPathfinder.UpdatePathfindDestination(moveDirection + (Vector2)owner.transform.position);
+            }
+            else if (inRange && canSeeTarget)
             {
                 owner.Shoot();
 

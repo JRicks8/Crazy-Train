@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+
+public enum Effect
+{
+    Fear = 0,
+}
 
 // Acts as a base for any character
 // Should not be attached to any character directly, this class is meant to be inherited (See Enemy_Gunner.cs for example)
@@ -19,7 +23,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected Transform middle;
     [SerializeField] protected Transform hand;
     [SerializeField] protected BoxCollider2D groundCheckCollider;
-    [SerializeField] protected Item equippedItem;
+    [SerializeField] protected Item equippedWeapon;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SpriteRenderer sRenderer;
     [SerializeField] protected Health healthScript;
@@ -27,15 +31,19 @@ public class Character : MonoBehaviour
     public float satisfiedNodeDistance = 0.5f;
     [Header("Other Settings")]
     [SerializeField] private LayerMask whatIsGround;
-    private LayerMask doorLayer;
+    [SerializeField] private bool[] activeEffects = new bool[1]; // Length is equal to the number of effects in the Effects enum.
+    private List<Action> startEffectFunctions = new List<Action>();
+    private List<Action> endEffectFunctions = new List<Action>();
 
-    protected Vector2 moveDir = Vector2.zero;
-    protected float deathFadeTimer;
-    protected bool facingLeft = false;
-    public GameObject ground = null;
-    protected bool grounded = false;
-    protected bool isDead = false;
-    private bool handOnLeftSide = false;
+    [Header("Details - Do Not Change")]
+    [SerializeField] private LayerMask doorLayer;
+    [SerializeField] protected Vector2 moveDir = Vector2.zero;
+    [SerializeField] protected float deathFadeTimer;
+    [SerializeField] protected bool facingLeft = false;
+    [SerializeField] public GameObject ground = null;
+    [SerializeField] protected bool grounded = false;
+    [SerializeField] protected bool isDead = false;
+    [SerializeField] private bool handOnLeftSide = false;
 
     protected void Initialize()
     {
@@ -46,11 +54,11 @@ public class Character : MonoBehaviour
             healthScript.SetMaxHealth(info.maxHealth, true);
         }
 
-        equippedItem = GetComponentInChildren<Item>();
-        if (equippedItem != null)
+        equippedWeapon = GetComponentInChildren<Item>();
+        if (equippedWeapon != null)
         {
-            PickupItem(equippedItem);
-            equippedItem.gameObject.SetActive(true);
+            PickupItem(equippedWeapon);
+            equippedWeapon.gameObject.SetActive(true);
         }
 
         if (info.canFly)
@@ -60,6 +68,16 @@ public class Character : MonoBehaviour
         }
 
         doorLayer = LayerMask.GetMask(new string[] { "Door" });
+
+        // Set effect functions
+        startEffectFunctions.AddRange(new Action[] 
+        { 
+            OnFear,
+        });
+        endEffectFunctions.AddRange(new Action[]
+        {
+            EndFear,
+        });
     }
 
     protected void UpdateCharacter()
@@ -144,10 +162,10 @@ public class Character : MonoBehaviour
     protected void UpdateHandAndGun()
     {
         // Update gun
-        if (equippedItem == null) return;
+        if (equippedWeapon == null) return;
         
         Vector2 gunAimPoint = Vector2.zero;
-        equippedItem.transform.position = hand.position;
+        equippedWeapon.transform.position = hand.position;
 
         // Conditional updates
         if (target != null) // We have a target
@@ -174,16 +192,16 @@ public class Character : MonoBehaviour
             if (facingLeft)
             {
                 hand.localPosition = new Vector2(info.handOffset * -1, 0);
-                gunAimPoint = equippedItem.transform.position + Vector3.left;
+                gunAimPoint = equippedWeapon.transform.position + Vector3.left;
             }
             else
             {
                 hand.localPosition = new Vector2(info.handOffset, 0);
-                gunAimPoint = equippedItem.transform.position + Vector3.right;
+                gunAimPoint = equippedWeapon.transform.position + Vector3.right;
             }
         }
 
-        equippedItem.UpdateItem(gunAimPoint, transform.position, hand.position, handOnLeftSide);
+        equippedWeapon.UpdateItem(gunAimPoint, transform.position, hand.position, handOnLeftSide);
     }
 
     // Sets defaults for guns on pickup. Default for the base class character is for enemies, but should be overridden for neutral or friendly ones.
@@ -205,7 +223,7 @@ public class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// Tests against the Friendly, Terrain, and Door layers for the GameObject with the "Player" Tag. If there are no obstructions and there is 
+    /// Raycasts against the Friendly, Terrain, and Door layers for the GameObject with the "Player" Tag. If there are no obstructions and there is 
     /// a clear line of sight to the player, returns true and sets the target. Else returns false.
     /// </summary>
     /// <returns></returns>
@@ -216,16 +234,12 @@ public class Character : MonoBehaviour
         {
             LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain", "Door" });
             RaycastHit2D hit = Physics2D.Linecast(middle.position, playerCharacter.transform.position, mask);
-            Debug.DrawLine(transform.position, (playerCharacter.transform.position - transform.position).normalized * hit.distance + transform.position, Color.blue);
-            //Debug.Log("Ray Info: " + hit.collider.gameObject.name);
+            //Debug.DrawLine(transform.position, (playerCharacter.transform.position - transform.position).normalized * hit.distance + transform.position, Color.blue);
             if (hit.collider.gameObject == playerCharacter)
             {
-                //Debug.Log(hit.collider.gameObject.name + " " + playerCharacter.name);
-                //Debug.Log("Successful raycast hit the player gameobject");
                 target = playerCharacter.transform;
                 return true;
             }
-            //else Debug.Log("Hit distance is <= 0 or the hit collider is not the same as the .");
         }
         return false;
     }
@@ -277,6 +291,59 @@ public class Character : MonoBehaviour
         return null;
     }
 
+    public bool HasEffect(Effect effect)
+    {
+        return activeEffects[(int)effect];
+    }
+
+    public void RemoveAllEffects()
+    {
+        for (int i = 0; i < activeEffects.Length; i++)
+        {
+            activeEffects[i] = false;
+            endEffectFunctions[i]();
+        }
+    }
+
+    public void RemoveEffect(Effect effect)
+    {
+        int i = (int)effect;
+        activeEffects[i] = false;
+        endEffectFunctions[i]();
+    }
+
+    public void GiveEffect(Effect effect, float duration)
+    {
+        int i = (int)effect;
+        if (!activeEffects[i])
+        {
+            activeEffects[i] = true;
+            StartCoroutine(EffectHandler(i, duration));
+        }
+    }
+
+    private IEnumerator EffectHandler(int effect, float duration)
+    {
+        startEffectFunctions[effect]();
+        yield return new WaitForSeconds(duration);
+        if (activeEffects[effect])
+            endEffectFunctions[effect]();
+        activeEffects[effect] = false;
+    }
+
+    [Header("Effects Settings")]
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color fearColor = Color.magenta;
+    private void OnFear()
+    {
+        sRenderer.color = fearColor;
+    }
+
+    private void EndFear()
+    {
+        sRenderer.color = defaultColor;
+    }
+
     public bool IsGrounded()
     {
         return grounded;
@@ -306,7 +373,7 @@ public class Character : MonoBehaviour
     {
         healthScript.SetCanSeeHealthbar(false);
         if (hand != null) hand.gameObject.SetActive(false);
-        if (equippedItem != null) equippedItem.gameObject.SetActive(false);
+        if (equippedWeapon != null) equippedWeapon.gameObject.SetActive(false);
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;

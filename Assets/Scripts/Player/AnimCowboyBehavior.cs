@@ -41,9 +41,6 @@ public class AnimCowboyBehavior : StateMachineBehaviour
         pMovement = player.GetComponent<PlayerMovement>();
         playerAnimator = pController.GetAnimator();
 
-        foreach (Component comp in player.GetComponents<Component>())
-            Debug.Log(comp.GetType());
-
         pHealth.OnDeath += OnCowboyDie;
         pHealth.OnDamageTaken += OnCowboyDamageTaken;
         pMovement.OnLand += OnCowboyLand;

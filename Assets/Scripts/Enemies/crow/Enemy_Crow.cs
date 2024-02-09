@@ -6,6 +6,7 @@ public class Enemy_Crow : Character
     [Header("Crow Settings")]
     public StateMachine stateMachine;
     public AirPathfind pathfinder;
+    [SerializeField] private Animator animator;
 
     private void Start()
     {
@@ -16,6 +17,8 @@ public class Enemy_Crow : Character
         stateMachine.ChangeState(new Idle(this));
 
         pathfinder = GetComponent<AirPathfind>();
+
+        animator.GetBehaviour<AnimCrowBehavior>().SetReferences(gameObject, animator);
     }
 
     private void Update()
@@ -86,7 +89,11 @@ public class Enemy_Crow : Character
                 owner.stateMachine.ChangeState(new Idle(owner));
             }
 
-            if (owner.LookForTarget())
+            if (owner.HasEffect(Effect.Fear))
+            {
+                owner.Move((owner.transform.position - owner.target.position).normalized);
+            }
+            else if (owner.LookForTarget())
             {
                 owner.Move((owner.target.position - owner.transform.position).normalized);
             }

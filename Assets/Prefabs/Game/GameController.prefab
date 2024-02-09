@@ -429,6 +429,8 @@ MonoBehaviour:
   itemPrefabs:
   - {fileID: 6381472025034332572, guid: cec10bebc8dbb1841a6103260ca6d508, type: 3}
   - {fileID: 6381472025034332572, guid: 1688b9e0e32ab2d44a0ed4a6689b82f3, type: 3}
+  - {fileID: 6381472025034332572, guid: 3bc6ed6148cb76e458a2782092a80f16, type: 3}
+  itemPickupPrefab: {fileID: 5867989246890966533, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
 --- !u!114 &3265700236167145417
 MonoBehaviour:
   m_ObjectHideFlags: 0

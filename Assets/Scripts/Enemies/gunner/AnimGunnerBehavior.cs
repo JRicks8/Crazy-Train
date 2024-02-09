@@ -21,7 +21,6 @@ public class AnimGunnerBehavior : StateMachineBehaviour
     private Health healthScript;
 
     private Animator gunnerAnimator;
-    private SpriteRenderer renderer;
 
     private bool inStandingState = false;
 
@@ -65,7 +64,7 @@ public class AnimGunnerBehavior : StateMachineBehaviour
     }
 
     // Called by the gunner script. Sets references to the gunner script and other important things.
-    public void SetReferences(GameObject gunner, SpriteRenderer renderer, Animator animator)
+    public void SetReferences(GameObject gunner, Animator animator)
     {
         charScript = gunner.GetComponent<Character>();
         healthScript = gunner.GetComponent<Health>();
@@ -73,7 +72,6 @@ public class AnimGunnerBehavior : StateMachineBehaviour
         healthScript.OnDeath += OnGunnerDie;
         healthScript.OnDamageTaken += OnGunnerDamageTaken;
 
-        this.renderer = renderer;
         gunnerAnimator = animator;
     }
 

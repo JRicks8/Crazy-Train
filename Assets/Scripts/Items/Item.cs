@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     [Header("Item Base")]
     public ItemInfo itemInfo;
+    [Header("Object References To Set")]
     public Transform handle;
     public Transform spriteObject;
     public SpriteRenderer sRenderer;
@@ -44,6 +45,17 @@ public class Item : MonoBehaviour
     // return value is whether the use was successful or not
     public virtual bool Use(Vector2 direction)
     {
-        return false;
+        throw new System.NotImplementedException();
+    }
+
+    public void Drop()
+    {
+        GameObject itemPickup = Instantiate(ItemData.staticItemPickupPrefab);
+        if (itemPickup.TryGetComponent(out ItemPickup itemPickupScript))
+            itemPickupScript.SetItemPrefab(ItemData.staticItemPrefabs[itemInfo.itemID]);
+        else
+            Destroy(itemPickup);
+        itemPickup.transform.position = transform.position;
+        Destroy(gameObject);
     }
 }

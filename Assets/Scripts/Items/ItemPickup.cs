@@ -39,11 +39,6 @@ public class ItemPickup : MonoBehaviour
         RecalculateCollision(spriteRenderer);
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         LayerMask mask = LayerMask.GetMask(new string[] { "Terrain", "OneWayTerrain" });
@@ -80,9 +75,10 @@ public class ItemPickup : MonoBehaviour
         }
     }
 
-    public void SetGunPrefab(GameObject gun)
+    public void SetItemPrefab(GameObject gun)
     {
-        this.itemPrefab = gun;
+        itemPrefab = gun;
+        spriteRenderer.sprite = itemPrefab.GetComponent<Item>().sRenderer.sprite;
     }
 
     public GameObject GetItemPrefab()

@@ -74,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 929783687
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b4894058283d9744796c2bc1c2cfe576, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -198,26 +198,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7046b577fa8a379418ff9bfe71c4af8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  info:
-    gunID: 0
-    clipSize: 6
-    ammo: 0
-    reserveAmmo: 36
-    baseDamage: 1
-    baseFireRate: 0
-    reloadDurationSeconds: 2
-    bulletSpeed: 5
-    showHand: 1
-    autoFire: 0
-    canCharge: 0
-  bulletPrefab: {fileID: 5860073430992698012, guid: fb8a61e306bfd63478f890ccd2bbdcb6, type: 3}
-  muzzle: {fileID: 5686849681697033061}
+  itemInfo:
+    itemID: 0
+    itemName: 
+    showHand: 0
   handle: {fileID: 7499814915553614577}
   spriteObject: {fileID: 9010266244711882223}
   sRenderer: {fileID: 2860463668786898392}
   animator: {fileID: 7111164843141495329}
+  handOnLeft: 0
+  lastHandOnLeft: 0
+  gunInfo:
+    clipSize: 0
+    ammo: 0
+    reserveAmmo: 0
+    baseDamage: 0
+    baseFireRate: 0
+    reloadDurationSeconds: 0
+    bulletSpeed: 0
+    autoFire: 0
+    canCharge: 0
+  bulletPrefab: {fileID: 5860073430992698012, guid: fb8a61e306bfd63478f890ccd2bbdcb6, type: 3}
+  muzzle: {fileID: 5686849681697033061}
+  chargeTime: 0
+  shootTimer: 0
+  reloadTimer: 0
+  reloading: 0
+  shooting: 0
+  bulletCollisionLayer: 0
   hitTags: []
   ignoreTags: []
+  animScript: {fileID: 0}
 --- !u!1 &7032925134488182067
 GameObject:
   m_ObjectHideFlags: 0
