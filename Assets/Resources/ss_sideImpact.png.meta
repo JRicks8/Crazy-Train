@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f93070e61688a3640896c2b3b5ef640e
+guid: 8d6cd251e6da0d54192b3c271c21969a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -108,7 +108,112 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: ss_sideImpact_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 54
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5621a8a39b0aac344b4b21b7899374b7
+      internalID: 1472982404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_sideImpact_1
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 0
+        width: 54
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef55c8a3fa624cf4a9f4b2bcdef6f173
+      internalID: 1898264206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_sideImpact_2
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 0
+        width: 54
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4d8007f786098f43aa1a2b2993ec8d4
+      internalID: -149847389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_sideImpact_3
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 0
+        width: 54
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdf9778c99aebcb47a49c3f4193ef8a6
+      internalID: -565349489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_sideImpact_4
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 0
+        width: 54
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d9093fadc74f36478ee77620af5d0e6
+      internalID: -449659057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -119,7 +224,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ss_sideImpact_0: 1472982404
+      ss_sideImpact_1: 1898264206
+      ss_sideImpact_2: -149847389
+      ss_sideImpact_3: -565349489
+      ss_sideImpact_4: -449659057
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

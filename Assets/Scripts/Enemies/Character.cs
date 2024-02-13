@@ -364,6 +364,11 @@ public class Character : MonoBehaviour
         return middle;
     }
 
+    public Transform GetBottom()
+    {
+        return bottom;
+    }
+
     public GameObject GetGround()
     {
         return ground;
@@ -372,8 +377,10 @@ public class Character : MonoBehaviour
     private void OnCharacterDeath(GameObject character)
     {
         healthScript.SetCanSeeHealthbar(false);
-        if (hand != null) hand.gameObject.SetActive(false);
-        if (equippedWeapon != null) equippedWeapon.gameObject.SetActive(false);
+        if (hand != null) 
+            hand.gameObject.SetActive(false);
+        if (equippedWeapon != null) 
+            equippedWeapon.gameObject.SetActive(false);
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;

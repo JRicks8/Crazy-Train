@@ -17,6 +17,9 @@ public class Gun : Item
     [SerializeField] protected List<string> hitTags = new List<string>();
     [SerializeField] protected List<string> ignoreTags = new List<string>();
 
+    public delegate void GunEventDelegate(GameObject obj);
+    public GunEventDelegate OnFireBullet;
+
     public override void UpdateItem(Vector2 aimPoint, Vector2 aimingFrom, Vector2 handPosition, bool handOnLeft)
     {
         transform.rotation = Quaternion.LookRotation(Vector3.forward, (aimPoint - aimingFrom).normalized) * Quaternion.Euler(0, 0, 90f);
@@ -96,6 +99,7 @@ public class Gun : Item
         b.transform.position = muzzle.position;
         b.SetActive(true);
         bulletScript.SetVelocity(direction * gunInfo.bulletSpeed);
+        OnFireBullet?.Invoke(b);
     }
 
     public override void SetReferences(Rigidbody2D rb, SpriteRenderer sRenderer)

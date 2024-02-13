@@ -4,7 +4,7 @@ using UnityEngine;
 // Base class for all gun scripts
 public class Item : MonoBehaviour
 {
-    [Header("Item Base")]
+    [Header("Item Base Info - Set at Awake")]
     public ItemInfo itemInfo;
     [Header("Object References To Set")]
     public Transform handle;

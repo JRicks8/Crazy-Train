@@ -30,6 +30,8 @@ public class Active_Rattle : Item
     {
         if (cooldownTimer <= 0)
         {
+            // Spawn rattle vfx
+            VFXData.SpawnVFX(VFXData.staticVFXSprites[(int)VFXData.VFXType.ExpandingCircle256], transform.parent.position);
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, fearRange, fearableObjects);
 
             foreach (Collider2D collider in colliders)

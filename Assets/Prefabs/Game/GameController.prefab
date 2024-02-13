@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 3265700236167145417}
   - component: {fileID: 1080611993032145323}
   - component: {fileID: 553536609150812659}
+  - component: {fileID: 1212182471696042130}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -430,6 +431,7 @@ MonoBehaviour:
   - {fileID: 6381472025034332572, guid: cec10bebc8dbb1841a6103260ca6d508, type: 3}
   - {fileID: 6381472025034332572, guid: 1688b9e0e32ab2d44a0ed4a6689b82f3, type: 3}
   - {fileID: 6381472025034332572, guid: 3bc6ed6148cb76e458a2782092a80f16, type: 3}
+  - {fileID: 2778268923181939816, guid: e6c61253b267f2d448d60fa8c040f610, type: 3}
   itemPickupPrefab: {fileID: 5867989246890966533, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
 --- !u!114 &3265700236167145417
 MonoBehaviour:
@@ -475,3 +477,37 @@ MonoBehaviour:
   - {fileID: 4155807694058225867, guid: dee81f06397b3fb4baa7203950b55cd9, type: 3}
   Area1CarPool:
   - {fileID: 1260726845747411476, guid: 65612a85fc04a834faefd9c16fd9975c, type: 3}
+--- !u!114 &1212182471696042130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6707032165601020347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25a21b61a967acb48a30cb1a26f35a86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VFXTextures:
+  - {fileID: 2800000, guid: 32c37611218b6574a838ef0221ae3409, type: 3}
+  - {fileID: 2800000, guid: 8ff3cbef58756124bbc354f80fd92eb1, type: 3}
+  - {fileID: 2800000, guid: ebe70fd7e7231fb419b917feac2cdca6, type: 3}
+  - {fileID: 2800000, guid: 970e31131a8124f40987a4be6ad8a107, type: 3}
+  - {fileID: 2800000, guid: bd3f5935fc5e6a3499fc1c0b9e7717f1, type: 3}
+  - {fileID: 2800000, guid: 2868d95143beeaf469740e343dab1000, type: 3}
+  - {fileID: 2800000, guid: 5d7ef930e97d9e549acd845348ddc193, type: 3}
+  - {fileID: 2800000, guid: 2c17cf36d5f59304b9db57251d475265, type: 3}
+  - {fileID: 2800000, guid: a4a48b954e79d8947af446c8e21f91cc, type: 3}
+  - {fileID: 2800000, guid: ea0e442a1cdc2b84ca805693e2aa5fae, type: 3}
+  - {fileID: 2800000, guid: 724647613646e0749a8b19d49a2bf727, type: 3}
+  - {fileID: 2800000, guid: 8d6cd251e6da0d54192b3c271c21969a, type: 3}
+  - {fileID: 2800000, guid: cb92d387cc755004db0a4d7cb2c6f8ef, type: 3}
+  - {fileID: 2800000, guid: f93070e61688a3640896c2b3b5ef640e, type: 3}
+  - {fileID: 2800000, guid: 23d2b95be04eba14eab1d892b5889cf9, type: 3}
+  - {fileID: 2800000, guid: afa63f978f750f941b62e7d28c0dcaeb, type: 3}
+  - {fileID: 2800000, guid: 4e38f131d4edfb849b561761d6c33bd7, type: 3}
+  - {fileID: 2800000, guid: a03e81a41f02b9249b92ff2d4f204673, type: 3}
+  - {fileID: 2800000, guid: 358681b87eb604f4ea11cf0b4e005e1e, type: 3}
+  - {fileID: 2800000, guid: 97a2722f22d4f4a48a9af12d3d10893b, type: 3}
+  - {fileID: 2800000, guid: 7ae2f53475513df49b9172d5adfa86d6, type: 3}

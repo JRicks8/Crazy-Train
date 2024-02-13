@@ -7,14 +7,14 @@ public class Health : MonoBehaviour
     public GameObject healthbar;
     public Transform scrollerContainer;
 
-    public delegate void HealthEventDelegate(GameObject entity);
-    public HealthEventDelegate OnDeath;
-    public HealthEventDelegate OnDamageTaken;
-
     [SerializeField]
     private float health = 10;
     [SerializeField]
     private float maxHealth = 10;
+
+    public delegate void HealthEventDelegate(GameObject entity);
+    public HealthEventDelegate OnDeath;
+    public HealthEventDelegate OnDamageTaken;
 
     private void Start()
     {

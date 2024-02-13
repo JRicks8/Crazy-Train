@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
         { "ShopItem", "" } // The text for this overhead prompt is set dynamically
     };
 
+    public delegate void PlayerEventDelegate(GameObject obj);
+    public PlayerEventDelegate OnItemAdded;
+    public PlayerEventDelegate OnItemRemoved;
+
     private void Awake()
     {
         // Set references
@@ -203,7 +207,7 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetButton("Fire1")) gun.ChargeUse(Time.deltaTime);
                     else if (Input.GetButtonUp("Fire1"))
                     {
-                        equippedWeapon.Use(equippedWeapon.transform.right);
+                        equippedWeapon.Use(equippedWeapon.transform.right); // Use the right vector because that is the forward rotation of the gun (confusing, I know)
                     }
                 }
                 else if (Input.GetButtonDown("Fire1"))
@@ -251,6 +255,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Pick up an Item Object
     private void PickupItem(Item item)
     {
         item.SetReferences(GetComponent<Rigidbody2D>(), GetComponent<SpriteRenderer>());
@@ -278,12 +283,14 @@ public class PlayerController : MonoBehaviour
         {
             passiveItems.Add(item);
         }
+        OnItemAdded?.Invoke(item.gameObject);
     }
 
+    // Pick up an ItemPickup GameObject
     private void PickupItem(ItemPickup itemPickup)
     {
         GameObject itemPrefab = itemPickup.GetItemPrefab();
-        if (itemPrefab.TryGetComponent(out Item itemScript)) // make sure the gun has a gun script before instantiating
+        if (itemPrefab.TryGetComponent(out Item _)) // Make sure the item has an item script before instantiating
         {
             GameObject itemCopy = Instantiate(itemPrefab);
             Item itemScriptCopy = itemCopy.GetComponent<Item>();
@@ -314,6 +321,7 @@ public class PlayerController : MonoBehaviour
             if (i == -1) return;
             if (equippedActiveItem != null && activeItems.Count > maxActiveItems)
             {
+                OnItemRemoved?.Invoke(equippedActiveItem.gameObject);
                 equippedActiveItem.Drop();
             }
             else if (equippedActiveItem != null)
@@ -388,5 +396,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public List<Item> GetAllItems()
+    {
+        List<Item> items = weapons.Concat(activeItems).Concat(passiveItems).ToList();
+        return items;
+    }
+
+    public List<Item> GetWeapons() { return weapons; }
+    public List<Item> GetActiveItems() { return activeItems; }
+    public List<Item> GetPassiveItems() {  return passiveItems; }
     public Animator GetAnimator() { return animator; }
 }

@@ -61,4 +61,12 @@ public class ItemData : MonoBehaviour
         showHand = true,
         itemType = ItemInfo.ItemType.Active,
     };
+
+    public static ItemInfo HotShotsInfo => new()
+    {
+        itemID = 3,
+        itemName = "Hot Shots",
+        showHand = false,
+        itemType = ItemInfo.ItemType.Passive,
+    };
 }

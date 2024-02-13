@@ -14,6 +14,9 @@ public class Bullet : MonoBehaviour
     public List<string> ignoreTags = new List<string>();
     public List<string> hitTags = new List<string>();
 
+    public delegate void BulletEventDelegate(GameObject obj);
+    public BulletEventDelegate OnHitEntity;
+
     private void Update()
     {
         timeAlive += Time.deltaTime;
@@ -35,7 +38,6 @@ public class Bullet : MonoBehaviour
         hitTags.Add(tag);
     }
 
-    // TODO: Enemy bullets can't hit the player
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject other = collision.gameObject;
@@ -44,7 +46,9 @@ public class Bullet : MonoBehaviour
         {
             if (other.CompareTag(tag) && other.TryGetComponent(out Health otherHealth))
             {
-                otherHealth.TakeDamage(damage); break;
+                otherHealth.TakeDamage(damage);
+                OnHitEntity?.Invoke(other);
+                break;
             }
         }
         Destroy(gameObject);

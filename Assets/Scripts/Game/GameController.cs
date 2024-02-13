@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour
             {
                 if (!StartNextWave()) // if we completed all of the waves
                 {
-                    Debug.Log("Waves Complete");
+                    //Debug.Log("Waves Complete");
                     OnWavesComplete();
                 }
             }
@@ -90,6 +90,18 @@ public class GameController : MonoBehaviour
         else
         {
             enemiesLeftText.text = "";
+        }
+
+        // Debug Controls
+        if (Input.GetButtonDown("Debug0"))
+        {
+            waveQueue.Clear();
+            OnWavesComplete();
+            foreach (Character c in livingEnemies)
+            {
+                Destroy(c.gameObject);
+            }
+            enemiesToSpawn.Clear();
         }
     }
 

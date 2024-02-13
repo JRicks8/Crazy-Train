@@ -206,7 +206,7 @@ public class Enemy_Gunner : Character
                 moveTimer += Time.deltaTime;
                 if (moveTimer >= moveTimerThreshold) // If it's time to move a bit randomly
                 {
-                    moveTimer = 0.0f + moveTimerVariance * UnityEngine.Random.Range(-1.0f, 1.0f);
+                    moveTimer = 0.0f + moveTimerVariance * Random.Range(-1.0f, 1.0f);
                     // move to a random nearby node
                     PathNode n = owner.groundPathfinder.FindClosestNode(owner.middle.position);
                     int numConnections = n.connections.Count;
