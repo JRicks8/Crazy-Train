@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor.UIElements;
+#endif
 using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEditor;
@@ -10,6 +12,7 @@ public enum MoveType {
     JUMP = 1,
 }
 
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(Connection))]
 public class ConnectionDrawerUIE : PropertyDrawer
 {
@@ -26,6 +29,7 @@ public class ConnectionDrawerUIE : PropertyDrawer
         return container;
     }
 }
+#endif
 
 [Serializable]
 public class Connection

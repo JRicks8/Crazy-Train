@@ -48,4 +48,17 @@ public class GunData : MonoBehaviour
         autoFire = false,
         canCharge = false,
     };
+
+    public static GunInfo TheDealerInfo => new()
+    {
+        clipSize = 1,
+        ammo = 1,
+        reserveAmmo = 60,
+        baseDamage = 1,
+        baseFireRate = 1,
+        reloadDurationSeconds = 0.01f,
+        bulletSpeed = 15,
+        autoFire = false,
+        canCharge = false,
+    };
 }

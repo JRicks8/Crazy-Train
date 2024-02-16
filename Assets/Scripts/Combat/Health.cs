@@ -4,13 +4,11 @@ using UnityEngine.Analytics;
 
 public class Health : MonoBehaviour
 {
-    public GameObject healthbar;
-    public Transform scrollerContainer;
+    [SerializeField] private GameObject healthbar;
+    [SerializeField] private Transform scrollerContainer;
 
-    [SerializeField]
-    private float health = 10;
-    [SerializeField]
-    private float maxHealth = 10;
+    [SerializeField] private float health = 10f;
+    [SerializeField] private float maxHealth = 10f;
 
     public delegate void HealthEventDelegate(GameObject entity);
     public HealthEventDelegate OnDeath;
@@ -23,15 +21,29 @@ public class Health : MonoBehaviour
 
     public float TakeDamage(float damage)
     {
+        if (health <= 0)
+        {
+            health = 0;
+            return 0;
+        }
         health -= damage;
         UpdateHealthBarAppearance();
         OnDamageTaken?.Invoke(gameObject);
-        if (health <= 0) OnDeath?.Invoke(gameObject);
+        if (health <= 0)
+        {
+            health = 0;
+            OnDeath?.Invoke(gameObject);
+        }
         return health;
     }
 
     public float Heal(float heal)
     {
+        if (health <= 0)
+        {
+            health = 0;
+            return 0;
+        }
         health += heal;
         if (health > maxHealth) health = maxHealth;
         UpdateHealthBarAppearance();
@@ -47,7 +59,11 @@ public class Health : MonoBehaviour
     {
         health = newHealth;
         UpdateHealthBarAppearance();
-        if (health <= 0) OnDeath?.Invoke(gameObject);
+        if (health <= 0)
+        {
+            health = 0;
+            OnDeath?.Invoke(gameObject);
+        }
     }
 
     public void SetMaxHealth(int maxHealth, bool adjustCurrentHealth)

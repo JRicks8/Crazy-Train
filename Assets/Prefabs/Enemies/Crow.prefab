@@ -168,7 +168,8 @@ MonoBehaviour:
   middle: {fileID: 5387167032994330569}
   hand: {fileID: 2180217954444329399}
   groundCheckCollider: {fileID: 0}
-  equippedItem: {fileID: 0}
+  primaryCollider: {fileID: 5350489244858358728}
+  equippedWeapon: {fileID: 0}
   rb: {fileID: 816776606225201441}
   sRenderer: {fileID: 240841975768661920}
   healthScript: {fileID: 1324471756361120596}
@@ -176,7 +177,17 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 0
+  activeEffects: 
+  doorLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  moveDir: {x: 0, y: 0}
+  deathFadeTimer: 0
+  facingLeft: 0
   ground: {fileID: 0}
+  grounded: 0
+  isDead: 0
+  handOnLeftSide: 0
   pathfinder: {fileID: 5557921362072690970}
   animator: {fileID: 7033594585357805121}
 --- !u!114 &1324471756361120596

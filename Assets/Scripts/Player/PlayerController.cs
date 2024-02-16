@@ -58,8 +58,11 @@ public class PlayerController : MonoBehaviour
     };
 
     public delegate void PlayerEventDelegate(GameObject obj);
-    public PlayerEventDelegate OnItemAdded;
-    public PlayerEventDelegate OnItemRemoved;
+    public delegate void PlayerItemEventDelegate(Item item);
+    public PlayerItemEventDelegate OnItemAdded;
+    public PlayerItemEventDelegate OnItemRemoved;
+    public PlayerItemEventDelegate OnUnequipItem;
+    public PlayerItemEventDelegate OnEquipItem;
 
     private void Awake()
     {
@@ -283,7 +286,7 @@ public class PlayerController : MonoBehaviour
         {
             passiveItems.Add(item);
         }
-        OnItemAdded?.Invoke(item.gameObject);
+        OnItemAdded?.Invoke(item);
     }
 
     // Pick up an ItemPickup GameObject
@@ -305,6 +308,8 @@ public class PlayerController : MonoBehaviour
     {
         if (item.itemInfo.itemType == ItemInfo.ItemType.Weapon) // If we're equipping a weapon
         {
+            OnEquipItem?.Invoke(item);
+            OnUnequipItem?.Invoke(equippedWeapon);
             int i = weapons.IndexOf(item);
             if (i == -1) return; // if the index is null, cancel the equip.
             if (equippedWeapon != null) equippedWeapon.gameObject.SetActive(false); // Unequip the current item
@@ -313,15 +318,18 @@ public class PlayerController : MonoBehaviour
             item.gameObject.SetActive(true);
             equippedWeapon = item;
             equippedWeaponIndex = i;
+            hand.gameObject.SetActive(equippedWeapon.itemInfo.showHand); // Set hand appearance
         }
         else if (item.itemInfo.itemType == ItemInfo.ItemType.Active) // If we're equipping an active item
         {
             // Same process as weapons, but drop the current active item if picking up the new item would put us over the limit.
+            OnEquipItem?.Invoke(item);
+            OnUnequipItem?.Invoke(equippedActiveItem);
             int i = activeItems.IndexOf(item);
             if (i == -1) return;
             if (equippedActiveItem != null && activeItems.Count > maxActiveItems)
             {
-                OnItemRemoved?.Invoke(equippedActiveItem.gameObject);
+                OnItemRemoved?.Invoke(equippedActiveItem);
                 equippedActiveItem.Drop();
             }
             else if (equippedActiveItem != null)
@@ -364,13 +372,19 @@ public class PlayerController : MonoBehaviour
         // Depending on the closest collider overlapping with the player's interact trigger, display the corresponding overhead prompt
         Collider2D closestCollider = null;
         float closestDistance = float.MaxValue;
-        foreach (Collider2D collider in overlappingInteractibles)
+        for (int i = overlappingInteractibles.Count - 1; i >= 0; i--)
         {
-            float distance = (collider.transform.position - transform.position).magnitude;
+            if (overlappingInteractibles[i] == null)
+            {
+                overlappingInteractibles.RemoveAt(i);
+                continue;
+            }
+
+            float distance = (overlappingInteractibles[i].transform.position - transform.position).magnitude;
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                closestCollider = collider;
+                closestCollider = overlappingInteractibles[i];
             }
         }
 

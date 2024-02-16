@@ -42,7 +42,7 @@ public class Passive_HotShots : Item
     }
 
     // Hook up the added weapon so this passive item has an effect on it
-    private void OnWeaponAdded(GameObject weapon)
+    private void OnWeaponAdded(Item weapon)
     {
         if (weapon.TryGetComponent(out Gun gun))
         {
@@ -51,7 +51,7 @@ public class Passive_HotShots : Item
     }
 
     // Remove Listener from weapon that isn't in our inventory
-    private void OnWeaponRemoved(GameObject weapon)
+    private void OnWeaponRemoved(Item weapon)
     {
         if (weapon.TryGetComponent(out Gun gun))
         {

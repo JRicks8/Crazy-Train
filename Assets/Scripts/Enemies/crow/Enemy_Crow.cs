@@ -89,7 +89,7 @@ public class Enemy_Crow : Character
                 owner.stateMachine.ChangeState(new Idle(owner));
             }
 
-            if (owner.HasEffect(Effect.Fear))
+            if (owner.HasEffect(EffectType.Fear))
             {
                 owner.Move((owner.transform.position - owner.target.position).normalized);
             }

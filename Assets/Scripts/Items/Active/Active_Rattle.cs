@@ -38,7 +38,7 @@ public class Active_Rattle : Item
             {
                 if (collider.TryGetComponent(out Character c))
                 {
-                    c.GiveEffect(Effect.Fear, fearDuration);
+                    c.GiveEffect(EffectType.Fear, fearDuration);
                 }
             }
 

@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CameraTarget : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
     [SerializeField] private Transform player;
     [SerializeField] private float maxXOffset;
     [SerializeField] private float maxYOffset;
@@ -12,7 +11,7 @@ public class CameraTarget : MonoBehaviour
 
     private IEnumerator lookForPlayer;
 
-    private void Start()
+    private void Awake()
     {
         lookForPlayer = LookForPlayerRecursive();
         StartCoroutine(lookForPlayer);
@@ -22,7 +21,11 @@ public class CameraTarget : MonoBehaviour
     {
         while (player == null) 
         {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
             yield return new WaitForSeconds(1.0f);
         }
     }

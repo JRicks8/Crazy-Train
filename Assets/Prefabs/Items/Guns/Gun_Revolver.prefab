@@ -202,6 +202,7 @@ MonoBehaviour:
     itemID: 0
     itemName: 
     showHand: 0
+    itemType: 0
   handle: {fileID: 7499814915553614577}
   spriteObject: {fileID: 9010266244711882223}
   sRenderer: {fileID: 2860463668786898392}

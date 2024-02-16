@@ -2,11 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public enum Effect
+public enum EffectType
 {
-    Fear = 0,
+    Fear,
+    Fire,
+    Charm,
+}
+
+public struct Effect
+{
+    public bool active;
+    public IEnumerator effectProcess;
 }
 
 // Acts as a base for any character
@@ -23,6 +32,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected Transform middle;
     [SerializeField] protected Transform hand;
     [SerializeField] protected BoxCollider2D groundCheckCollider;
+    [SerializeField] protected Collider2D primaryCollider;
     [SerializeField] protected Item equippedWeapon;
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected SpriteRenderer sRenderer;
@@ -31,7 +41,7 @@ public class Character : MonoBehaviour
     public float satisfiedNodeDistance = 0.5f;
     [Header("Other Settings")]
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private bool[] activeEffects = new bool[1]; // Length is equal to the number of effects in the Effects enum.
+    [SerializeField] private Effect[] effects; // Length is equal to the number of effects in the Effects enum.
     private List<Action> startEffectFunctions = new List<Action>();
     private List<Action> endEffectFunctions = new List<Action>();
 
@@ -47,6 +57,8 @@ public class Character : MonoBehaviour
 
     protected void Initialize()
     {
+        effects = new Effect[Enum.GetValues(typeof(EffectType)).Length];
+
         rb = GetComponent<Rigidbody2D>();
         if (TryGetComponent(out healthScript))
         {
@@ -73,10 +85,14 @@ public class Character : MonoBehaviour
         startEffectFunctions.AddRange(new Action[] 
         { 
             OnFear,
+            OnFire,
+            OnCharm,
         });
         endEffectFunctions.AddRange(new Action[]
         {
             EndFear,
+            EndFire,
+            EndCharm,
         });
     }
 
@@ -291,49 +307,68 @@ public class Character : MonoBehaviour
         return null;
     }
 
-    public bool HasEffect(Effect effect)
+    public bool HasEffect(EffectType effect)
     {
-        return activeEffects[(int)effect];
+        return effects[(int)effect].active;
     }
 
     public void RemoveAllEffects()
     {
-        for (int i = 0; i < activeEffects.Length; i++)
+        for (int i = 0; i < effects.Length; i++)
         {
-            activeEffects[i] = false;
-            endEffectFunctions[i]();
+            RemoveEffect(i);
         }
     }
 
-    public void RemoveEffect(Effect effect)
+    public void RemoveEffect(EffectType effect)
     {
         int i = (int)effect;
-        activeEffects[i] = false;
-        endEffectFunctions[i]();
+        RemoveEffect(i);
     }
 
-    public void GiveEffect(Effect effect, float duration)
+    public void RemoveEffect(int effectIndex)
+    {
+        effects[effectIndex].active = false;
+        if (effects[effectIndex].effectProcess != null)
+            StopCoroutine(effects[effectIndex].effectProcess);
+        endEffectFunctions[effectIndex]();
+    }
+
+    public void GiveEffect(EffectType effect, float duration)
     {
         int i = (int)effect;
-        if (!activeEffects[i])
+        if (!effects[i].active) // If the effect process isn't running already
         {
-            activeEffects[i] = true;
-            StartCoroutine(EffectHandler(i, duration));
+            effects[i].active = true;
+            effects[i].effectProcess = EffectHandler(i, duration);
+            StartCoroutine(effects[i].effectProcess);
+        }
+        else // If the effect process is running, halt it then start a new one
+        {
+            StopCoroutine(effects[i].effectProcess);
+            effects[i].effectProcess = EffectHandler(i, duration, true);
+            StartCoroutine(effects[i].effectProcess);
         }
     }
 
-    private IEnumerator EffectHandler(int effect, float duration)
+    private IEnumerator EffectHandler(int effectIndex, float duration, bool skipStartFunction = false)
     {
-        startEffectFunctions[effect]();
+        Debug.Log("Started effect with duration " + duration);
+        if (!skipStartFunction)
+            startEffectFunctions[effectIndex]();
+
         yield return new WaitForSeconds(duration);
-        if (activeEffects[effect])
-            endEffectFunctions[effect]();
-        activeEffects[effect] = false;
+
+        if (effects[effectIndex].active)
+            endEffectFunctions[effectIndex]();
+        effects[effectIndex].active = false;
+        Debug.Log("Ended effect.");
     }
 
     [Header("Effects Settings")]
-    [SerializeField] private Color defaultColor = Color.white;
-    [SerializeField] private Color fearColor = Color.magenta;
+    [SerializeField] public static Color defaultColor = Color.white;
+    [SerializeField] public static Color fearColor = Color.magenta;
+    // The effects of fear are handled in the state machine of each character individually
     private void OnFear()
     {
         sRenderer.color = fearColor;
@@ -342,6 +377,64 @@ public class Character : MonoBehaviour
     private void EndFear()
     {
         sRenderer.color = defaultColor;
+    }
+
+    public static VFXData.VFXType fireVFX = VFXData.VFXType.Fire1;
+    public static float fireDamage = 1.0f;
+    public static float fireDamageInterval = 1.0f;
+    public static float fireVFXInterval = 0.33f;
+    public static float fireVFXDuration = 1.0f;
+    private IEnumerator fireEffectHandler;
+    private IEnumerator fireEffectVFXHandler;
+    private void OnFire()
+    {
+        fireEffectHandler = FireEffectHandler();
+        StartCoroutine(fireEffectHandler);
+        fireEffectVFXHandler = FireEffectVFXHandler();
+        StartCoroutine(fireEffectVFXHandler);
+    }
+
+    private void EndFire()
+    {
+        
+    }
+
+    private IEnumerator FireEffectHandler()
+    {
+        while (effects[(int)EffectType.Fire].active)
+        {
+            yield return new WaitForSeconds(fireDamageInterval);
+            healthScript.TakeDamage(fireDamage);
+        }
+    }
+
+    private IEnumerator FireEffectVFXHandler()
+    {
+        // While we are on fire, keep spawning vfx.
+        while (effects[(int)EffectType.Fire].active)
+        {
+            // Spawn VFX at a random position within the bounds of the primary collider
+            Bounds bounds = primaryCollider.bounds;
+            float t1 = UnityEngine.Random.Range(0.0f, 1.0f);
+            float t2 = UnityEngine.Random.Range(0.0f, 1.0f);
+            Vector2 VFXPosition = new Vector2(
+                Mathf.Lerp(bounds.min.x, bounds.max.x, t1),
+                Mathf.Lerp(bounds.min.y, bounds.max.y, t2));
+            VFXData.SpawnVFX(
+                VFXData.staticVFXSprites[(int)VFXData.VFXType.Fire1],
+                VFXPosition, Vector3.one, transform, fireVFXDuration);
+            yield return new WaitForSeconds(fireVFXInterval);
+        }
+    }
+
+    private void OnCharm()
+    {
+        Debug.Log("Charmed character " + gameObject.name);
+    }
+
+    private void EndCharm()
+    {
+        Debug.Log("Charm on character " + gameObject.name + " has ended");
     }
 
     public bool IsGrounded()
@@ -385,5 +478,6 @@ public class Character : MonoBehaviour
         gameObject.tag = "Untagged";
         isDead = true;
         deathFadeTimer = info.deathFadeTime;
+        RemoveAllEffects();
     }
 }

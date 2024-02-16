@@ -33,7 +33,7 @@ public class Gun_Revolver : Gun
         return success;
     }
 
-    // The reload function starts the reload animation. The actual clip is affected after the animation finishes.
+    // The reload function starts the reload animation. The actual clip is affected after the reload time elapses.
     public override bool Reload()
     {
         bool success = base.Reload();

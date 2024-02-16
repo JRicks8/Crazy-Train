@@ -191,7 +191,7 @@ public class Enemy_Gunner : Character
             // Shoot.
             // If we want to move, pick a nearby node to move to.
             // If we have any outstanding effects that change movement, resolve those instead.
-            if (owner.HasEffect(Effect.Fear))
+            if (owner.HasEffect(EffectType.Fear))
             {
                 Vector2 moveDirection = (owner.transform.position - owner.target.transform.position).normalized * 3;
                 owner.groundPathfinder.UpdatePathfindDestination(moveDirection + (Vector2)owner.transform.position);

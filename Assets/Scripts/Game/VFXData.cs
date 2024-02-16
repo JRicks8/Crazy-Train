@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class VFXData : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class VFXData : MonoBehaviour
         ExpandingCircle128,
         ExpandingCircle64,
         Explosion,
+        Fire1,
         Impact1,
         ImpactDustKick,
         MediumSmoke,
@@ -43,15 +45,49 @@ public class VFXData : MonoBehaviour
         }
     }
 
-    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 position, Vector3 scale = default)
+    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 localPosition)
     {
         GameObject obj = new GameObject();
-        obj.transform.position = position;
-        if (scale == Vector3.zero)
-            obj.transform.localScale = Vector3.one;
-        else
-            obj.transform.localScale = scale;
+        obj.transform.localPosition = localPosition;
         obj.AddComponent<VFXHandler>().Initialize(sheet);
+        return obj;
+    }
+
+    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 localPosition, Transform parent)
+    {
+        GameObject obj = new GameObject();
+        obj.transform.localPosition = localPosition;
+        obj.transform.parent = parent;
+        obj.AddComponent<VFXHandler>().Initialize(sheet);
+        return obj;
+    }
+
+    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 localPosition, Vector3 scale)
+    {
+        GameObject obj = new GameObject();
+        obj.transform.localPosition = localPosition;
+        obj.transform.localScale = scale;
+        obj.AddComponent<VFXHandler>().Initialize(sheet);
+        return obj;
+    }
+
+    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 localPosition, Vector3 scale, Transform parent)
+    {
+        GameObject obj = new GameObject();
+        obj.transform.localPosition = localPosition;
+        obj.transform.localScale = scale;
+        obj.transform.parent = parent;
+        obj.AddComponent<VFXHandler>().Initialize(sheet);
+        return obj;
+    }
+
+    public static GameObject SpawnVFX(Sprite[] sheet, Vector2 localPosition, Vector3 scale, Transform parent, float VFXduration)
+    {
+        GameObject obj = new GameObject();
+        obj.transform.localPosition = localPosition;
+        obj.transform.localScale = scale;
+        obj.transform.parent = parent;
+        obj.AddComponent<VFXHandler>().Initialize(sheet, true, VFXduration);
         return obj;
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class OneWayPlatform : MonoBehaviour
 {
@@ -33,10 +32,12 @@ public class OneWayPlatform : MonoBehaviour
         }
     }
 
+    // Disables collision with the target gameobject, effectively causing them to fall through.
     public void DisableCollision(GameObject requestor, bool autoEnable = false, float noCollisionDuration = 0.2f)
     {
         int instanceID = requestor.GetInstanceID();
-        if (cooldowns.TryGetValue(instanceID, out float v))
+        // If the requestor has already requested no collision
+        if (cooldowns.TryGetValue(instanceID, out float _))
         {
             return;
         }

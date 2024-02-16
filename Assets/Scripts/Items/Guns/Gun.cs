@@ -93,7 +93,7 @@ public class Gun : Item
         Bullet bulletScript = b.GetComponent<Bullet>();
         foreach (string tag in ignoreTags) bulletScript.AddIgnoreTag(tag);
         foreach (string tag in hitTags) bulletScript.AddHitTag(tag);
-        bulletScript.damage = gunInfo.baseDamage;
+        bulletScript.SetBaseDamage(gunInfo.baseDamage);
 
         b.layer = bulletCollisionLayer;
         b.transform.position = muzzle.position;

@@ -19,7 +19,11 @@ public class VFXHandler : MonoBehaviour
         int frameIndex = Mathf.FloorToInt(replayTimer / frameLength);
         if (frameIndex >= sheet.Length)
         {
-            if (shouldLoop) replayTimer -= frameLength * sheet.Length;
+            if (shouldLoop)
+            {
+                replayTimer -= frameLength * sheet.Length;
+                frameIndex = 0;
+            }
             else
             {
                 Destroy(gameObject);

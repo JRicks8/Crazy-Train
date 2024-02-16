@@ -69,4 +69,12 @@ public class ItemData : MonoBehaviour
         showHand = false,
         itemType = ItemInfo.ItemType.Passive,
     };
+
+    public static ItemInfo TheDealer => new()
+    {
+        itemID = 4,
+        itemName = "The Dealer",
+        showHand = true,
+        itemType = ItemInfo.ItemType.Weapon,
+    };
 }
