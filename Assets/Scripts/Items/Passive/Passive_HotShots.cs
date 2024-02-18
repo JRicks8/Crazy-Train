@@ -23,16 +23,7 @@ public class Passive_HotShots : Item
 
         if (playerController != null)
         {
-            playerController.OnItemAdded += OnWeaponAdded;
-            playerController.OnItemRemoved += OnWeaponRemoved;
-
-            List<Item> weapons = playerController.GetWeapons();
-            foreach (Item weapon in weapons)
-            {
-                Gun gun = weapon as Gun;
-                if (gun != null)
-                    gun.OnFireBullet += OnWeaponShoot;
-            }
+            playerController.OnPlayerBulletFired += OnPlayerBulletFired;
         }
     }
 
@@ -41,26 +32,8 @@ public class Passive_HotShots : Item
         // Don't do base update because we don't need to for passive items
     }
 
-    // Hook up the added weapon so this passive item has an effect on it
-    private void OnWeaponAdded(Item weapon)
-    {
-        if (weapon.TryGetComponent(out Gun gun))
-        {
-            gun.OnFireBullet += OnWeaponShoot;
-        }
-    }
-
-    // Remove Listener from weapon that isn't in our inventory
-    private void OnWeaponRemoved(Item weapon)
-    {
-        if (weapon.TryGetComponent(out Gun gun))
-        {
-            gun.OnFireBullet -= OnWeaponShoot;
-        }
-    }
-
     // On shoot, hook up the bullet hit entity delegate
-    private void OnWeaponShoot(GameObject bulletObject)
+    private void OnPlayerBulletFired(GameObject bulletObject)
     {
         if (bulletObject.TryGetComponent(out Bullet bullet))
         {

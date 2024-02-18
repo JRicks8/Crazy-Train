@@ -73,6 +73,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        if (collider.isTrigger) return; // Don't hit triggers
         GameObject other = collider.gameObject;
         foreach (string tag in ignoreTags) if (other.CompareTag(tag)) return;
         foreach (string tag in hitTags)

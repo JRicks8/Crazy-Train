@@ -101,12 +101,11 @@ public class Gun_TheDealer : Gun
         var effectScript = bulletObject.AddComponent<Gun_TheDealer_BulletEffect>();
         effectScript.cardType = nextCardType;
 
-        OnFireBullet?.Invoke(bulletObject);
-
-        Debug.DrawRay(bulletObject.transform.position, direction, Color.black, 3.0f);
-        Debug.DrawRay(bulletObject.transform.position, bulletObject.transform.right, Color.red, 3.0f);
-        Debug.DrawRay(bulletObject.transform.position, bulletObject.transform.forward, Color.blue, 3.0f);
-        Debug.DrawRay(bulletObject.transform.position, bulletObject.transform.up, Color.green, 3.0f);
+        PlayerController parentController = GetComponentInParent<PlayerController>();
+        if (parentController != null)
+        {
+            parentController.OnPlayerBulletFired?.Invoke(bulletObject);
+        }
     }
 
     private void OnItemEquipped(Item item)

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 // Base class for all gun scripts
@@ -56,6 +55,15 @@ public class Item : MonoBehaviour
         else
             Destroy(itemPickup);
         itemPickup.transform.position = transform.position;
+        Destroy(gameObject);
+    }
+
+    public void Remove()
+    {
+        PlayerController playerController = GetComponentInParent<PlayerController>();
+        if (playerController != null)
+            playerController.OnItemRemoved?.Invoke(this);
+
         Destroy(gameObject);
     }
 }

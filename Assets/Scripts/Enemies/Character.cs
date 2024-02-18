@@ -82,8 +82,8 @@ public class Character : MonoBehaviour
         doorLayer = LayerMask.GetMask(new string[] { "Door" });
 
         // Set effect functions
-        startEffectFunctions.AddRange(new Action[] 
-        { 
+        startEffectFunctions.AddRange(new Action[]
+        {
             OnFear,
             OnFire,
             OnCharm,
@@ -127,7 +127,7 @@ public class Character : MonoBehaviour
         ground = CheckGround();
         grounded = ground != null;
 
-        if (moveDir != Vector2.zero) 
+        if (moveDir != Vector2.zero)
         {
             rb.velocity += moveDir;
         }
@@ -179,7 +179,7 @@ public class Character : MonoBehaviour
     {
         // Update gun
         if (equippedWeapon == null) return;
-        
+
         Vector2 gunAimPoint = Vector2.zero;
         equippedWeapon.transform.position = hand.position;
 
@@ -396,7 +396,7 @@ public class Character : MonoBehaviour
 
     private void EndFire()
     {
-        
+
     }
 
     private IEnumerator FireEffectHandler()
@@ -466,6 +466,8 @@ public class Character : MonoBehaviour
     {
         return ground;
     }
+
+    public bool GetIsDead() { return isDead; }
 
     private void OnCharacterDeath(GameObject character)
     {

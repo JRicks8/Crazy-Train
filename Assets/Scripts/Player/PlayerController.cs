@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -58,6 +59,7 @@ public class PlayerController : MonoBehaviour
     };
 
     public delegate void PlayerEventDelegate(GameObject obj);
+    public PlayerEventDelegate OnPlayerBulletFired;
     public delegate void PlayerItemEventDelegate(Item item);
     public PlayerItemEventDelegate OnItemAdded;
     public PlayerItemEventDelegate OnItemRemoved;
@@ -81,6 +83,11 @@ public class PlayerController : MonoBehaviour
 
         // Set Animator references
         animator.GetBehaviour<AnimCowboyBehavior>().SetReferences(gameObject);
+    }
+
+    private void Start()
+    {
+        OnItemRemoved += ItemRemoved;
     }
 
     private void Update()
@@ -365,6 +372,19 @@ public class PlayerController : MonoBehaviour
             if (closestInteractObject.TryGetComponent(out DynamicDoor doorScript))
                 doorScript.OnDoorInteract();
         }
+    }
+
+    private void ItemRemoved(Item item)
+    {
+        Predicate<Item> match = delegate(Item i) { return i.Equals(item); };
+
+        int index = weapons.FindIndex(match);
+        if (index != -1)
+            weapons.RemoveAt(index);
+
+        index = activeItems.FindIndex(match);
+        if (index != -1)
+            activeItems.RemoveAt(index);
     }
 
     private void DisplayOverheadPrompt()
