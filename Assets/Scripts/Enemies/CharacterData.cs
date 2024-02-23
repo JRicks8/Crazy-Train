@@ -7,6 +7,10 @@ public struct EnemyInfo
 {
     public int charID;
     public string name;
+    public LayerMask allyMask;
+    public LayerMask enemyMask;
+    public List<string> bulletHitTags;
+    public List<string> bulletIgnoreTags;
     [Header("Movement")]
     public float acceleration;
     public float maxJumpPower;
@@ -36,6 +40,10 @@ public class CharacterData : MonoBehaviour
     {
         charID = 0,
         name = "Dummy",
+        allyMask = LayerMask.GetMask(new string[] {  }),
+        enemyMask = LayerMask.GetMask(new string[] { "Friendly", "Enemy", "Neutral" }),
+        bulletHitTags = new List<string>() { "Enemy", "Friendly", "Neutral", "Player" },
+        bulletIgnoreTags = new List<string>() { },
         acceleration = 0,
         maxJumpPower = 0,
         maxHorizontalSpeed = 0,
@@ -52,6 +60,10 @@ public class CharacterData : MonoBehaviour
     {
         charID = 1,
         name = "Gunner",
+        allyMask = LayerMask.GetMask(new string[] { "Enemy" }),
+        enemyMask = LayerMask.GetMask(new string[] { "Friendly", "Neutral" }),
+        bulletHitTags = new List<string>() { "Friendly", "Neutral", "Player" },
+        bulletIgnoreTags = new List<string>() { "Enemy" },
         acceleration = 400f,
         maxJumpPower = 10f,
         maxHorizontalSpeed = 3.5f,
@@ -68,6 +80,10 @@ public class CharacterData : MonoBehaviour
     {
         charID = 2,
         name = "Crow",
+        allyMask = LayerMask.GetMask(new string[] { "Enemy" }),
+        enemyMask = LayerMask.GetMask(new string[] { "Friendly", "Neutral" }),
+        bulletHitTags = new List<string>() { "Friendly", "Neutral", "Player" },
+        bulletIgnoreTags = new List<string>() { "Enemy" },
         acceleration = 100.0f,
         maxJumpPower = 0f,
         maxHorizontalSpeed = 0f,

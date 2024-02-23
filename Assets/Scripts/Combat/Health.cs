@@ -9,44 +9,63 @@ public class Health : MonoBehaviour
 
     [SerializeField] private float health = 10f;
     [SerializeField] private float maxHealth = 10f;
+    [SerializeField] private bool isPlayer = false;
 
     public delegate void HealthEventDelegate(GameObject entity);
     public HealthEventDelegate OnDeath;
     public HealthEventDelegate OnDamageTaken;
+    public delegate void HealthChangeEventDelegate(float newHealth, float newMaxHealth);
+    public HealthChangeEventDelegate OnHealthChanged;
 
     private void Start()
     {
-        UpdateHealthBarAppearance();
+        if (TryGetComponent(out PlayerController _))
+            isPlayer = true;
+        else 
+            UpdateHealthBarAppearance();
+
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 
     public float TakeDamage(float damage)
     {
+        if (isPlayer) 
+        {
+            damage = Mathf.Floor(damage);
+        }
         if (health <= 0)
         {
             health = 0;
+            OnHealthChanged?.Invoke(0, maxHealth);
             return 0;
         }
         health -= damage;
-        UpdateHealthBarAppearance();
         OnDamageTaken?.Invoke(gameObject);
+        OnHealthChanged?.Invoke(Mathf.Max(0, health), maxHealth);
         if (health <= 0)
         {
             health = 0;
             OnDeath?.Invoke(gameObject);
         }
+        if (!isPlayer) UpdateHealthBarAppearance();
         return health;
     }
 
     public float Heal(float heal)
     {
+        if (isPlayer)
+            heal = Mathf.Floor(heal);
+
         if (health <= 0)
         {
             health = 0;
+            OnHealthChanged?.Invoke(0, maxHealth);
             return 0;
         }
         health += heal;
         if (health > maxHealth) health = maxHealth;
-        UpdateHealthBarAppearance();
+        OnHealthChanged?.Invoke(health, maxHealth);
+        if (!isPlayer) UpdateHealthBarAppearance();
         return health;
     }
 
@@ -55,15 +74,21 @@ public class Health : MonoBehaviour
         return health;
     }
 
+    public bool GetIsDead()
+    {
+        return health <= 0;
+    }
+
     public void SetHealth(float newHealth)
     {
         health = newHealth;
-        UpdateHealthBarAppearance();
+        if (!isPlayer) UpdateHealthBarAppearance();
         if (health <= 0)
         {
             health = 0;
             OnDeath?.Invoke(gameObject);
         }
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 
     public void SetMaxHealth(int maxHealth, bool adjustCurrentHealth)
@@ -71,6 +96,7 @@ public class Health : MonoBehaviour
         this.maxHealth = maxHealth;
         if (adjustCurrentHealth)
             health = maxHealth;
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 
     public void SetCanSeeHealthbar(bool canSee)

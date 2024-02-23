@@ -70,10 +70,18 @@ public class ItemData : MonoBehaviour
         itemType = ItemInfo.ItemType.Passive,
     };
 
-    public static ItemInfo TheDealer => new()
+    public static ItemInfo TheDealerInfo => new()
     {
         itemID = 4,
         itemName = "The Dealer",
+        showHand = true,
+        itemType = ItemInfo.ItemType.Weapon,
+    };
+
+    public static ItemInfo TurretInfo => new()
+    {
+        itemID = 5,
+        itemName = "Turret",
         showHand = true,
         itemType = ItemInfo.ItemType.Weapon,
     };

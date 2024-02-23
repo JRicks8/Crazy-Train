@@ -12,7 +12,7 @@ public class Enemy_Gunner : Character
 
     private void Awake()
     {
-        info = CharacterData.gunner;
+        enemyInfo = CharacterData.gunner;
         Initialize(); // base class function
 
         groundPathfinder = GetComponent<GroundPathfind>();
@@ -53,7 +53,7 @@ public class Enemy_Gunner : Character
 
         if (isDead)
         {
-            rb.velocity = new Vector2(info.idleDrag * rb.velocity.x, rb.velocity.y);
+            rb.velocity = new Vector2(enemyInfo.idleDrag * rb.velocity.x, rb.velocity.y);
             return;
         }
 
@@ -98,7 +98,7 @@ public class Enemy_Gunner : Character
         void IState.Execute()
         {
             wanderTimer -= Time.deltaTime;
-            if (owner.LookForTarget()) // if we see a target
+            if (owner.CanSeeTarget()) // if we see a target
             {
                 owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
             }
@@ -137,7 +137,7 @@ public class Enemy_Gunner : Character
 
         void IState.Execute()
         {
-            if (owner.LookForTarget()) // If we see the target
+            if (owner.CanSeeTarget()) // If we see the target
             {
                 owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
             }
@@ -173,9 +173,9 @@ public class Enemy_Gunner : Character
 
         void IState.Enter()
         {
-            targetRb = owner.target.GetComponent<Rigidbody2D>();
+            targetRb = owner.closestTarget.GetComponent<Rigidbody2D>();
             // Factor in the velocity for the last seen position so that we don't walk to the edge of a platform and sit there
-            lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
+            lastSeenPosition = owner.closestTarget.position + (Vector3)targetRb.velocity;
 
             owner.groundPathfinder.PausePathfinding(false);
         }
@@ -184,8 +184,8 @@ public class Enemy_Gunner : Character
         {
             if (!owner.groundPathfinder.IsPaused()) lastSeenTargetTimer += Time.deltaTime;
 
-            bool canSeeTarget = owner.LookForTarget();
-            bool inRange = Vector2.Distance(owner.target.position, owner.middle.position) <= owner.range;
+            bool canSeeTarget = owner.CanSeeTarget();
+            bool inRange = owner.closestTarget != null && Vector2.Distance(owner.closestTarget.position, owner.middle.position) <= owner.range;
             
             // If in range and can see target...
             // Shoot.
@@ -193,7 +193,7 @@ public class Enemy_Gunner : Character
             // If we have any outstanding effects that change movement, resolve those instead.
             if (owner.HasEffect(EffectType.Fear))
             {
-                Vector2 moveDirection = (owner.transform.position - owner.target.transform.position).normalized * 3;
+                Vector2 moveDirection = (owner.transform.position - owner.closestTarget.transform.position).normalized * 3;
                 owner.groundPathfinder.UpdatePathfindDestination(moveDirection + (Vector2)owner.transform.position);
             }
             else if (inRange && canSeeTarget)
@@ -201,7 +201,7 @@ public class Enemy_Gunner : Character
                 owner.Shoot();
 
                 lastSeenTargetTimer = 0.0f;
-                lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
+                lastSeenPosition = owner.closestTarget.position + (Vector3)targetRb.velocity;
 
                 moveTimer += Time.deltaTime;
                 if (moveTimer >= moveTimerThreshold) // If it's time to move a bit randomly
@@ -222,9 +222,9 @@ public class Enemy_Gunner : Character
             else if (canSeeTarget) // if we can see the target and we're not in range, move to the target.
             {
                 lastSeenTargetTimer = 0.0f;
-                lastSeenPosition = owner.target.position + (Vector3)targetRb.velocity;
+                lastSeenPosition = owner.closestTarget.position + (Vector3)targetRb.velocity;
 
-                owner.groundPathfinder.UpdatePathfindDestination(owner.target.position);
+                owner.groundPathfinder.UpdatePathfindDestination(owner.closestTarget.position);
             }
             else // can't see the target and we're not in range
             {
@@ -232,7 +232,6 @@ public class Enemy_Gunner : Character
                 if (lastSeenTargetTimer >= lastSeenTargetTimeThreshold)
                 {
                     owner.stateMachine.ChangeState(new Idle(owner));
-                    owner.target = null;
                 }
                 // move to the last seen position.
                 owner.groundPathfinder.UpdatePathfindDestination(lastSeenPosition);

@@ -13,6 +13,8 @@ TagManager:
   - RightConnector
   - LeftConnector
   - ShopItem
+  - Friendly
+  - Neutral
   layers:
   - Default
   - TransparentFX

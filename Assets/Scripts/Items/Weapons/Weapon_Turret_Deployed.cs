@@ -84,7 +84,7 @@ public class Weapon_Turret_Deployed : MonoBehaviour
     private void FixedUpdate()
     {
         // Rotate towards the closest target
-        GetClosestCharacter();
+        GetClosestTarget();
         if (closestCharacter != null)
         {
             Transform headTrans = headSpriteObject.transform;
@@ -116,7 +116,7 @@ public class Weapon_Turret_Deployed : MonoBehaviour
         foreach (string tag in settings.hitTags) bulletScript.AddHitTag(tag);
         bulletScript.SetBaseDamage(settings.baseDamage);
 
-        b.layer = LayerMask.NameToLayer("Friendly");
+        b.layer = LayerMask.NameToLayer("PlayerProjectile");
         b.transform.position = muzzle.position;
         b.SetActive(true);
         bulletScript.SetVelocity(headSpriteObject.transform.right * settings.bulletSpeed);
@@ -125,6 +125,7 @@ public class Weapon_Turret_Deployed : MonoBehaviour
 
     private void LookForTargets()
     {
+        targets.Clear();
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, settings.range, settings.targetMask);
 
         foreach (Collider2D collider in colliders)
@@ -136,13 +137,13 @@ public class Weapon_Turret_Deployed : MonoBehaviour
                 // Get the character associated with the collider
                 if (collider.TryGetComponent(out Character character) && !character.GetIsDead())
                     targets.Add(character);
-                else if (collider.transform.parent.TryGetComponent(out Character c) && !c.GetIsDead())
+                else if (collider.transform.parent != null && collider.transform.parent.TryGetComponent(out Character c) && !c.GetIsDead())
                     targets.Add(c);
             }
         }
     }
 
-    private void GetClosestCharacter()
+    private void GetClosestTarget()
     {
         if (targets.Count == 0)
         {

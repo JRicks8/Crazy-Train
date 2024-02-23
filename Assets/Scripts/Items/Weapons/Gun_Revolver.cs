@@ -10,6 +10,7 @@ public class Gun_Revolver : Gun
 
     private void Awake()
     {
+        itemInfo = ItemData.RevolverInfo;
         gunInfo = GunData.RevolverInfo;
     }
 

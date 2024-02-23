@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject announcementTextPrefab;
     [SerializeField] private GameObject shopWizardPrefab;
     [SerializeField] private Transform GUICanvas;
-    [SerializeField] private TextMeshProUGUI enemiesLeftText;
+    [SerializeField] private Text enemiesLeftText;
 
     private WaveData waveData;
     private TrainCarData trainCarData;

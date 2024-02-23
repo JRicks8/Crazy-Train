@@ -7,6 +7,11 @@ public class Weapon_Turret : Item
     [SerializeField] private TurretSettings turretSettings;
     [SerializeField] private float throwForce;
 
+    private void Awake()
+    {
+        itemInfo = ItemData.TurretInfo;
+    }
+
     public override bool Use(Vector2 direction)
     {
         GameObject deployed = Instantiate(deployedTurretPrefab);

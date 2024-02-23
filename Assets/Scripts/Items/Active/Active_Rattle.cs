@@ -48,4 +48,9 @@ public class Active_Rattle : Item
         }
         return false;
     }
+
+    public override float GetCooldownElapsedPercent()
+    {
+        return 1 - Mathf.Max(cooldownTimer, 0) / cooldownTime;
+    }
 }

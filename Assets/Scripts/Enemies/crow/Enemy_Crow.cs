@@ -10,7 +10,7 @@ public class Enemy_Crow : Character
 
     private void Start()
     {
-        info = CharacterData.crow;
+        enemyInfo = CharacterData.crow;
         Initialize();
 
         stateMachine = new StateMachine();
@@ -34,9 +34,9 @@ public class Enemy_Crow : Character
 
         if (isDead)
         {
-            info.maxVelocityMag = 0;
+            enemyInfo.maxVelocityMag = 0;
             rb.gravityScale = 1.0f;
-            rb.velocity *= info.idleDrag;
+            rb.velocity *= enemyInfo.idleDrag;
             return;
         }
     }
@@ -51,14 +51,12 @@ public class Enemy_Crow : Character
 
         void IState.Enter()
         {
-            owner.InvokeRepeating(nameof(owner.LookForTargetNoHitTest), 0.0f, 3.0f);
-
             owner.pathfinder.StopPathfinding();
         }
 
         void IState.Execute()
         {
-            if (owner.target != null) // if there is a target
+            if (owner.closestTarget != null) // if there is a target
             {
                 owner.stateMachine.ChangeState(new InCombatWithTarget(owner));
             }
@@ -79,28 +77,29 @@ public class Enemy_Crow : Character
 
         void IState.Enter()
         {
-            owner.CancelInvoke(nameof(owner.LookForTargetNoHitTest));
+
         }
 
         void IState.Execute()
         {
-            if (owner.target == null)
+            if (owner.closestTarget == null)
             {
                 owner.stateMachine.ChangeState(new Idle(owner));
+                return;
             }
 
             if (owner.HasEffect(EffectType.Fear))
             {
-                owner.Move((owner.transform.position - owner.target.position).normalized);
+                owner.Move((owner.transform.position - owner.closestTarget.position).normalized);
             }
-            else if (owner.LookForTarget())
+            else if (owner.CanSeeTarget())
             {
-                owner.Move((owner.target.position - owner.transform.position).normalized);
+                owner.Move((owner.closestTarget.position - owner.transform.position).normalized);
             }
             else
             {
                 owner.pathfinder.SetStartPosition(owner.transform.position);
-                owner.pathfinder.SetEndPosition(owner.target.position);
+                owner.pathfinder.SetEndPosition(owner.closestTarget.position);
                 if (!owner.pathfinder.IsPathfinding()) owner.pathfinder.StartPathfinding();
                 owner.pathfinder.MoveAlongPath(owner);
             }

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,13 +12,8 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     [Header("Object References To Set")]
+    [SerializeField] private PlayerGUI playerGUI;
     [SerializeField] private TextMeshProUGUI overheadPrompt;
-    [SerializeField] private TextMeshProUGUI weaponNameText;
-    [SerializeField] private TextMeshProUGUI ammoClipText;
-    [SerializeField] private TextMeshProUGUI ammoReserveText;
-    [SerializeField] private Image weaponDisplayImage;
-    [SerializeField] private TextMeshProUGUI activeItemNameText;
-    [SerializeField] private Image activeItemDisplayImage;
     [SerializeField] private GameObject defaultItem;
     [SerializeField] private Transform hand;
     [SerializeField] private Transform middle;
@@ -105,40 +98,7 @@ public class PlayerController : MonoBehaviour
 
         // Update UI
         DisplayOverheadPrompt();
-        if (equippedWeapon != null)
-        {
-            weaponDisplayImage.sprite = equippedWeapon.sRenderer.sprite;
-            weaponDisplayImage.color = equippedWeapon.sRenderer.color;
-            weaponNameText.text = equippedWeapon.itemInfo.itemName;
-        }
-        else
-        {
-            weaponDisplayImage.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-            weaponNameText.text = "";
-        }
-
-        if (gun != null)
-        {
-            ammoClipText.text = gun.gunInfo.ammo.ToString() + " / " + gun.gunInfo.clipSize.ToString();
-            ammoReserveText.text = gun.gunInfo.reserveAmmo.ToString();
-        }
-        else
-        {
-            ammoClipText.text = "";
-            ammoReserveText.text = "";
-        }
-
-        if (equippedActiveItem != null)
-        {
-            activeItemDisplayImage.sprite = equippedActiveItem.sRenderer.sprite;
-            activeItemDisplayImage.color = equippedActiveItem.sRenderer.color;
-            activeItemNameText.text = equippedActiveItem.itemInfo.itemName;
-        }
-        else
-        {
-            activeItemDisplayImage.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-            activeItemNameText.text = "";
-        }
+        playerGUI.UpdateGUI();
     }
 
     private void FixedUpdate()
@@ -273,8 +233,8 @@ public class PlayerController : MonoBehaviour
         Gun gun = item as Gun;
         if (gun != null)
         {
-            gun.SetIgnoreTags(new List<string>() { "Player" });
-            gun.SetHitTags(new List<string>() { "Enemy" });
+            gun.SetIgnoreTags(new List<string>() { "Player", "Friendly" });
+            gun.SetHitTags(new List<string>() { "Enemy", "Neutral" });
             gun.SetBulletCollisionLayer(LayerMask.NameToLayer("PlayerProjectile"));
         }
 
@@ -440,4 +400,6 @@ public class PlayerController : MonoBehaviour
     public List<Item> GetActiveItems() { return activeItems; }
     public List<Item> GetPassiveItems() {  return passiveItems; }
     public Animator GetAnimator() { return animator; }
+    public Item GetEquippedActiveItem() { return equippedActiveItem; }
+    public Item GetEquippedWeapon() { return equippedWeapon; }
 }

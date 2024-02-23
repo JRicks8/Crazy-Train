@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum EffectType
@@ -23,11 +21,12 @@ public struct Effect
 public class Character : MonoBehaviour
 {
     [Header("Enemy Info")]
-    public EnemyInfo info;
+    public EnemyInfo enemyInfo;
 
     [Space]
     [Header("Object References")]
-    [SerializeField] protected Transform target;
+    [SerializeField] protected List<Transform> targets = new List<Transform>();
+    [SerializeField] protected Transform closestTarget;
     [SerializeField] protected Transform bottom;
     [SerializeField] protected Transform middle;
     [SerializeField] protected Transform hand;
@@ -55,6 +54,9 @@ public class Character : MonoBehaviour
     [SerializeField] protected bool isDead = false;
     [SerializeField] private bool handOnLeftSide = false;
 
+    private readonly float lookForTargetsInterval = 0.2f;
+    private float lookForTargetsTimer;
+
     protected void Initialize()
     {
         effects = new Effect[Enum.GetValues(typeof(EffectType)).Length];
@@ -63,7 +65,7 @@ public class Character : MonoBehaviour
         if (TryGetComponent(out healthScript))
         {
             healthScript.OnDeath += OnCharacterDeath;
-            healthScript.SetMaxHealth(info.maxHealth, true);
+            healthScript.SetMaxHealth(enemyInfo.maxHealth, true);
         }
 
         equippedWeapon = GetComponentInChildren<Item>();
@@ -73,7 +75,7 @@ public class Character : MonoBehaviour
             equippedWeapon.gameObject.SetActive(true);
         }
 
-        if (info.canFly)
+        if (enemyInfo.canFly)
         {
             // If we can fly, don't hit the one way platforms
             GetComponent<Collider2D>().excludeLayers = LayerMask.GetMask(new string[] { "OneWayTerrain" });
@@ -100,7 +102,7 @@ public class Character : MonoBehaviour
     {
         if (isDead)
         {
-            if (info.fadeOnDeath)
+            if (enemyInfo.fadeOnDeath)
             {
                 deathFadeTimer -= Time.deltaTime;
                 if (deathFadeTimer <= 0)
@@ -109,10 +111,18 @@ public class Character : MonoBehaviour
                 }
                 else
                 {
-                    sRenderer.color = new Color(sRenderer.color.r, sRenderer.color.g, sRenderer.color.b, deathFadeTimer / info.deathFadeTime);
+                    sRenderer.color = new Color(sRenderer.color.r, sRenderer.color.g, sRenderer.color.b, deathFadeTimer / enemyInfo.deathFadeTime);
                 }
             }
             return;
+        }
+
+        lookForTargetsTimer += Time.deltaTime;
+
+        if (lookForTargetsTimer >= lookForTargetsInterval)
+        {
+            lookForTargetsTimer = 0.0f;
+            LookForTargets();
         }
 
         UpdateHandAndGun();
@@ -124,6 +134,8 @@ public class Character : MonoBehaviour
     {
         if (isDead) return;
 
+        FindNearestTarget();
+
         ground = CheckGround();
         grounded = ground != null;
 
@@ -134,24 +146,24 @@ public class Character : MonoBehaviour
         // If not attempting to move, actively stifle the velocity to prevent excessive sliding
         else
         {
-            if (info.canFly) rb.velocity *= info.idleDrag;
-            else rb.velocity = new Vector2(info.idleDrag * rb.velocity.x, rb.velocity.y);
+            if (enemyInfo.canFly) rb.velocity *= enemyInfo.idleDrag;
+            else rb.velocity = new Vector2(enemyInfo.idleDrag * rb.velocity.x, rb.velocity.y);
         }
         moveDir = Vector2.zero;
 
         // cap velocity
-        if (info.maxVelocityMag > 0 && rb.velocity.magnitude > info.maxVelocityMag)
+        if (enemyInfo.maxVelocityMag > 0 && rb.velocity.magnitude > enemyInfo.maxVelocityMag)
         {
-            rb.velocity = rb.velocity.normalized * info.maxVelocityMag;
+            rb.velocity = rb.velocity.normalized * enemyInfo.maxVelocityMag;
         }
-        else if (Math.Abs(rb.velocity.x) > info.maxHorizontalSpeed && info.maxHorizontalSpeed > 0)
+        else if (Math.Abs(rb.velocity.x) > enemyInfo.maxHorizontalSpeed && enemyInfo.maxHorizontalSpeed > 0)
         {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -info.maxHorizontalSpeed, info.maxHorizontalSpeed), rb.velocity.y);
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -enemyInfo.maxHorizontalSpeed, enemyInfo.maxHorizontalSpeed), rb.velocity.y);
         }
 
-        if (target != null) // if there is a target, face the target when not moving
+        if (closestTarget != null) // if there is a target, face the target when not moving
         {
-            float difX = (target.position - middle.position).x;
+            float difX = (closestTarget.position - middle.position).x;
             if (difX < -0.1f)
             {
                 facingLeft = true;
@@ -179,27 +191,25 @@ public class Character : MonoBehaviour
     {
         // Update gun
         if (equippedWeapon == null) return;
-
-        Vector2 gunAimPoint = Vector2.zero;
         equippedWeapon.transform.position = hand.position;
-
+        Vector2 gunAimPoint;
         // Conditional updates
-        if (target != null) // We have a target
+        if (closestTarget != null) // We have a target
         {
             // Face the gun towards the target
-            gunAimPoint = target.position;
+            gunAimPoint = closestTarget.position;
 
             // Depending on the target location, change the position of the hand
-            float difX = (target.position - middle.position).x;
+            float difX = (closestTarget.position - middle.position).x;
             if (difX < -0.1f && !handOnLeftSide)
             {
                 handOnLeftSide = true;
-                hand.localPosition = new Vector2(info.handOffset * -1, 0);
+                hand.localPosition = new Vector2(enemyInfo.handOffset * -1, 0);
             }
             else if (difX > 0.1f && handOnLeftSide)
             {
                 handOnLeftSide = false;
-                hand.localPosition = new Vector2(info.handOffset, 0);
+                hand.localPosition = new Vector2(enemyInfo.handOffset, 0);
             }
         }
         else // We don't have a target
@@ -207,12 +217,12 @@ public class Character : MonoBehaviour
             // Neutral hand position
             if (facingLeft)
             {
-                hand.localPosition = new Vector2(info.handOffset * -1, 0);
+                hand.localPosition = new Vector2(enemyInfo.handOffset * -1, 0);
                 gunAimPoint = equippedWeapon.transform.position + Vector3.left;
             }
             else
             {
-                hand.localPosition = new Vector2(info.handOffset, 0);
+                hand.localPosition = new Vector2(enemyInfo.handOffset, 0);
                 gunAimPoint = equippedWeapon.transform.position + Vector3.right;
             }
         }
@@ -230,12 +240,22 @@ public class Character : MonoBehaviour
         Gun gun = item as Gun;
         if (gun != null)
         {
-            gun.SetIgnoreTags(new List<string>() { "Enemy" });
-            gun.SetHitTags(new List<string>() { "Player" });
+            gun.SetIgnoreTags(enemyInfo.bulletIgnoreTags);
+            gun.SetHitTags(enemyInfo.bulletHitTags);
             gun.SetBulletCollisionLayer(LayerMask.NameToLayer("EnemyProjectile"));
         }
 
         item.transform.parent = transform;
+    }
+
+    protected bool HasClearVisionOf(Vector2 position)
+    {
+        LayerMask mask = LayerMask.GetMask(new string[] { "Terrain", "Door" });
+        RaycastHit2D hit = Physics2D.Linecast(middle.position, position, mask);
+        if (hit.collider == null)
+            return true;
+        else
+            return false;
     }
 
     /// <summary>
@@ -243,43 +263,70 @@ public class Character : MonoBehaviour
     /// a clear line of sight to the player, returns true and sets the target. Else returns false.
     /// </summary>
     /// <returns></returns>
-    protected bool LookForTarget()
+    protected bool CanSeeTarget()
     {
-        GameObject playerCharacter = GameObject.FindGameObjectWithTag("Player");
-        if (playerCharacter != null)
-        {
-            LayerMask mask = LayerMask.GetMask(new string[] { "Friendly", "Terrain", "Door" });
-            RaycastHit2D hit = Physics2D.Linecast(middle.position, playerCharacter.transform.position, mask);
-            //Debug.DrawLine(transform.position, (playerCharacter.transform.position - transform.position).normalized * hit.distance + transform.position, Color.blue);
-            if (hit.collider.gameObject == playerCharacter)
-            {
-                target = playerCharacter.transform;
-                return true;
-            }
-        }
-        return false;
+        if (closestTarget != null && HasClearVisionOf(closestTarget.position))
+            return true;
+        else
+            return false;
     }
 
-    protected bool LookForTargetNoHitTest()
+    protected void FindNearestTarget()
     {
-        GameObject t = GameObject.FindGameObjectWithTag("Player");
-        if (t != null)
+        if (targets.Count == 0)
         {
-            target = t.transform;
-            return true;
+            closestTarget = null;
+            return;
         }
-        return false;
+
+        float closestDistance = float.MaxValue;
+        for (int i = targets.Count - 1; i >= 0; i--)
+        {
+            if (targets[i] == null)
+            {
+                targets.RemoveAt(i);
+                continue;
+            }
+
+            float dist = Vector3.Distance(targets[i].transform.position, transform.position);
+            if (dist < closestDistance || closestTarget == null)
+            {
+                closestTarget = targets[i];
+                closestDistance = dist;
+            }
+        }
+    }
+
+    protected void LookForTargets()
+    {
+        targets.Clear();
+
+        LayerMask targetMask;
+        if (HasEffect(EffectType.Charm)) // If we're charmed, target allies!
+            targetMask = enemyInfo.allyMask;
+        else // Target enemies
+            targetMask = enemyInfo.enemyMask;
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 100.0f, targetMask);
+
+        foreach (Collider2D collider in colliders)
+        {
+            if ((collider.TryGetComponent(out Health healthScript) && healthScript.GetIsDead()) || collider.gameObject == gameObject)
+                continue;
+
+            targets.Add(collider.transform);
+        }
     }
 
     public void Move(Vector2 direction)
     {
-        moveDir = info.acceleration * rb.mass * Time.deltaTime * direction;
+        moveDir = enemyInfo.acceleration * rb.mass * Time.deltaTime * direction;
     }
 
     public void Jump(float jumpPower)
     {
         if (!grounded) return;
-        jumpPower = Mathf.Clamp(jumpPower, 0.0f, info.maxJumpPower);
+        jumpPower = Mathf.Clamp(jumpPower, 0.0f, enemyInfo.maxJumpPower);
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(new Vector2(0, jumpPower * rb.mass), ForceMode2D.Impulse);
     }
@@ -353,7 +400,6 @@ public class Character : MonoBehaviour
 
     private IEnumerator EffectHandler(int effectIndex, float duration, bool skipStartFunction = false)
     {
-        Debug.Log("Started effect with duration " + duration);
         if (!skipStartFunction)
             startEffectFunctions[effectIndex]();
 
@@ -362,7 +408,6 @@ public class Character : MonoBehaviour
         if (effects[effectIndex].active)
             endEffectFunctions[effectIndex]();
         effects[effectIndex].active = false;
-        Debug.Log("Ended effect.");
     }
 
     [Header("Effects Settings")]
@@ -426,15 +471,57 @@ public class Character : MonoBehaviour
             yield return new WaitForSeconds(fireVFXInterval);
         }
     }
-
+    
+    // Charmed enemies target their allies, and do no harm to their enemies.
+    // Implementation is in the Character script, where the character would search for their target.
     private void OnCharm()
     {
-        Debug.Log("Charmed character " + gameObject.name);
+        Debug.Log(transform.name + " has been charmed");
+
+        // Make heart vfx like fire
+
+        // Change layer & tag
+        gameObject.layer = LayerMask.NameToLayer("Neutral");
+        gameObject.tag = "Neutral";
+
+        // Swap hit and ignore targets
+        (enemyInfo.bulletHitTags, enemyInfo.bulletIgnoreTags) = (enemyInfo.bulletIgnoreTags, enemyInfo.bulletHitTags);
+
+        // Update gun settings
+        Gun gun = equippedWeapon as Gun;
+        if (gun != null)
+        {
+            gun.SetHitTags(enemyInfo.bulletHitTags);
+            gun.SetIgnoreTags(enemyInfo.bulletIgnoreTags);
+            gun.SetBulletCollisionLayer(LayerMask.NameToLayer("NeutralProjectile"));
+        }
+
+        // Refresh current target list
+        LookForTargets();
     }
 
     private void EndCharm()
     {
-        Debug.Log("Charm on character " + gameObject.name + " has ended");
+        Debug.Log(transform.name + " is no longer charmed");
+
+        // Change layer & tag
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+        gameObject.tag = "Enemy";
+
+        // Swap hit and ignore targets
+        (enemyInfo.bulletHitTags, enemyInfo.bulletIgnoreTags) = (enemyInfo.bulletIgnoreTags, enemyInfo.bulletHitTags);
+
+        // Update gun settings
+        Gun gun = equippedWeapon as Gun;
+        if (gun != null)
+        {
+            gun.SetHitTags(enemyInfo.bulletHitTags);
+            gun.SetIgnoreTags(enemyInfo.bulletIgnoreTags);
+            gun.SetBulletCollisionLayer(LayerMask.NameToLayer("EnemyProjectile"));
+        }
+
+        // Refresh current target list
+        LookForTargets();
     }
 
     public bool IsGrounded()
@@ -479,7 +566,7 @@ public class Character : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("TerrainOnly");
         gameObject.tag = "Untagged";
         isDead = true;
-        deathFadeTimer = info.deathFadeTime;
+        deathFadeTimer = enemyInfo.deathFadeTime;
         RemoveAllEffects();
     }
 }

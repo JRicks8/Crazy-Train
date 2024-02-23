@@ -66,4 +66,9 @@ public class Item : MonoBehaviour
 
         Destroy(gameObject);
     }
+
+    public virtual float GetCooldownElapsedPercent()
+    {
+        throw new System.NotImplementedException();
+    }
 }
