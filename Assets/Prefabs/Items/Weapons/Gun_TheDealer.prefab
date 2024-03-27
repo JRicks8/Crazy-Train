@@ -28,11 +28,10 @@ Transform:
   m_GameObject: {fileID: 1719636695305310927}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.315, y: 0.18, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7499814915553614577}
   - {fileID: 5686849681697033061}
   m_Father: {fileID: 1008935869910448220}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -203,7 +202,7 @@ MonoBehaviour:
     itemName: 
     showHand: 0
     itemType: 0
-  handle: {fileID: 7499814915553614577}
+  handle: {fileID: 0}
   spriteObject: {fileID: 9010266244711882223}
   sRenderer: {fileID: 2860463668786898392}
   animator: {fileID: 7111164843141495329}
@@ -244,35 +243,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d86b617a74e5b444ca2fa8ef214459ee, type: 3}
   - {fileID: 21300000, guid: e2de09852594b3e4590bea7287502ffa, type: 3}
   overheadSprite: {fileID: 0}
-  nextCard: 0
---- !u!1 &7032925134488182067
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7499814915553614577}
-  m_Layer: 0
-  m_Name: Handle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7499814915553614577
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7032925134488182067}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1, y: -0.16, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9010266244711882223}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  nextCardType: 0

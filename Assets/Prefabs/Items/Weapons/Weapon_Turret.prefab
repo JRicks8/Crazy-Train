@@ -174,7 +174,7 @@ MonoBehaviour:
   lastHandOnLeft: 0
   deployedTurretPrefab: {fileID: 4646760599690165885, guid: 949432370528cc247adc1119d761d633, type: 3}
   turretSettings:
-    bulletPrefab: {fileID: 5860073430992698012, guid: c6584276a7740004e80818d6d44ebcdf, type: 3}
+    bulletPrefab: {fileID: 5860073430992698012, guid: 9329149d71caf29499689c67eb504546, type: 3}
     hitTags:
     - Enemy
     ignoreTags:

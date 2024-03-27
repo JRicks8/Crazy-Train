@@ -1,0 +1,528 @@
+fileFormatVersion: 2
+guid: ed97a6a9397958c489b65527f6129e89
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: ss_CactusBoss_Walk_Frame_0
+    originalName: 
+    pivot: {x: 0.5, y: -0.02857143}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 144
+      y: 4
+      width: 37
+      height: 35
+    spriteID: 51eb795ea9ddb184bb00e05a6aae735e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 144, y: 4}
+  - name: ss_CactusBoss_Walk_Frame_1
+    originalName: 
+    pivot: {x: 0.5131579, y: -0.05882353}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 49
+      y: 47
+      width: 38
+      height: 34
+    spriteID: 6a40d1c05085f39469a0e5673521ea51
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 49, y: 47}
+  - name: ss_CactusBoss_Walk_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: -0.08571429}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 39
+      height: 35
+    spriteID: 90ebdcb205f982c4dbbe49046ee1b288
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: ss_CactusBoss_Walk_Frame_3
+    originalName: 
+    pivot: {x: 0.5131579, y: -0.05882353}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 95
+      y: 47
+      width: 38
+      height: 34
+    spriteID: c0d2816be7bc04b4a8d8fbdb339ce5b2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 95, y: 47}
+  - name: ss_CactusBoss_Walk_Frame_4
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 189
+      y: 4
+      width: 37
+      height: 35
+    spriteID: e1683fc8708928044bc187fa67f7e4fb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 189, y: 4}
+  - name: ss_CactusBoss_Walk_Frame_5
+    originalName: 
+    pivot: {x: 0.51388884, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 49
+      y: 90
+      width: 36
+      height: 32
+    spriteID: 5294f440d27bfd94bb8e525f9067e7ad
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 49, y: 90}
+  - name: ss_CactusBoss_Walk_Frame_6
+    originalName: 
+    pivot: {x: 0.47297302, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 93
+      y: 90
+      width: 37
+      height: 31
+    spriteID: ffce7aa2731327d41837ba560971ca20
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 93, y: 90}
+  - name: ss_CactusBoss_Walk_Frame_7
+    originalName: 
+    pivot: {x: 0.5131579, y: -0.02857143}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 98
+      y: 4
+      width: 38
+      height: 35
+    spriteID: 88393ab8b39993046bf26afa3b001242
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 98, y: 4}
+  - name: ss_CactusBoss_Walk_Frame_8
+    originalName: 
+    pivot: {x: 0.5131579, y: -0.05882353}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 141
+      y: 47
+      width: 38
+      height: 34
+    spriteID: 0ad0087040f7a8a41a385098593ea657
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 141, y: 47}
+  - name: ss_CactusBoss_Walk_Frame_9
+    originalName: 
+    pivot: {x: 0.525641, y: -0.08571429}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 51
+      y: 4
+      width: 39
+      height: 35
+    spriteID: c271f882ca61247489827a94ce0f876c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 51, y: 4}
+  - name: ss_CactusBoss_Walk_Frame_10
+    originalName: 
+    pivot: {x: 0.5131579, y: -0.05882353}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 187
+      y: 47
+      width: 38
+      height: 34
+    spriteID: a8c20656ef8b4cd438d0bbc74779ee1f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 187, y: 47}
+  - name: ss_CactusBoss_Walk_Frame_11
+    originalName: 
+    pivot: {x: 0.5270271, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 47
+      width: 37
+      height: 35
+    spriteID: 568cef844e6243d4795e2327e975e57a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 47}
+  - name: ss_CactusBoss_Walk_Frame_12
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 90
+      width: 37
+      height: 32
+    spriteID: 2b80d72121699c340b5600ef44cbd022
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 90}
+  - name: ss_CactusBoss_Walk_Frame_13
+    originalName: 
+    pivot: {x: 0.44594598, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 138
+      y: 90
+      width: 37
+      height: 31
+    spriteID: b3a62ca7e1bdd0c4ab3b9ceb10ff5528
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 138, y: 90}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: -856959409
+    name: ss_CactusBoss_Walk
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: ss_CactusBoss_Walk_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 2
+        y: 1
+        width: 37
+        height: 35
+      spriteId: 51eb795ea9ddb184bb00e05a6aae735e
+    - name: ss_CactusBoss_Walk_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 1
+        y: 2
+        width: 38
+        height: 34
+      spriteId: 6a40d1c05085f39469a0e5673521ea51
+    - name: ss_CactusBoss_Walk_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 1
+        y: 3
+        width: 39
+        height: 35
+      spriteId: 90ebdcb205f982c4dbbe49046ee1b288
+    - name: ss_CactusBoss_Walk_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 1
+        y: 2
+        width: 38
+        height: 34
+      spriteId: c0d2816be7bc04b4a8d8fbdb339ce5b2
+    - name: ss_CactusBoss_Walk_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 2
+        y: 0
+        width: 37
+        height: 35
+      spriteId: e1683fc8708928044bc187fa67f7e4fb
+    - name: ss_CactusBoss_Walk_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 2
+        y: 0
+        width: 36
+        height: 32
+      spriteId: 5294f440d27bfd94bb8e525f9067e7ad
+    - name: ss_CactusBoss_Walk_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 3
+        y: 0
+        width: 37
+        height: 31
+      spriteId: ffce7aa2731327d41837ba560971ca20
+    - name: ss_CactusBoss_Walk_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 1
+        y: 1
+        width: 38
+        height: 35
+      spriteId: 88393ab8b39993046bf26afa3b001242
+    - name: ss_CactusBoss_Walk_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 1
+        y: 2
+        width: 38
+        height: 34
+      spriteId: 0ad0087040f7a8a41a385098593ea657
+    - name: ss_CactusBoss_Walk_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 0
+        y: 3
+        width: 39
+        height: 35
+      spriteId: c271f882ca61247489827a94ce0f876c
+    - name: ss_CactusBoss_Walk_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 1
+        y: 2
+        width: 38
+        height: 34
+      spriteId: a8c20656ef8b4cd438d0bbc74779ee1f
+    - name: ss_CactusBoss_Walk_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 1
+        y: 0
+        width: 37
+        height: 35
+      spriteId: 568cef844e6243d4795e2327e975e57a
+    - name: ss_CactusBoss_Walk_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 2
+        y: 0
+        width: 37
+        height: 32
+      spriteId: 2b80d72121699c340b5600ef44cbd022
+    - name: ss_CactusBoss_Walk_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 4
+        y: 0
+        width: 37
+        height: 31
+      spriteId: b3a62ca7e1bdd0c4ab3b9ceb10ff5528
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 41, y: 38}

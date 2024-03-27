@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [Header("Other Object References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerMovement movement;
+    [SerializeField] private Health healthScript;
     [SerializeField] private List<Collider2D> overlappingInteractibles = new List<Collider2D>();
     [SerializeField] private GameObject closestInteractObject = null;
 
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<Item> passiveItems = new List<Item>();
 
     [Header("Other")]
+    [SerializeField] private float timeInvincibleOnHit = 1.0f;
     [SerializeField] private float horizontalMove = 0f;
     [SerializeField] private float currency;
     [SerializeField] private bool jump = false;
@@ -59,11 +62,14 @@ public class PlayerController : MonoBehaviour
     public PlayerItemEventDelegate OnUnequipItem;
     public PlayerItemEventDelegate OnEquipItem;
 
+    private IEnumerator tempInvincibilityHandler;
+
     private void Awake()
     {
         // Set references
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
+        healthScript = GetComponent<Health>();
 
         // Collect guns that are already in the player's gameobject
         List<Item> childGuns = GetComponentsInChildren<Item>().ToList();
@@ -81,6 +87,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         OnItemRemoved += ItemRemoved;
+        healthScript.OnDamageTaken += OnDamageTaken;
     }
 
     private void Update()
@@ -181,6 +188,10 @@ public class PlayerController : MonoBehaviour
                     }
                 }
                 else if (Input.GetButtonDown("Fire1"))
+                {
+                    equippedWeapon.Use(equippedWeapon.transform.right);
+                }
+                else if (Input.GetButton("Fire1") && gun.gunInfo.autoFire)
                 {
                     equippedWeapon.Use(equippedWeapon.transform.right);
                 }
@@ -402,4 +413,18 @@ public class PlayerController : MonoBehaviour
     public Animator GetAnimator() { return animator; }
     public Item GetEquippedActiveItem() { return equippedActiveItem; }
     public Item GetEquippedWeapon() { return equippedWeapon; }
+    public Vector3 GetHandLocation() { return hand.position; }
+
+    private void OnDamageTaken(GameObject entity)
+    {
+        tempInvincibilityHandler = TempInvincibilityHandler(timeInvincibleOnHit);
+        StartCoroutine(tempInvincibilityHandler);
+    }
+
+    private IEnumerator TempInvincibilityHandler(float time)
+    {
+        healthScript.SetIsInvincible(true);
+        yield return new WaitForSeconds(time);
+        healthScript.SetIsInvincible(false);
+    }
 }

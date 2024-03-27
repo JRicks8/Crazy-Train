@@ -269,9 +269,10 @@ MonoBehaviour:
   muzzle: {fileID: 7392748573204280489}
   itemPickupScript: {fileID: 7760705305355789679}
   rb: {fileID: 4830542968492829823}
-  whatIsGround:
+  visionBlocking:
     serializedVersion: 2
-    m_Bits: 2560
+    m_Bits: 512
+  targets: []
 --- !u!50 &4830542968492829823
 Rigidbody2D:
   serializedVersion: 4

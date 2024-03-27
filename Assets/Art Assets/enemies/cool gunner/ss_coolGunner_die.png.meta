@@ -1,0 +1,545 @@
+fileFormatVersion: 2
+guid: b5ee0a66a2b5ce34e8b5c97c6f10bf97
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ss_coolGunner_die_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4abf6478b1fca2d499d5ad56f9cd1b55
+      internalID: 1253683661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_1
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24954efdb48ba424987248e54196327e
+      internalID: -1059573808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_2
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95446d9f6db2678499d87ef808cb0524
+      internalID: -355196330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_3
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ce8e65bb60e4984b88ecd1f82b966ef
+      internalID: -594974122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_4
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c2b15a6900e70349827aef7306d2caa
+      internalID: -764744850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_5
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7820366cd5e1aac4d871fc6819974bc0
+      internalID: 310431478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_6
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbe213ca2ed04ee44a7c89dfe654c1da
+      internalID: 1423909169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_7
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2b10f0c749a067458fba2ae23fea355
+      internalID: -675070929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_8
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2217b732e605b534faf7ac595f91bca3
+      internalID: 666385946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_9
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f2f29b5ea0732e4c98241e1ebe2e14e
+      internalID: -273417364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_10
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35e48258678f5574a92adb3b31b1c2cc
+      internalID: 1521987448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_11
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2184b6333906f94bab2c25a2e282203
+      internalID: -1914865824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_12
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de387dccac1b8e9488f116b86f034b70
+      internalID: -1985268267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_13
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ad3be9fffd9a194caa7e70f38bac930
+      internalID: -177263504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_14
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee8ae8976ee05b14aad92fd0cb4b6dfe
+      internalID: 1879432302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_15
+      rect:
+        serializedVersion: 2
+        x: 795
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ffcf8eb7304e4046b55dcf8ffcb19b9
+      internalID: 559885742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_16
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81557058086e913469225aec534e1b89
+      internalID: 1303291459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_17
+      rect:
+        serializedVersion: 2
+        x: 901
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e16b30c7dfcac5d4cae166c0a43f3383
+      internalID: -1775890883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ss_coolGunner_die_18
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 0
+        width: 53
+        height: 30
+      alignment: 9
+      pivot: {x: 0.6415094, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fc2d9b5ae7134048a51ece2df80e63c
+      internalID: -1375344133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ss_coolGunner_die_0: 1253683661
+      ss_coolGunner_die_1: -1059573808
+      ss_coolGunner_die_10: 1521987448
+      ss_coolGunner_die_11: -1914865824
+      ss_coolGunner_die_12: -1985268267
+      ss_coolGunner_die_13: -177263504
+      ss_coolGunner_die_14: 1879432302
+      ss_coolGunner_die_15: 559885742
+      ss_coolGunner_die_16: 1303291459
+      ss_coolGunner_die_17: -1775890883
+      ss_coolGunner_die_18: -1375344133
+      ss_coolGunner_die_2: -355196330
+      ss_coolGunner_die_3: -594974122
+      ss_coolGunner_die_4: -764744850
+      ss_coolGunner_die_5: 310431478
+      ss_coolGunner_die_6: 1423909169
+      ss_coolGunner_die_7: -675070929
+      ss_coolGunner_die_8: 666385946
+      ss_coolGunner_die_9: -273417364
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

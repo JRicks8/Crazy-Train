@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
     [Header("Object References")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject announcementTextPrefab;
-    [SerializeField] private GameObject shopWizardPrefab;
+    [SerializeField] private GameObject shopPrefab;
     [SerializeField] private Transform GUICanvas;
     [SerializeField] private Text enemiesLeftText;
 
@@ -61,11 +61,16 @@ public class GameController : MonoBehaviour
         SearchForPathfindData();
 
         List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
-        for (int i = 0; i < numWaves; i++) // Add numWaves waves from the pool to the queue
+        for (int i = 0; i < numWaves - 1; i++) // Add numWaves - 1 waves from the pool to the queue (minus one to account for the boss wave)
         {
             int randomIndex = Random.Range(0, waves.Count); // Add them randomly
             waveQueue.Enqueue(waves[randomIndex]);
         }
+
+        // Queue boss wave
+        List<EnemyWave> bossWaves = waveData.Area1BossWavePool;
+        int randBossWaveIndex = Random.Range(0, bossWaves.Count);
+        waveQueue.Enqueue(bossWaves[randBossWaveIndex]);
 
         if (!StartNextWave())
         {
@@ -96,8 +101,20 @@ public class GameController : MonoBehaviour
         // Debug Controls
         if (Input.GetButtonDown("Debug0"))
         {
+            // Clear all waves in the round, kill all enemies, cancel spawning all enemies. Skip to shop phase.
             waveQueue.Clear();
-            OnWavesComplete();
+            foreach (Character c in livingEnemies)
+            {
+                Destroy(c.gameObject);
+            }
+            enemiesToSpawn.Clear();
+        }
+        else if (Input.GetButtonDown("Debug1"))
+        {
+            // Skip to boss wave, kill all enemies, cancel spawning all enemies.
+            while (waveQueue.Count > 1)
+                waveQueue.Dequeue();
+
             foreach (Character c in livingEnemies)
             {
                 Destroy(c.gameObject);
@@ -108,12 +125,32 @@ public class GameController : MonoBehaviour
 
     private void OnWavesComplete()
     {
+        Debug.Log("Waves complete");
         // Get the front most car on the train
         TrainCar car = trainCars[^1];
 
         // Instantiate shop wizard
-        GameObject wizard = Instantiate(shopWizardPrefab);
-        wizard.transform.position = car.shopWizardSpawnPoint.position;
+        GameObject shop = Instantiate(shopPrefab);
+        shop.transform.position = car.shopWizardSpawnPoint.position;
+        if (shop.TryGetComponent(out Shop shopScript))
+        {
+            // Randomize shop contents
+            List<int> pool = new List<int>();
+            for (int i = 1; i < ItemData.allItemInfo.Count; i++) // skip i == 0 because that's the null weapon
+            {
+                for (int j = 0; j < ItemData.allItemInfo[i].rarity; j++)
+                    pool.Add(ItemData.allItemInfo[i].itemID);
+            }
+
+            List<GameObject> itemPrefabs = new List<GameObject>(4)
+            {
+                ItemData.staticItemPrefabs[pool[Random.Range(0, pool.Count)]],
+                ItemData.staticItemPrefabs[pool[Random.Range(0, pool.Count)]],
+                ItemData.staticItemPrefabs[pool[Random.Range(0, pool.Count)]],
+                ItemData.staticItemPrefabs[pool[Random.Range(0, pool.Count)]]
+            };
+            shopScript.SetShopItems(itemPrefabs);
+        }
     }
 
     // Depending on the chosen pool, create a train car and attach it to the front of the train.
@@ -261,8 +298,6 @@ public class GameController : MonoBehaviour
         // start spawning enemies
         while (enemiesToSpawn.Count > 0)
         {
-            yield return new WaitForSeconds(spawnInterval);
-
             // spawn all enemies in random order at random spawners
             int randEnemyIndex = UnityEngine.Random.Range(0, enemiesToSpawn.Count);
             int randSpawnerIndex = UnityEngine.Random.Range(0, spawners.Count);
@@ -280,6 +315,8 @@ public class GameController : MonoBehaviour
                 Debug.LogError("Unable to spawn prefab! Aborting spawning process to prevent infinite loop...");
                 break;
             }
+
+            yield return new WaitForSeconds(spawnInterval);
         }
     }
 

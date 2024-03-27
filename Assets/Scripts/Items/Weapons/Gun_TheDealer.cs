@@ -24,7 +24,7 @@ public class Gun_TheDealer : Gun
 
     private void Awake()
     {
-        itemInfo = ItemData.TheDealerInfo;
+        itemInfo = ItemData.allItemInfo[(int)ItemData.Items.TheDealer];
         gunInfo = GunData.TheDealerInfo;
 
         enumValues = Enum.GetValues(typeof(CardType));

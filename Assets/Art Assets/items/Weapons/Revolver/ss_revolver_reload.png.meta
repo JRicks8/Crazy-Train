@@ -115,10 +115,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 23
+        height: 25
+      alignment: 9
+      pivot: {x: 0.45652175, y: 0.48}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: ss_revolver_reload_1
       rect:
         serializedVersion: 2
-        x: 34
+        x: 23
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 23
+        height: 25
+      alignment: 9
+      pivot: {x: 0.47826087, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: ss_revolver_reload_2
       rect:
         serializedVersion: 2
-        x: 68
+        x: 46
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 23
+        height: 25
+      alignment: 9
+      pivot: {x: 0.5652174, y: 0.52}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +176,12 @@ TextureImporter:
       name: ss_revolver_reload_3
       rect:
         serializedVersion: 2
-        x: 102
+        x: 69
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 23
+        height: 25
+      alignment: 9
+      pivot: {x: 0.5217391, y: 0.48}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -197,12 +197,12 @@ TextureImporter:
       name: ss_revolver_reload_4
       rect:
         serializedVersion: 2
-        x: 136
+        x: 92
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 23
+        height: 25
+      alignment: 9
+      pivot: {x: 0.5652174, y: 0.48}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -210,27 +210,6 @@ TextureImporter:
       bones: []
       spriteID: 9de6ead4cebfd10459caae6904b6c1e4
       internalID: -433011456
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ss_revolver_reload_5
-      rect:
-        serializedVersion: 2
-        x: 170
-        y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7fc3eab0a038eab42b35ef15c960f7dd
-      internalID: -142256849
       vertices: []
       indices: 
       edges: []
@@ -251,7 +230,6 @@ TextureImporter:
       ss_revolver_reload_2: -1415772082
       ss_revolver_reload_3: -418538509
       ss_revolver_reload_4: -433011456
-      ss_revolver_reload_5: -142256849
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

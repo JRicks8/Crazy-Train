@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float health = 10f;
     [SerializeField] private float maxHealth = 10f;
     [SerializeField] private bool isPlayer = false;
+    [SerializeField] private bool isInvincible = false;
 
     public delegate void HealthEventDelegate(GameObject entity);
     public HealthEventDelegate OnDeath;
@@ -27,8 +28,9 @@ public class Health : MonoBehaviour
         OnHealthChanged?.Invoke(health, maxHealth);
     }
 
-    public float TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
+        if (isInvincible) return;
         if (isPlayer) 
         {
             damage = Mathf.Floor(damage);
@@ -37,7 +39,7 @@ public class Health : MonoBehaviour
         {
             health = 0;
             OnHealthChanged?.Invoke(0, maxHealth);
-            return 0;
+            return;
         }
         health -= damage;
         OnDamageTaken?.Invoke(gameObject);
@@ -48,7 +50,7 @@ public class Health : MonoBehaviour
             OnDeath?.Invoke(gameObject);
         }
         if (!isPlayer) UpdateHealthBarAppearance();
-        return health;
+        return;
     }
 
     public float Heal(float heal)
@@ -102,6 +104,11 @@ public class Health : MonoBehaviour
     public void SetCanSeeHealthbar(bool canSee)
     {
         healthbar.SetActive(canSee);
+    }
+
+    public void SetIsInvincible(bool isInvincible)
+    {
+        this.isInvincible = isInvincible;
     }
 
     private void UpdateHealthBarAppearance()

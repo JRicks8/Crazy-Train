@@ -31,12 +31,12 @@ public class Weapon_Turret_Deployed : MonoBehaviour
     private Animator baseSpriteAnimator;
     private SpriteRenderer headSpriteRenderer;
     private PlayerController playerController;
-    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private LayerMask visionBlocking;
 
-    private List<Character> targets = new List<Character>(); // Targets that can be shot at
+    [SerializeField] private List<Character> targets = new List<Character>(); // Targets that can be shot at
     private Character closestCharacter;
     private float shootTimer;
-    private readonly float lookForTargetsInterval = 0.5f;
+    private readonly float lookForTargetsInterval = 0.2f;
     private float lookForTargetsTimer;
 
     public delegate void TurretEventDelegate(GameObject obj);
@@ -131,8 +131,8 @@ public class Weapon_Turret_Deployed : MonoBehaviour
         foreach (Collider2D collider in colliders)
         {
             // Test if there is terrain in the way
-            RaycastHit2D hit = Physics2D.Raycast(muzzle.position, (collider.ClosestPoint(muzzle.position) - (Vector2)muzzle.position).normalized, settings.range, whatIsGround);
-            if (hit.collider != null)
+            RaycastHit2D hit = Physics2D.Raycast(muzzle.position, (collider.ClosestPoint(muzzle.position) - (Vector2)muzzle.position).normalized, settings.range, visionBlocking);
+            if (hit.collider == null)
             {
                 // Get the character associated with the collider
                 if (collider.TryGetComponent(out Character character) && !character.GetIsDead())
@@ -182,7 +182,7 @@ public class Weapon_Turret_Deployed : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, whatIsGround);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, visionBlocking);
         if (hit.collider != null)
         {
             if (rb != null)

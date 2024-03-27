@@ -9,7 +9,7 @@ public class Weapon_Turret : Item
 
     private void Awake()
     {
-        itemInfo = ItemData.TurretInfo;
+        itemInfo = ItemData.allItemInfo[(int)ItemData.Items.Turret];
     }
 
     public override bool Use(Vector2 direction)
@@ -20,7 +20,7 @@ public class Weapon_Turret : Item
         {
             turretScript.Initialize(turretSettings, playerController);
             turretScript.rb.velocity = direction * throwForce;
-            turretScript.transform.position = handle.position;
+            turretScript.transform.position = playerController.GetHandLocation();
             Remove(); // Remove the item from the player's inventory
         }
         else

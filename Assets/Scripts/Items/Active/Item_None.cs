@@ -6,6 +6,6 @@ public class Item_None : Item
 {
     private void Awake()
     {
-        itemInfo = ItemData.NoneInfo;
+        itemInfo = ItemData.allItemInfo[(int)ItemData.Items.None];
     }
 }

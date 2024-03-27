@@ -14,4 +14,12 @@ public class Shop : MonoBehaviour
             item.SetPrice(Random.Range(20, 41));
         }
     }
+
+    public void SetShopItems(List<GameObject> itemPrefabs)
+    {
+        for (int i = 0; i < shopItems.Count; i++)
+        {
+            shopItems[i].SetItemPrefab(itemPrefabs[i]);
+        }
+    }
 }

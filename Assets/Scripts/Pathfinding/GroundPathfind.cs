@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GroundPathfind : MonoBehaviour
@@ -9,6 +8,8 @@ public class GroundPathfind : MonoBehaviour
     [SerializeField] private List<PathNode> path = new List<PathNode>();
 
     [SerializeField] private Vector2 targetPosition;
+
+    public float oneWayIgnoreCollisionDuration = 0.4f;
 
     private float recalculateCooldown = 0.5f;
     [SerializeField] private bool continuouslyUpdate = true;
@@ -185,6 +186,7 @@ public class GroundPathfind : MonoBehaviour
     // Moves along the path. Return value is whether we've reached the target destination or not
     public bool MoveAlongPath(Character character, Transform satisfiedDistComparator, float satisfiedDist)
     {
+        if (character.GetIsDead()) return false;
         if (path == null)
         {
             Debug.LogError("Attempt to move along path has failed: Path is null!");
@@ -211,7 +213,7 @@ public class GroundPathfind : MonoBehaviour
                             && currentGround != null
                             && currentGround.TryGetComponent(out OneWayPlatform p))
                         {
-                            p.DisableCollision(character.gameObject, true, 0.4f);
+                            p.DisableCollision(character.gameObject, true, oneWayIgnoreCollisionDuration);
                         }
                     }
                 }

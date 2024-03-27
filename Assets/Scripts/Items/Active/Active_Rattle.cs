@@ -13,7 +13,7 @@ public class Active_Rattle : Item
     private void Awake()
     {
         sRenderer.enabled = false; // Don't show the snake rattle
-        itemInfo = ItemData.RattleInfo;
+        itemInfo = ItemData.allItemInfo[(int)ItemData.Items.Rattle];
     }
 
     private void Update()

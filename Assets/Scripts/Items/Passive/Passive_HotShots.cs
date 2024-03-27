@@ -13,7 +13,7 @@ public class Passive_HotShots : Item
     private void Awake()
     {
         sRenderer.enabled = false; // Don't show passive items
-        itemInfo = ItemData.HotShotsInfo;
+        itemInfo = ItemData.allItemInfo[(int)ItemData.Items.HotShots];
     }
 
     private void Start()

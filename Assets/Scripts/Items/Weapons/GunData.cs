@@ -13,6 +13,7 @@ public struct GunInfo
     public float baseFireRate; // shots per second
     public float reloadDurationSeconds;
     public float bulletSpeed;
+    public float spread;
     public bool autoFire; // if the player can hold down the fire button to fire automatically
     public bool canCharge; // if the player can hold down the fire button to charge a shot
 }
@@ -32,6 +33,7 @@ public class GunData : MonoBehaviour
         baseFireRate = 0,
         reloadDurationSeconds = 0,
         bulletSpeed = 0,
+        spread = 0,
         autoFire = false,
         canCharge = false,
     };
@@ -44,7 +46,8 @@ public class GunData : MonoBehaviour
         baseDamage = 1,
         baseFireRate = 3,
         reloadDurationSeconds = 1,
-        bulletSpeed = 10,
+        bulletSpeed = 15,
+        spread = 5,
         autoFire = false,
         canCharge = false,
     };
@@ -58,7 +61,22 @@ public class GunData : MonoBehaviour
         baseFireRate = 1,
         reloadDurationSeconds = 0.01f,
         bulletSpeed = 15,
+        spread = 3,
         autoFire = false,
+        canCharge = false,
+    };
+
+    public static GunInfo UziInfo => new()
+    {
+        clipSize = 18,
+        ammo = 18,
+        reserveAmmo = 216,
+        baseDamage = 1,
+        baseFireRate = 5,
+        reloadDurationSeconds = 2f,
+        bulletSpeed = 13,
+        spread = 8,
+        autoFire = true,
         canCharge = false,
     };
 }

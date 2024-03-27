@@ -1,0 +1,500 @@
+fileFormatVersion: 2
+guid: b4ddd70fea4ea6a4580eb263fa1ee211
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: ss_CactusBoss_Jump_Frame_0
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 50
+      y: 87
+      width: 38
+      height: 34
+    spriteID: 752724277f625da4faae20ef779d85ec
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 50, y: 87}
+  - name: ss_CactusBoss_Jump_Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 50
+      y: 129
+      width: 38
+      height: 31
+    spriteID: 6fe468330125b3a4abf5054c856bd78a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 50, y: 129}
+  - name: ss_CactusBoss_Jump_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 50
+      y: 168
+      width: 38
+      height: 27
+    spriteID: 4c7f6af3c7f133349a924b99de3e8d86
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 50, y: 168}
+  - name: ss_CactusBoss_Jump_Frame_3
+    originalName: 
+    pivot: {x: 0.47368422, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 50
+      y: 203
+      width: 38
+      height: 27
+    spriteID: 28dc0b0e66c4542468b8ef0437e84a5e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 50, y: 203}
+  - name: ss_CactusBoss_Jump_Frame_4
+    originalName: 
+    pivot: {x: 0.5263158, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 96
+      y: 4
+      width: 38
+      height: 27
+    spriteID: 1a3d0e55c872e774eb095ed63fdc8d8a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 96, y: 4}
+  - name: ss_CactusBoss_Jump_Frame_5
+    originalName: 
+    pivot: {x: 0.47368422, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 96
+      y: 39
+      width: 38
+      height: 27
+    spriteID: a38e3c60355839b47bd2d0539d692122
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 96, y: 39}
+  - name: ss_CactusBoss_Jump_Frame_6
+    originalName: 
+    pivot: {x: 0.5263158, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 96
+      y: 74
+      width: 38
+      height: 27
+    spriteID: 004146561baa1254ca3edad28a50f85d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 96, y: 74}
+  - name: ss_CactusBoss_Jump_Frame_7
+    originalName: 
+    pivot: {x: 0.47368422, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 96
+      y: 109
+      width: 38
+      height: 27
+    spriteID: 087099e3573397649959f8c9c42f9bbb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 96, y: 109}
+  - name: ss_CactusBoss_Jump_Frame_8
+    originalName: 
+    pivot: {x: 0.5263158, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 96
+      y: 144
+      width: 38
+      height: 27
+    spriteID: eccc19d80e0304c4591a3077dff44985
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 96, y: 144}
+  - name: ss_CactusBoss_Jump_Frame_9
+    originalName: 
+    pivot: {x: 0.5, y: -0.10666666}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 38
+      height: 75
+    spriteID: 4275d94ef8aca3e41a15588b30ea2073
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: ss_CactusBoss_Jump_Frame_10
+    originalName: 
+    pivot: {x: 0.5, y: -1.12}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 87
+      width: 38
+      height: 75
+    spriteID: 5888f8c7469f81b4a9c1ff896917fdca
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 87}
+  - name: ss_CactusBoss_Jump_Frame_11
+    originalName: 
+    pivot: {x: 0.5, y: -2.5466666}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 170
+      width: 38
+      height: 75
+    spriteID: f9d35bdb09f558d41a669ebab6a0137d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 170}
+  - name: ss_CactusBoss_Jump_Frame_12
+    originalName: 
+    pivot: {x: 0.5, y: -3.6399999}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 50
+      y: 4
+      width: 38
+      height: 75
+    spriteID: b4d4c30263cd13742b838e194c481b4d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 50, y: 4}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 125908204
+    name: ss_CactusBoss_Jump
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: ss_CactusBoss_Jump_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 1
+        y: 0
+        width: 38
+        height: 34
+      spriteId: 752724277f625da4faae20ef779d85ec
+    - name: ss_CactusBoss_Jump_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 1
+        y: 0
+        width: 38
+        height: 31
+      spriteId: 6fe468330125b3a4abf5054c856bd78a
+    - name: ss_CactusBoss_Jump_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 1
+        y: 0
+        width: 38
+        height: 27
+      spriteId: 4c7f6af3c7f133349a924b99de3e8d86
+    - name: ss_CactusBoss_Jump_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 2
+        y: 0
+        width: 38
+        height: 27
+      spriteId: 28dc0b0e66c4542468b8ef0437e84a5e
+    - name: ss_CactusBoss_Jump_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 0
+        y: 0
+        width: 38
+        height: 27
+      spriteId: 1a3d0e55c872e774eb095ed63fdc8d8a
+    - name: ss_CactusBoss_Jump_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 2
+        y: 0
+        width: 38
+        height: 27
+      spriteId: a38e3c60355839b47bd2d0539d692122
+    - name: ss_CactusBoss_Jump_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 0
+        y: 0
+        width: 38
+        height: 27
+      spriteId: 004146561baa1254ca3edad28a50f85d
+    - name: ss_CactusBoss_Jump_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 2
+        y: 0
+        width: 38
+        height: 27
+      spriteId: 087099e3573397649959f8c9c42f9bbb
+    - name: ss_CactusBoss_Jump_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 0
+        y: 0
+        width: 38
+        height: 27
+      spriteId: eccc19d80e0304c4591a3077dff44985
+    - name: ss_CactusBoss_Jump_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 1
+        y: 8
+        width: 38
+        height: 75
+      spriteId: 4275d94ef8aca3e41a15588b30ea2073
+    - name: ss_CactusBoss_Jump_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 1
+        y: 84
+        width: 38
+        height: 75
+      spriteId: 5888f8c7469f81b4a9c1ff896917fdca
+    - name: ss_CactusBoss_Jump_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 1
+        y: 191
+        width: 38
+        height: 75
+      spriteId: f9d35bdb09f558d41a669ebab6a0137d
+    - name: ss_CactusBoss_Jump_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 1
+        y: 273
+        width: 38
+        height: 75
+      spriteId: b4d4c30263cd13742b838e194c481b4d
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 40, y: 348}

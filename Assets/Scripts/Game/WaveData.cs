@@ -35,7 +35,7 @@ public class WaveData : MonoBehaviour
         {
             waveContents = new List<Tuple<GameObject, int>>()
             {
-                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.gunner.charID], 3)
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.gunner.charID], 3),
             }
         },
         // Three crows
@@ -43,7 +43,7 @@ public class WaveData : MonoBehaviour
         {
             waveContents = new List<Tuple<GameObject, int>>()
             {
-                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 3)
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 3),
             }
         },
         // Three gunners, two crows
@@ -52,7 +52,19 @@ public class WaveData : MonoBehaviour
             waveContents = new List<Tuple<GameObject, int>>()
             {
                 new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.gunner.charID], 3),
-                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 2)
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 2),
+            }
+        },
+    };
+
+    public List<EnemyWave> Area1BossWavePool => new()
+    {
+        // Cactus man
+        new EnemyWave
+        {
+            waveContents = new List<Tuple<GameObject, int>>()
+            {
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.cactusBoss.charID], 1)
             }
         },
     };

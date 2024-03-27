@@ -6,7 +6,6 @@ public class Item : MonoBehaviour
     [Header("Item Base Info - Set at Awake")]
     public ItemInfo itemInfo;
     [Header("Object References To Set")]
-    public Transform handle;
     public Transform spriteObject;
     public SpriteRenderer sRenderer;
     public Animator animator;
@@ -20,17 +19,17 @@ public class Item : MonoBehaviour
         transform.position = handPosition;
 
         sRenderer.flipY = handOnLeft;
-        if (handOnLeft && !lastHandOnLeft)
-        {
-            spriteObject.localPosition = new Vector2(handle.localPosition.x * -1, handle.localPosition.y);
-
-            // flip the muzzles y position to match the sprite's new orientation
-            // do this every time we switch aiming directions
-        }
-        else if (!handOnLeft && lastHandOnLeft)
-        {
-            spriteObject.localPosition = handle.localPosition * -1;
-        }
+        //if (handOnLeft && !lastHandOnLeft)
+        //{
+        //    spriteObject.localPosition = new Vector2(handle.localPosition.x * -1, handle.localPosition.y);
+        //
+        //    // flip the muzzles y position to match the sprite's new orientation
+        //    // do this every time we switch aiming directions
+        //}
+        //else if (!handOnLeft && lastHandOnLeft)
+        //{
+        //    spriteObject.localPosition = handle.localPosition * -1;
+        //}
 
         lastHandOnLeft = handOnLeft;
     }

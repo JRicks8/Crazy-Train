@@ -19,7 +19,6 @@ public struct EnemyInfo
     [Range(0.0f, 1.0f)] public float idleDrag;
     [Header("Game Settings")]
     public int maxHealth;
-    public int bulletDamage;
     public bool dealsContactDamage;
     public int contactDamage;
     [Space]
@@ -50,6 +49,8 @@ public class CharacterData : MonoBehaviour
         maxVelocityMag = 0,
         idleDrag = 0,
         maxHealth = 0,
+        dealsContactDamage = false,
+        contactDamage = 0,
         handOffset = 0,
         canFly = false,
         fadeOnDeath = false,
@@ -69,7 +70,9 @@ public class CharacterData : MonoBehaviour
         maxHorizontalSpeed = 3.5f,
         maxVelocityMag = 0f,
         idleDrag = 0.75f,
-        maxHealth = 8,
+        maxHealth = 6,
+        dealsContactDamage = true,
+        contactDamage = 1,
         handOffset = 0.57f,
         canFly = false,
         fadeOnDeath = true,
@@ -90,9 +93,55 @@ public class CharacterData : MonoBehaviour
         maxVelocityMag = 5.0f,
         idleDrag = 0.9f,
         maxHealth = 5,
+        dealsContactDamage = true,
+        contactDamage = 1,
         handOffset = 0f,
         canFly = true,
         fadeOnDeath = true,
         deathFadeTime = 3.0f
+    };
+
+    public static EnemyInfo cactusBoss => new()
+    {
+        charID = 3,
+        name = "Cactus Man",
+        allyMask = LayerMask.GetMask(new string[] { "Enemy" }),
+        enemyMask = LayerMask.GetMask(new string[] { "Friendly", "Neutral" }),
+        bulletHitTags = new List<string>() { "Friendly", "Neutral", "Player" },
+        bulletIgnoreTags = new List<string>() { "Enemy" },
+        acceleration = 150,
+        maxJumpPower = 10f,
+        maxHorizontalSpeed = 2.0f,
+        maxVelocityMag = 0.0f,
+        idleDrag = 0.75f,
+        maxHealth = 50,
+        dealsContactDamage = true,
+        contactDamage = 2,
+        handOffset = 0.0f,
+        canFly = false,
+        fadeOnDeath = true,
+        deathFadeTime = 8.0f
+    };
+
+    public static EnemyInfo coolGunner => new()
+    {
+        charID = 4,
+        name = "Cool Gunner",
+        allyMask = LayerMask.GetMask(new string[] { "Enemy" }),
+        enemyMask = LayerMask.GetMask(new string[] { "Friendly", "Neutral" }),
+        bulletHitTags = new List<string>() { "Friendly", "Neutral", "Player" },
+        bulletIgnoreTags = new List<string>() { "Enemy" },
+        acceleration = 400f,
+        maxJumpPower = 10f,
+        maxHorizontalSpeed = 4.0f,
+        maxVelocityMag = 0f,
+        idleDrag = 0.75f,
+        maxHealth = 6,
+        dealsContactDamage = true,
+        contactDamage = 1,
+        handOffset = 0.57f,
+        canFly = false,
+        fadeOnDeath = false,
+        deathFadeTime = 0.0f
     };
 }

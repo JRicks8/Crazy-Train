@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Gun : Item
 {
@@ -31,15 +32,12 @@ public class Gun : Item
         sRenderer.flipY = handOnLeft;
         if (handOnLeft && !lastHandOnLeft)
         {
-            spriteObject.localPosition = new Vector2(handle.localPosition.x * -1, handle.localPosition.y);
-
             // flip the muzzles y position to match the sprite's new orientation
             // do this every time we switch aiming directions
             muzzle.localPosition = new Vector2(muzzle.localPosition.x, muzzle.localPosition.y * -1);
         }
         else if (!handOnLeft && lastHandOnLeft)
         {
-            spriteObject.localPosition = handle.localPosition * -1;
             muzzle.localPosition = new Vector2(muzzle.localPosition.x, muzzle.localPosition.y * -1);
         }
 
@@ -86,6 +84,16 @@ public class Gun : Item
 
     protected virtual void FireBullet(Vector2 direction)
     {
+        if (gunInfo.spread > 0)
+        {
+            float angleToTarget = Vector2.Angle(Vector2.right, direction);
+            if (direction.y < 0)
+                angleToTarget *= -1;
+
+            float newAngle = Random.Range(-gunInfo.spread, gunInfo.spread) + angleToTarget;
+            direction = new Vector2(Mathf.Cos(newAngle * Mathf.Deg2Rad), Mathf.Sin(newAngle * Mathf.Deg2Rad)).normalized;
+        }
+
         GameObject b = Instantiate(bulletPrefab);
         Bullet bulletScript = b.GetComponent<Bullet>();
         foreach (string tag in ignoreTags) bulletScript.AddIgnoreTag(tag);

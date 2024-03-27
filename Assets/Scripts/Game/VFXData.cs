@@ -7,6 +7,7 @@ public class VFXData : MonoBehaviour
 {
     public enum VFXType
     {
+        Heart,
         BigImpactSmoke,
         BigSmoke,
         DashSmoke1,

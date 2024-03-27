@@ -6,6 +6,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public Character owner;
+    private Rigidbody2D rb;
 
     [SerializeField] private List<string> ignoreTags = new List<string>();
     [SerializeField] private List<string> hitTags = new List<string>();
@@ -19,15 +20,32 @@ public class Bullet : MonoBehaviour
 
     [SerializeField] private bool canPierce = false;
     [SerializeField] private int numPierce = 0;
+    [SerializeField] private bool ignoreTerrain = false;
+    [SerializeField] private bool hasGravity = false;
+    [SerializeField] private float gravityForce = -9.81f;
 
     public delegate void BulletEventDelegate(GameObject obj);
     public BulletEventDelegate OnHitEntity;
     public BulletEventDelegate OnHitTerrain;
 
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
     private void Update()
     {
         timeAlive += Time.deltaTime;
         if (timeAlive >= maxTimeAlive) Destroy(gameObject);
+    }
+
+    private void FixedUpdate()
+    {
+        if (hasGravity)
+        {
+            rb.velocity += new Vector2(0, gravityForce * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.Cross(transform.forward, rb.velocity.normalized));
+        }
     }
 
     public void SetVelocity(Vector2 velocity)
@@ -71,6 +89,14 @@ public class Bullet : MonoBehaviour
         this.numPierce = numPierce;
     }
 
+    public void SetGravity(bool hasGravity, float force)
+    {
+        this.hasGravity = hasGravity;
+        gravityForce = force;
+    }
+
+    public void SetIgnoreTerrain(bool ignoreTerrain) { this.ignoreTerrain = ignoreTerrain; }
+    
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.isTrigger) return; // Don't hit triggers
@@ -83,19 +109,23 @@ public class Bullet : MonoBehaviour
                 float finalDamage = baseDamage * damageMultiplier + additiveDamage;
                 otherHealth.TakeDamage(finalDamage);
                 OnHitEntity?.Invoke(other);
-                break;
+                if (canPierce && numPierce > 0)
+                {
+                    numPierce--;
+                    return;
+                }
             }
         }
 
-        if (other.layer == LayerMask.NameToLayer("Terrain"))
+        if (other.layer == LayerMask.NameToLayer("Terrain") || other.layer == LayerMask.NameToLayer("Door"))
         {
-            OnHitTerrain?.Invoke(other);
-            Destroy(gameObject);
+            if (!ignoreTerrain)
+            {
+                OnHitTerrain?.Invoke(other);
+                Destroy(gameObject);
+            }
         }
-
-        if (canPierce && numPierce > 0)
-            numPierce--;
-        else 
+        else
             Destroy(gameObject);
     }
 }

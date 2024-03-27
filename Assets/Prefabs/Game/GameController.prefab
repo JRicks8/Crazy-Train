@@ -352,13 +352,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 658745313413191590, guid: 2653ff5f41f5641ec93c1a67f9228796, type: 3}
   announcementTextPrefab: {fileID: 187627060126578659, guid: ffa01cd1a99d39d4fa1a01b48e031628, type: 3}
-  shopWizardPrefab: {fileID: 3562361340248360543, guid: 5ad46ea82306fbb4485df9f372a5ed8e, type: 3}
+  shopPrefab: {fileID: 3562361340248360543, guid: 5ad46ea82306fbb4485df9f372a5ed8e, type: 3}
   GUICanvas: {fileID: 665857861009545735}
   enemiesLeftText: {fileID: 9099869238645968835}
   trainCars: []
   enemiesToSpawn: []
   livingEnemies: []
-  numWaves: 2
+  numWaves: 4
   waveActive: 0
 --- !u!114 &7828417313033661439
 MonoBehaviour:
@@ -377,6 +377,9 @@ MonoBehaviour:
   - {fileID: 6381472025034332572, guid: 1688b9e0e32ab2d44a0ed4a6689b82f3, type: 3}
   - {fileID: 6381472025034332572, guid: 3bc6ed6148cb76e458a2782092a80f16, type: 3}
   - {fileID: 2778268923181939816, guid: e6c61253b267f2d448d60fa8c040f610, type: 3}
+  - {fileID: 6381472025034332572, guid: 3912461009171ca448712a3b83cb57ea, type: 3}
+  - {fileID: 8262402455172697422, guid: 77d0f452df43260499cff9a5fc8b2124, type: 3}
+  - {fileID: 6381472025034332572, guid: 88dc0de17be26f247ada32444d9c09cd, type: 3}
   itemPickupPrefab: {fileID: 5867989246890966533, guid: 9591daa0fd8b60c42b6550dbd78adf67, type: 3}
 --- !u!114 &3265700236167145417
 MonoBehaviour:
@@ -394,6 +397,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 8888877826769090527, guid: 580b9622087dc444a81ef433aaf357cc, type: 3}
   - {fileID: 3414244748358548577, guid: 76f81a7232449c2488c4038bba9efca7, type: 3}
+  - {fileID: 8888877826769090527, guid: 95dfe9029a3bcc94281854c55b8a046d, type: 3}
+  - {fileID: 8888877826769090527, guid: 0ffff3646364b174aae4ef3ae8e422f4, type: 3}
 --- !u!114 &1080611993032145323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VFXTextures:
+  - {fileID: 2800000, guid: 51fe4bce8b1e34d468504639447b5b77, type: 3}
   - {fileID: 2800000, guid: 32c37611218b6574a838ef0221ae3409, type: 3}
   - {fileID: 2800000, guid: 8ff3cbef58756124bbc354f80fd92eb1, type: 3}
   - {fileID: 2800000, guid: ebe70fd7e7231fb419b917feac2cdca6, type: 3}

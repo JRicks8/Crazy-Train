@@ -39,8 +39,9 @@ public class Character : MonoBehaviour
     [Header("Pathfinding")]
     public float satisfiedNodeDistance = 0.5f;
     [Header("Other Settings")]
-    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] protected LayerMask whatIsGround;
     [SerializeField] private Effect[] effects; // Length is equal to the number of effects in the Effects enum.
+    [SerializeField] private bool immuneToEffects = false;
     private List<Action> startEffectFunctions = new List<Action>();
     private List<Action> endEffectFunctions = new List<Action>();
 
@@ -383,6 +384,7 @@ public class Character : MonoBehaviour
 
     public void GiveEffect(EffectType effect, float duration)
     {
+        if (immuneToEffects) return;
         int i = (int)effect;
         if (!effects[i].active) // If the effect process isn't running already
         {
@@ -424,7 +426,6 @@ public class Character : MonoBehaviour
         sRenderer.color = defaultColor;
     }
 
-    public static VFXData.VFXType fireVFX = VFXData.VFXType.Fire1;
     public static float fireDamage = 1.0f;
     public static float fireDamageInterval = 1.0f;
     public static float fireVFXInterval = 0.33f;
@@ -471,14 +472,17 @@ public class Character : MonoBehaviour
             yield return new WaitForSeconds(fireVFXInterval);
         }
     }
-    
+
     // Charmed enemies target their allies, and do no harm to their enemies.
     // Implementation is in the Character script, where the character would search for their target.
+    public static float charmVFXInterval = 0.33f;
+    public static float charmVFXDuration = 1.0f;
+    private IEnumerator charmEffectVFXHandler;
     private void OnCharm()
     {
-        Debug.Log(transform.name + " has been charmed");
-
         // Make heart vfx like fire
+        charmEffectVFXHandler = CharmEffectVFXHandler();
+        StartCoroutine(charmEffectVFXHandler);
 
         // Change layer & tag
         gameObject.layer = LayerMask.NameToLayer("Neutral");
@@ -502,8 +506,6 @@ public class Character : MonoBehaviour
 
     private void EndCharm()
     {
-        Debug.Log(transform.name + " is no longer charmed");
-
         // Change layer & tag
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         gameObject.tag = "Enemy";
@@ -522,6 +524,25 @@ public class Character : MonoBehaviour
 
         // Refresh current target list
         LookForTargets();
+    }
+
+    private IEnumerator CharmEffectVFXHandler()
+    {
+        // While we are charmed, keep spawning vfx.
+        while (effects[(int)EffectType.Charm].active)
+        {
+            // Spawn VFX at a random position within the bounds of the primary collider
+            Bounds bounds = primaryCollider.bounds;
+            float t1 = UnityEngine.Random.Range(0.0f, 1.0f);
+            float t2 = UnityEngine.Random.Range(0.0f, 1.0f);
+            Vector2 VFXPosition = new Vector2(
+                Mathf.Lerp(bounds.min.x, bounds.max.x, t1),
+                Mathf.Lerp(bounds.min.y, bounds.max.y, t2));
+            VFXData.SpawnVFX(
+                VFXData.staticVFXSprites[(int)VFXData.VFXType.Heart],
+                VFXPosition, Vector3.one, transform, charmVFXDuration);
+            yield return new WaitForSeconds(charmVFXInterval);
+        }
     }
 
     public bool IsGrounded()
@@ -555,9 +576,11 @@ public class Character : MonoBehaviour
     }
 
     public bool GetIsDead() { return isDead; }
+    public void SetEffectImmunity(bool immune) { immuneToEffects = immune; }
 
     private void OnCharacterDeath(GameObject character)
     {
+        RemoveAllEffects();
         healthScript.SetCanSeeHealthbar(false);
         if (hand != null) 
             hand.gameObject.SetActive(false);
@@ -567,6 +590,22 @@ public class Character : MonoBehaviour
         gameObject.tag = "Untagged";
         isDead = true;
         deathFadeTimer = enemyInfo.deathFadeTime;
-        RemoveAllEffects();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (enemyInfo.dealsContactDamage)
+        {
+            GameObject other = collision.collider.gameObject;
+
+            foreach (string tag in enemyInfo.bulletHitTags)
+            {
+                if (other.CompareTag(tag) && other.TryGetComponent(out Health otherHealth))
+                {
+                    otherHealth.TakeDamage(enemyInfo.contactDamage);
+                    return;
+                }
+            }
+        }
     }
 }

@@ -115,10 +115,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.29411766, y: 0.125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: ss_revolver_shoot_1
       rect:
         serializedVersion: 2
-        x: 34
+        x: 17
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.29411766, y: 0.125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: ss_revolver_shoot_2
       rect:
         serializedVersion: 2
-        x: 68
+        x: 34
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.29411766, y: 0.125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +176,12 @@ TextureImporter:
       name: ss_revolver_shoot_3
       rect:
         serializedVersion: 2
-        x: 102
+        x: 51
         y: 0
-        width: 34
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.29411766, y: 0.125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
