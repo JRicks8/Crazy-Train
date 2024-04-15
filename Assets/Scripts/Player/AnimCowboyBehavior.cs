@@ -16,6 +16,8 @@ public class AnimCowboyBehavior : StateMachineBehaviour
         landTrigger,
     }
 
+    private bool referencesSet = false;
+
     private PlayerMovement pMovement;
     private Health pHealth;
 
@@ -26,10 +28,13 @@ public class AnimCowboyBehavior : StateMachineBehaviour
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        animator.SetFloat(Parameters.horizSpeed.ToString(), pRigidbody.velocity.x);
-        animator.SetFloat(Parameters.vertSpeed.ToString(), pRigidbody.velocity.y);
-        animator.SetFloat(Parameters.velocityMag.ToString(), pRigidbody.velocity.magnitude);
-        animator.SetBool(Parameters.grounded.ToString(), pMovement.IsGrounded());
+        if (referencesSet)
+        {
+            animator.SetFloat(Parameters.horizSpeed.ToString(), pRigidbody.velocity.x);
+            animator.SetFloat(Parameters.vertSpeed.ToString(), pRigidbody.velocity.y);
+            animator.SetFloat(Parameters.velocityMag.ToString(), pRigidbody.velocity.magnitude);
+            animator.SetBool(Parameters.grounded.ToString(), pMovement.IsGrounded());
+        }
     }
 
     public void SetReferences(GameObject player)
@@ -44,6 +49,8 @@ public class AnimCowboyBehavior : StateMachineBehaviour
         pHealth.OnDeath += OnCowboyDie;
         pHealth.OnDamageTaken += OnCowboyDamageTaken;
         pMovement.OnLand += OnCowboyLand;
+
+        referencesSet = true;
     }
 
     public void OnCowboyDie(GameObject entity)

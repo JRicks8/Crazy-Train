@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour
         TrainCarPool = 1
     }
 
+    public static GameController instance;
+
     [Header("Object References")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject announcementTextPrefab;
@@ -44,39 +46,22 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Debug.LogError("Error: There are two GameControllers in this scene.");
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
         waveData = GetComponent<WaveData>();
         trainCarData = GetComponent<TrainCarData>();
     }
 
     private void Start()
     {
-        // Create the caboose and first car
-        CreateNextTrainCar(TrainCarPool.CaboosePool);
-        CreateNextTrainCar(TrainCarPool.TrainCarPool);
+        MusicPlayer.instance.PlaySoundFadeIn(MusicPlayer.Sound.Song_Menu, 3.0f, true);
 
-        // Spawn the player in the caboose
-        GameObject player = Instantiate(playerPrefab);
-        player.transform.position = trainCars[0].playerSpawnPoint.position;
-
-        SearchForPathfindData();
-
-        List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
-        for (int i = 0; i < numWaves - 1; i++) // Add numWaves - 1 waves from the pool to the queue (minus one to account for the boss wave)
-        {
-            int randomIndex = Random.Range(0, waves.Count); // Add them randomly
-            waveQueue.Enqueue(waves[randomIndex]);
-        }
-
-        // Queue boss wave
-        List<EnemyWave> bossWaves = waveData.Area1BossWavePool;
-        int randBossWaveIndex = Random.Range(0, bossWaves.Count);
-        waveQueue.Enqueue(bossWaves[randBossWaveIndex]);
-
-        if (!StartNextWave())
-        {
-            Debug.Log("Waves Complete");
-            OnWavesComplete();
-        }
     }
 
     private void Update()
@@ -120,6 +105,45 @@ public class GameController : MonoBehaviour
                 Destroy(c.gameObject);
             }
             enemiesToSpawn.Clear();
+        }
+    }
+
+    public void StartGame()
+    {
+        // Play Music
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_EnemiesClosingIn, true);
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true);
+
+        // Create the caboose and first car
+        CreateNextTrainCar(TrainCarPool.CaboosePool);
+        CreateNextTrainCar(TrainCarPool.TrainCarPool);
+
+        // Reposition for the intro animation
+        for (int i = 0; i < trainCars.Count; i++)
+            trainCars[i].transform.position += new Vector3(30, 0);
+
+        // Spawn the player in the caboose
+        GameObject player = Instantiate(playerPrefab);
+        player.transform.position = trainCars[0].playerSpawnPoint.position;
+
+        SearchForPathfindData();
+
+        List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
+        for (int i = 0; i < numWaves - 1; i++) // Add numWaves - 1 waves from the pool to the queue (minus one to account for the boss wave)
+        {
+            int randomIndex = Random.Range(0, waves.Count); // Add them randomly
+            waveQueue.Enqueue(waves[randomIndex]);
+        }
+
+        // Queue boss wave
+        List<EnemyWave> bossWaves = waveData.Area1BossWavePool;
+        int randBossWaveIndex = Random.Range(0, bossWaves.Count);
+        waveQueue.Enqueue(bossWaves[randBossWaveIndex]);
+
+        if (!StartNextWave())
+        {
+            Debug.Log("Waves Complete");
+            OnWavesComplete();
         }
     }
 
