@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         Hide();
-        GameController.instance.StartGame();
+        GameController.instance.PlayOpeningSequence();
     }
 
     public void OnOptionsButtonClicked()

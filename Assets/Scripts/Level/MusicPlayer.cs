@@ -11,6 +11,7 @@ public class MusicPlayer : MonoBehaviour
         Song_EnemiesClosingIn,
         Song_Menu,
         Sound_TrainNoise,
+        Song_BossLayer,
     }
 
     public static MusicPlayer instance;
@@ -79,16 +80,14 @@ public class MusicPlayer : MonoBehaviour
         tracks[(int)sound].volume = targetVolume;
     }
 
-    public void PlaySoundFadeOut(Sound sound, float fadeOutTime, bool loop, float startVolume = 1.0f)
+    public void StopSoundFadeOut(Sound sound, float fadeOutTime, float startVolume = 1.0f)
     {
-        tracks[(int)sound].loop = loop;
         StartCoroutine(SoundFadeOutHandler(sound, fadeOutTime, startVolume));
     }
 
     private IEnumerator SoundFadeOutHandler(Sound sound, float fadeOutTime, float startVolume)
     {
         tracks[(int)sound].volume = startVolume;
-        tracks[(int)sound].Play();
 
         float timer = 0.0f;
         while (timer < fadeOutTime)
@@ -100,6 +99,6 @@ public class MusicPlayer : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        tracks[(int)sound].volume = 0.0f;
+        tracks[(int)sound].Stop();
     }
 }

@@ -61,7 +61,6 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         MusicPlayer.instance.PlaySoundFadeIn(MusicPlayer.Sound.Song_Menu, 3.0f, true);
-
     }
 
     private void Update()
@@ -114,14 +113,6 @@ public class GameController : MonoBehaviour
         MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_EnemiesClosingIn, true);
         MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true);
 
-        // Create the caboose and first car
-        CreateNextTrainCar(TrainCarPool.CaboosePool);
-        CreateNextTrainCar(TrainCarPool.TrainCarPool);
-
-        // Reposition for the intro animation
-        for (int i = 0; i < trainCars.Count; i++)
-            trainCars[i].transform.position += new Vector3(30, 0);
-
         // Spawn the player in the caboose
         GameObject player = Instantiate(playerPrefab);
         player.transform.position = trainCars[0].playerSpawnPoint.position;
@@ -145,6 +136,20 @@ public class GameController : MonoBehaviour
             Debug.Log("Waves Complete");
             OnWavesComplete();
         }
+    }
+
+    public void PlayOpeningSequence()
+    {
+        MusicPlayer.instance.StopSoundFadeOut(MusicPlayer.Sound.Song_Menu, 4.0f);
+        OpeningSequenceManager.instance.DoOpeningSequence();
+
+        // Create the caboose and first car
+        CreateNextTrainCar(TrainCarPool.CaboosePool);
+        CreateNextTrainCar(TrainCarPool.TrainCarPool);
+
+        // Reposition for the intro animation
+        for (int i = 0; i < trainCars.Count; i++)
+            trainCars[i].transform.position += new Vector3(30, 0);
     }
 
     private void OnWavesComplete()
