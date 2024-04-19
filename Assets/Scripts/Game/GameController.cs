@@ -111,13 +111,22 @@ public class GameController : MonoBehaviour
     {
         // Play Music
         MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_EnemiesClosingIn, true);
-        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true);
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_BossLayer, true, 0.0f);
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true, 0.4f);
 
         // Spawn the player in the caboose
         GameObject player = Instantiate(playerPrefab);
         player.transform.position = trainCars[0].playerSpawnPoint.position;
 
         SearchForPathfindData();
+        StartNextSection();
+    }
+
+    public void StartNextSection()
+    {
+        // Play Music
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_EnemiesClosingIn, 1.0f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.4f, 3.0f);
 
         List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
         for (int i = 0; i < numWaves - 1; i++) // Add numWaves - 1 waves from the pool to the queue (minus one to account for the boss wave)
@@ -154,6 +163,10 @@ public class GameController : MonoBehaviour
 
     private void OnWavesComplete()
     {
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_BossLayer, 0.0f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_EnemiesClosingIn, 0.0f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.8f, 4.0f);
+
         Debug.Log("Waves complete");
         // Get the front most car on the train
         TrainCar car = trainCars[^1];
@@ -290,6 +303,10 @@ public class GameController : MonoBehaviour
 
         currentWave = waveQueue.Dequeue();
         waveActive = true;
+
+        // Play the boss layer of music if this is the last wave (boss wave)
+        if (waveQueue.Count == 0)
+            MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_BossLayer, 1.0f, 3.0f);
 
         // get all train cars
         GameObject[] trainCars = GameObject.FindGameObjectsWithTag("TrainCar");

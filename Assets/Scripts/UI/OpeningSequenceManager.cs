@@ -40,6 +40,7 @@ public class OpeningSequenceManager : MonoBehaviour
 
         // Walk back to edge of platform and face right
         fakePlayerAnimator.SetTrigger("runLeftTrigger");
+        fakePlayerTransform.localScale = new Vector3(-1, 1, 1);
 
         float timer = 0.0f;
         float duration = 1.0f;
@@ -55,10 +56,13 @@ public class OpeningSequenceManager : MonoBehaviour
         fakePlayerTransform.localPosition = destination;
 
         fakePlayerAnimator.SetTrigger("idleRightTrigger");
+        fakePlayerTransform.localScale = Vector3.one;
+
+        yield return new WaitForSeconds(1.0f);
 
         // Start running to the right end
         fakePlayerAnimator.SetTrigger("runRightTrigger");
-
+        
         timer = 0.0f;
         duration = 0.5f;
         destination = new Vector3(1.125f, 2.0f, 0);
@@ -76,30 +80,34 @@ public class OpeningSequenceManager : MonoBehaviour
         fakePlayerAnimator.SetTrigger("jumpRightTrigger");
 
         timer = 0.0f;
-        duration = 2.0f;
+        duration = 1.0f;
         destination = new Vector3(8.1875f, 8.7f, 0);
         start = fakePlayerTransform.localPosition;
         while (timer < duration)
         {
             timer += Time.deltaTime;
             float t = 1 - Mathf.Pow(1 - (timer / duration), 3);
-            fakePlayerTransform.localPosition = Vector3.Lerp(start, destination, t);
+            float x = Mathf.Lerp(start.x, destination.x, timer / duration);
+            float y = Mathf.Lerp(start.y, destination.y, t);
+            fakePlayerTransform.localPosition = new Vector2(x, y);
             cameraController.transform.position = fakePlayerTransform.position + new Vector3(0, 1.755f, 0);
             yield return new WaitForEndOfFrame();
         }
 
         // Fall to the train
-        fakePlayerAnimator.SetTrigger("jumpRightTrigger");
+        fakePlayerAnimator.SetTrigger("fallRightTrigger");
 
         timer = 0.0f;
-        duration = 2.0f;
+        duration = 1.0f;
         destination = new Vector3(17.5f, 3.7f, 0);
         start = fakePlayerTransform.localPosition;
         while (timer < duration)
         {
             timer += Time.deltaTime;
             float t = Mathf.Pow(timer / duration, 3);
-            fakePlayerTransform.localPosition = Vector3.Lerp(start, destination, t);
+            float x = Mathf.Lerp(start.x, destination.x, timer / duration);
+            float y = Mathf.Lerp(start.y, destination.y, t);
+            fakePlayerTransform.localPosition = new Vector2(x, y);
             cameraController.transform.position = fakePlayerTransform.position + new Vector3(0, 1.755f, 0);
             yield return new WaitForEndOfFrame();
         }
