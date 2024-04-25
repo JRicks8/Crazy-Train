@@ -80,7 +80,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 658745313413191590}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 897998e3216fb48f88712c46ebeeef9f, type: 2}
+  m_Material: {fileID: 6200000, guid: 9c704d81fccda674996f3367a0a253ef, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -118,7 +118,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 65087
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 448
@@ -187,6 +187,7 @@ MonoBehaviour:
   animator: {fileID: 578416125137471097}
   rb: {fileID: 0}
   movement: {fileID: 0}
+  healthScript: {fileID: 0}
   overlappingInteractibles: []
   closestInteractObject: {fileID: 0}
   equippedWeaponIndex: 0
@@ -197,6 +198,7 @@ MonoBehaviour:
   weapons: []
   activeItems: []
   passiveItems: []
+  timeInvincibleOnHit: 1
   horizontalMove: 0
   currency: 0
   jump: 0
@@ -243,6 +245,7 @@ MonoBehaviour:
   health: 6
   maxHealth: 6
   isPlayer: 1
+  isInvincible: 0
 --- !u!1 &955082768661290047
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,7 +821,7 @@ BoxCollider2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295

@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -39,6 +40,7 @@ public class GameController : MonoBehaviour
     [Header("Globals")]
     public static GameObject[] groundPathfindDataObjects;
     public static List<PathNode> pathNodes = new List<PathNode>();
+    public static bool paused = false;
 
     // Other
     private IEnumerator spawnEnemiesRecursively;
@@ -82,6 +84,11 @@ public class GameController : MonoBehaviour
             enemiesLeftText.text = "";
         }
 
+        if (Input.GetButtonDown("Escape"))
+        {
+            TogglePause();
+        }
+
         // Debug Controls
         if (Input.GetButtonDown("Debug0"))
         {
@@ -105,6 +112,16 @@ public class GameController : MonoBehaviour
             }
             enemiesToSpawn.Clear();
         }
+        else if (Input.GetButtonDown("Debug2"))
+        {
+            // Kill the player immediately
+            PlayerController.instance.GetHealthScript().SetHealth(0.0f);
+        }
+        else if (Input.GetButtonDown("Debug3"))
+        {
+            // Reset the game
+            ResetGame();
+        }
     }
 
     public void StartGame()
@@ -120,6 +137,60 @@ public class GameController : MonoBehaviour
 
         SearchForPathfindData();
         StartNextSection();
+    }
+
+    public void ResetGame()
+    {
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_Menu, 1.0f, 3.0f);
+
+        // Clear all enemies, cancel spawning
+        waveQueue.Clear();
+        foreach (Character c in livingEnemies)
+        {
+            Destroy(c.gameObject);
+        }
+        enemiesToSpawn.Clear();
+        currentWaveIndex = 0;
+        waveActive = false; // This prevents the game from continuing
+
+        // Clear pathfind data
+        for (int i = groundPathfindDataObjects.Length - 1; i >= 0; i--)
+        {
+            Destroy(groundPathfindDataObjects[i]);
+        }
+        pathNodes.Clear();
+        AstarPath.active.data.SetData(new byte[0]);
+
+        // Destroy Train cars
+        for (int i = trainCars.Count - 1; i >= 0; i--)
+        {
+            Destroy(trainCars[i].gameObject);
+        }
+
+        // Show Menu
+        MainMenu.instance.ShowContent();
+
+        Debug.Log("Game Reset");
+    }
+
+    public void TogglePause()
+    {
+        if (PlayerController.instance != null) // Only pause when the player is valid and the game is in session
+        {
+            paused = !paused;
+
+            if (paused)
+            {
+                PauseMenu.instance.ShowContent();
+                Time.timeScale = 0.0f;
+            }
+            else
+            {
+                PauseMenu.instance.ForceHideContent();
+                OptionsMenu.instance.ForceHideContent();
+                Time.timeScale = 1.0f;
+            }
+        }
     }
 
     public void StartNextSection()
@@ -150,7 +221,7 @@ public class GameController : MonoBehaviour
     public void PlayOpeningSequence()
     {
         MusicPlayer.instance.StopSoundFadeOut(MusicPlayer.Sound.Song_Menu, 4.0f);
-        OpeningSequenceManager.instance.DoOpeningSequence();
+        CutsceneManager.instance.DoOpeningSequence();
 
         // Create the caboose and first car
         CreateNextTrainCar(TrainCarPool.CaboosePool);
@@ -159,6 +230,13 @@ public class GameController : MonoBehaviour
         // Reposition for the intro animation
         for (int i = 0; i < trainCars.Count; i++)
             trainCars[i].transform.position += new Vector3(30, 0);
+        Matrix4x4 m = new Matrix4x4();
+        m.SetTRS(new Vector3(30, 0, 0), Quaternion.identity, Vector3.one);
+        for (int i = 0; i < AstarPath.active.graphs.Length; i++)
+        {
+            GridGraph g = AstarPath.active.graphs[i] as GridGraph;
+            g.RelocateNodes(new Vector3(g.center.x + 30, g.center.y, 0), Quaternion.identity, 1.0f);
+        }
     }
 
     private void OnWavesComplete()
@@ -348,7 +426,15 @@ public class GameController : MonoBehaviour
             int randEnemyIndex = UnityEngine.Random.Range(0, enemiesToSpawn.Count);
             int randSpawnerIndex = UnityEngine.Random.Range(0, spawners.Count);
 
-            GameObject e = spawners[randSpawnerIndex].SpawnEntity(enemiesToSpawn[randEnemyIndex]);
+            //GameObject e = spawners[randSpawnerIndex].SpawnEntity(enemiesToSpawn[randEnemyIndex]);
+            Spawner s = spawners[randSpawnerIndex];
+            while (Vector2.Distance(s.transform.position, PlayerController.instance.transform.position) < 13.0f)
+            {
+                randSpawnerIndex = UnityEngine.Random.Range(0, spawners.Count);
+                s = spawners[randSpawnerIndex];
+            }
+            GameObject e = s.SpawnEntity(enemiesToSpawn[randEnemyIndex]);
+
             if (e != null) // If spawn is successful
             {
                 Character charScript = e.GetComponent<Character>();

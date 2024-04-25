@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
+
     [Header("Settings")]
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private float handOffset;
@@ -66,6 +68,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+
         // Set references
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
@@ -88,6 +92,7 @@ public class PlayerController : MonoBehaviour
     {
         OnItemRemoved += ItemRemoved;
         healthScript.OnDamageTaken += OnDamageTaken;
+        healthScript.OnDeath += OnDeath;
     }
 
     private void Update()
@@ -358,6 +363,12 @@ public class PlayerController : MonoBehaviour
             activeItems.RemoveAt(index);
     }
 
+    private void OnDeath(GameObject _)
+    {
+        CutsceneManager.instance.DoDeathSequence(transform.position);
+        Destroy(gameObject);
+    }
+
     private void DisplayOverheadPrompt()
     {
         // Depending on the closest collider overlapping with the player's interact trigger, display the corresponding overhead prompt
@@ -414,6 +425,7 @@ public class PlayerController : MonoBehaviour
     public Item GetEquippedActiveItem() { return equippedActiveItem; }
     public Item GetEquippedWeapon() { return equippedWeapon; }
     public Vector3 GetHandLocation() { return hand.position; }
+    public Health GetHealthScript() { return healthScript; }
 
     private void OnDamageTaken(GameObject entity)
     {

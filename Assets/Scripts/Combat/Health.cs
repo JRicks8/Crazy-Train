@@ -121,10 +121,4 @@ public class Health : MonoBehaviour
 
         scrollerContainer.localScale = new Vector3(Mathf.Clamp01(health / maxHealth), scrollerContainer.localScale.y, 1);
     }
-
-    private void OnDestroy()
-    {
-        if (health <= 0) return; // if already dead don't invoke the ondeath delegate
-        OnDeath?.Invoke(gameObject);
-    }
 }

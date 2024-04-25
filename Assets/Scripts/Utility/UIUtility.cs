@@ -13,7 +13,7 @@ public class UIUtility : MonoBehaviour
             float t = Mathf.Pow(timer / duration, 3);
             rectToMove.localPosition = Vector2.Lerp(start, end, t);
 
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             yield return new WaitForEndOfFrame();
         }
 
