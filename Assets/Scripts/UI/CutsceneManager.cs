@@ -138,7 +138,10 @@ public class CutsceneManager : MonoBehaviour
 
         // Walk back to edge of platform and face right
         fakePlayerAnimator.SetTrigger("ouchTrigger");
-        fakePlayerTransform.position = deathPosition;
+        fakePlayerTransform.position = deathPosition + new Vector2(0, 0.5f);
+        cameraController.transform.position = new Vector2(fakePlayerTransform.position.x, -1.87f);
+
+        yield return new WaitForSeconds(1.0f);
 
         float timer = 0.0f;
         float duration = 1.0f;

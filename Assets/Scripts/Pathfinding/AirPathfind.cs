@@ -65,6 +65,7 @@ public class AirPathfind : MonoBehaviour
         for (int i = 0; i < AstarPath.active.graphs.Length; i++)
         {
             GridGraph g = (GridGraph)AstarPath.active.graphs[i];
+            if (g == null) continue;
 
             if (nearestGraph == null || Vector3.Distance(g.center, p) < Vector3.Distance(nearestGraph.center, p))
             {

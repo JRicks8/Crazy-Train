@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        MusicPlayer.instance.PlaySoundFadeIn(MusicPlayer.Sound.Song_Menu, 3.0f, true);
+        MusicPlayer.instance.PlaySoundFadeIn(MusicPlayer.Sound.Song_Menu, 3.0f, true, 0.7f);
     }
 
     private void Update()
@@ -127,9 +127,9 @@ public class GameController : MonoBehaviour
     public void StartGame()
     {
         // Play Music
-        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_EnemiesClosingIn, true);
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_EnemiesClosingIn, true, 0.5f);
         MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Song_BossLayer, true, 0.0f);
-        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true, 0.4f);
+        MusicPlayer.instance.PlaySound(MusicPlayer.Sound.Sound_TrainNoise, true, 0.2f);
 
         // Spawn the player in the caboose
         GameObject player = Instantiate(playerPrefab);
@@ -141,7 +141,7 @@ public class GameController : MonoBehaviour
 
     public void ResetGame()
     {
-        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_Menu, 1.0f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_Menu, 0.7f, 3.0f);
 
         // Clear all enemies, cancel spawning
         waveQueue.Clear();
@@ -150,6 +150,7 @@ public class GameController : MonoBehaviour
             Destroy(c.gameObject);
         }
         enemiesToSpawn.Clear();
+        livingEnemies.Clear();
         currentWaveIndex = 0;
         waveActive = false; // This prevents the game from continuing
 
@@ -159,18 +160,27 @@ public class GameController : MonoBehaviour
             Destroy(groundPathfindDataObjects[i]);
         }
         pathNodes.Clear();
-        AstarPath.active.data.SetData(new byte[0]);
+        foreach (GridGraph graph in AstarPath.active.data.graphs)
+        {
+            try
+            {
+                AstarPath.active.data.RemoveGraph(graph);
+            }
+            catch
+            {
+                //Debug.LogError("Astar has internal errors and I don't know what to do :( I guess I'll just leave it????");
+            }
+        }
 
         // Destroy Train cars
         for (int i = trainCars.Count - 1; i >= 0; i--)
         {
             Destroy(trainCars[i].gameObject);
         }
+        trainCars = new List<TrainCar>();
 
         // Show Menu
         MainMenu.instance.ShowContent();
-
-        Debug.Log("Game Reset");
     }
 
     public void TogglePause()
@@ -196,8 +206,8 @@ public class GameController : MonoBehaviour
     public void StartNextSection()
     {
         // Play Music
-        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_EnemiesClosingIn, 1.0f, 3.0f);
-        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.4f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_EnemiesClosingIn, 0.5f, 3.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.2f, 3.0f);
 
         List<EnemyWave> waves = waveData.Area1WavePool; // Get the list of waves from the pool
         for (int i = 0; i < numWaves - 1; i++) // Add numWaves - 1 waves from the pool to the queue (minus one to account for the boss wave)
@@ -220,7 +230,8 @@ public class GameController : MonoBehaviour
 
     public void PlayOpeningSequence()
     {
-        MusicPlayer.instance.StopSoundFadeOut(MusicPlayer.Sound.Song_Menu, 4.0f);
+        float currentSongVolume = MusicPlayer.instance.tracks[(int)MusicPlayer.Sound.Song_Menu].volume;
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_Menu, 0.0f, 4.0f);
         CutsceneManager.instance.DoOpeningSequence();
 
         // Create the caboose and first car
@@ -235,7 +246,8 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < AstarPath.active.graphs.Length; i++)
         {
             GridGraph g = AstarPath.active.graphs[i] as GridGraph;
-            g.RelocateNodes(new Vector3(g.center.x + 30, g.center.y, 0), Quaternion.identity, 1.0f);
+            if (g == null) continue;
+            g.RelocateNodes(new Vector3(g.center.x + 30, g.center.y, 0), Quaternion.Euler(g.rotation), g.nodeSize);
         }
     }
 
@@ -243,7 +255,7 @@ public class GameController : MonoBehaviour
     {
         MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_BossLayer, 0.0f, 3.0f);
         MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_EnemiesClosingIn, 0.0f, 3.0f);
-        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.8f, 4.0f);
+        MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Sound_TrainNoise, 0.5f, 4.0f);
 
         Debug.Log("Waves complete");
         // Get the front most car on the train
@@ -384,7 +396,7 @@ public class GameController : MonoBehaviour
 
         // Play the boss layer of music if this is the last wave (boss wave)
         if (waveQueue.Count == 0)
-            MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_BossLayer, 1.0f, 3.0f);
+            MusicPlayer.instance.ChangeVolumeGradual(MusicPlayer.Sound.Song_BossLayer, 0.5f, 3.0f);
 
         // get all train cars
         GameObject[] trainCars = GameObject.FindGameObjectsWithTag("TrainCar");
@@ -428,6 +440,7 @@ public class GameController : MonoBehaviour
 
             //GameObject e = spawners[randSpawnerIndex].SpawnEntity(enemiesToSpawn[randEnemyIndex]);
             Spawner s = spawners[randSpawnerIndex];
+            if (PlayerController.instance == null) break;
             while (Vector2.Distance(s.transform.position, PlayerController.instance.transform.position) < 13.0f)
             {
                 randSpawnerIndex = UnityEngine.Random.Range(0, spawners.Count);

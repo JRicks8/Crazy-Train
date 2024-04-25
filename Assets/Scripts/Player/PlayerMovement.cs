@@ -49,12 +49,15 @@ public class PlayerMovement : MonoBehaviour
             filter.SetLayerMask(whatIsGround);
             filter.useLayerMask = true;
             groundCheckCollider.OverlapCollider(filter, colliders);
-            if (colliders.Count > 0)
+            if (colliders.Count > 0 && rb.velocity.y <= 0.1f)
             {
                 grounded = true;
                 if (!wasGrounded)
+				{
                     OnLand?.Invoke(gameObject);
-				return colliders[0].gameObject;
+					MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_Land);
+                }
+                return colliders[0].gameObject;
             }
         }
 		return null;
@@ -89,6 +92,7 @@ public class PlayerMovement : MonoBehaviour
 			// Add a vertical force to the player.
 			grounded = false;
 			rb.AddForce(new Vector2(0f, jumpForce));
+			MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_Jump);
 		}
 	}
 

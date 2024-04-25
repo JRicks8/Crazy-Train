@@ -26,8 +26,11 @@ public class CameraTarget : MonoBehaviour
             DonePositioningCamera = new UnityEvent();
     }
 
+    bool bounce = false;
     IEnumerator LookForPlayerRecursive()
     {
+        if (bounce) yield break;
+
         while (player == null) 
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -37,6 +40,8 @@ public class CameraTarget : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f);
         }
+
+        lookForPlayer = null;
     }
 
     private void LateUpdate()
@@ -44,6 +49,11 @@ public class CameraTarget : MonoBehaviour
         if (player == null)
         {
             DonePositioningCamera?.Invoke();
+            if (lookForPlayer == null)
+            {
+                lookForPlayer = LookForPlayerRecursive();
+                StartCoroutine(lookForPlayer);
+            }
             return;
         }
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);

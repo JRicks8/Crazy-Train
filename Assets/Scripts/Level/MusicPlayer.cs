@@ -12,6 +12,8 @@ public class MusicPlayer : MonoBehaviour
         Song_Menu,
         Sound_TrainNoise,
         Song_BossLayer,
+        Sound_Jump,
+        Sound_Land,
     }
 
     public static MusicPlayer instance;

@@ -30,20 +30,22 @@ public class WaveData : MonoBehaviour
 
     public List<EnemyWave> Area1WavePool => new()
     {
-        // Three gunners
+        // Three gunners, one crow
         new EnemyWave
         {
             waveContents = new List<Tuple<GameObject, int>>()
             {
                 new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.gunner.charID], 3),
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 1),
             }
         },
-        // Three crows
+        // Three crows, one cool gunner
         new EnemyWave
         {
             waveContents = new List<Tuple<GameObject, int>>()
             {
                 new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 3),
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.coolGunner.charID], 1),
             }
         },
         // Three gunners, two crows
@@ -55,16 +57,26 @@ public class WaveData : MonoBehaviour
                 new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.crow.charID], 2),
             }
         },
-    };
-
-    public List<EnemyWave> Area1BossWavePool => new()
-    {
-        // Cactus man
+        // Two cool gunners, two gunners
         new EnemyWave
         {
             waveContents = new List<Tuple<GameObject, int>>()
             {
-                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.cactusBoss.charID], 1)
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.coolGunner.charID], 2),
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.gunner.charID], 2),
+            }
+        },
+    };
+
+    public List<EnemyWave> Area1BossWavePool => new()
+    {
+        // Cactus man, 2 cool gunners
+        new EnemyWave
+        {
+            waveContents = new List<Tuple<GameObject, int>>()
+            {
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.cactusBoss.charID], 1),
+                new Tuple<GameObject, int>(charData.enemyPrefabs[CharacterData.coolGunner.charID], 2),
             }
         },
     };
