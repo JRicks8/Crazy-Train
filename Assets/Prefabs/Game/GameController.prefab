@@ -355,6 +355,7 @@ MonoBehaviour:
   shopPrefab: {fileID: 3562361340248360543, guid: 5ad46ea82306fbb4485df9f372a5ed8e, type: 3}
   GUICanvas: {fileID: 665857861009545735}
   enemiesLeftText: {fileID: 9099869238645968835}
+  coinPrefab: {fileID: 4678512223411384975, guid: a2aa022c215b1444c90961ee374c4bd9, type: 3}
   trainCars: []
   enemiesToSpawn: []
   livingEnemies: []

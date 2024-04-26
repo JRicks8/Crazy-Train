@@ -42,7 +42,7 @@ public class GunData : MonoBehaviour
     {
         clipSize = 6,
         ammo = 6,
-        reserveAmmo = 72,
+        reserveAmmo = 999,
         baseDamage = 1,
         baseFireRate = 3,
         reloadDurationSeconds = 1,

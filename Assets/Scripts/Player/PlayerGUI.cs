@@ -18,6 +18,7 @@ public class PlayerGUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI activeItemNameText;
     [SerializeField] private Image activeItemDisplayImage;
     [SerializeField] private RectTransform activeItemCooldownSlider;
+    [SerializeField] private TextMeshProUGUI coinsNumber;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject HeartImagePrefab;
@@ -69,6 +70,8 @@ public class PlayerGUI : MonoBehaviour
             activeItemNameText.text = "";
             activeItemCooldownSlider.localScale = new Vector3(1, 0, 1);
         }
+
+        coinsNumber.text = playerController.GetCurrency().ToString();
     }
 
     private int lastNumHearts = 0;

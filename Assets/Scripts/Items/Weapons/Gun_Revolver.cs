@@ -29,6 +29,7 @@ public class Gun_Revolver : Gun
         if (success)
         {
             animator.SetTrigger("shootTrigger");
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_Gunshot2, 0.4f);
         }
 
         return success;

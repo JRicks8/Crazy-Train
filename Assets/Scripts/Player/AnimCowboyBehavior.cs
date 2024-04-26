@@ -13,7 +13,6 @@ public class AnimCowboyBehavior : StateMachineBehaviour
         grounded,
         dieTrigger,
         ouchTrigger,
-        landTrigger,
     }
 
     private bool referencesSet = false;
@@ -48,7 +47,6 @@ public class AnimCowboyBehavior : StateMachineBehaviour
 
         pHealth.OnDeath += OnCowboyDie;
         pHealth.OnDamageTaken += OnCowboyDamageTaken;
-        pMovement.OnLand += OnCowboyLand;
 
         referencesSet = true;
     }
@@ -61,10 +59,5 @@ public class AnimCowboyBehavior : StateMachineBehaviour
     public void OnCowboyDamageTaken(GameObject entity)
     {
         playerAnimator.SetTrigger(Parameters.ouchTrigger.ToString());
-    }
-
-    public void OnCowboyLand(GameObject entity)
-    {
-        playerAnimator.SetTrigger(Parameters.landTrigger.ToString());
     }
 }

@@ -41,6 +41,9 @@ public class Enemy_CoolGunner : Character
             gun.gunInfo.reloadDurationSeconds = 4.0f;
             gun.bulletPrefab = overrideBulletPrefab;
         }
+
+        healthScript.OnDeath += OnDeath;
+        healthScript.OnDamageTaken += OnOuch;
     }
 
     private void Update()
@@ -75,6 +78,21 @@ public class Enemy_CoolGunner : Character
             gun.gunInfo.reserveAmmo = 1000; // NPCs have infinite ammo
 
         equippedWeapon.Use(equippedWeapon.transform.right);
+    }
+
+    private void OnOuch(GameObject _)
+    {
+        int rand = Random.Range(0, 2);
+
+        if (rand == 0)
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_GunnerOuch1, 0.5f);
+        else
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_GunnerOuch2, 0.5f);
+    }
+
+    private void OnDeath(GameObject _)
+    {
+        MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_GunnerDie, 0.5f);
     }
 
     // State Machine States

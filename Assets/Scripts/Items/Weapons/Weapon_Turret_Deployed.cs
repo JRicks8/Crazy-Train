@@ -121,6 +121,7 @@ public class Weapon_Turret_Deployed : MonoBehaviour
         b.SetActive(true);
         bulletScript.SetVelocity(headSpriteObject.transform.right * settings.bulletSpeed);
         playerController.OnPlayerBulletFired?.Invoke(b);
+        MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_Gunshot1, 0.4f);
     }
 
     private void LookForTargets()

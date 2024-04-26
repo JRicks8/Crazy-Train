@@ -1,19 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class MusicPlayer : MonoBehaviour
 {
     public enum Sound
     {
+        Song_BossLayer,
         Song_EnemiesClosingIn,
         Song_Menu,
-        Sound_TrainNoise,
-        Song_BossLayer,
+        Sound_CoinCollect1,
+        Sound_CoinCollect2,
+        Sound_CrowDie,
+        Sound_CrowOuch1,
+        Sound_CrowOuch2,
+        Sound_DeathFalling,
+        Sound_GunnerDie,
+        Sound_GunnerOuch1,
+        Sound_GunnerOuch2,
+        Sound_Gunshot1,
+        Sound_Gunshot2,
+        Sound_ItemCollect,
         Sound_Jump,
         Sound_Land,
+        Sound_Ouch,
+        Sound_TrainNoise,
     }
 
     public static MusicPlayer instance;

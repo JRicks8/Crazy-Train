@@ -270,6 +270,7 @@ public class PlayerController : MonoBehaviour
             passiveItems.Add(item);
         }
         OnItemAdded?.Invoke(item);
+        MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_ItemCollect, 0.1f);
     }
 
     // Pick up an ItemPickup GameObject
@@ -356,11 +357,25 @@ public class PlayerController : MonoBehaviour
 
         int index = weapons.FindIndex(match);
         if (index != -1)
+        {
             weapons.RemoveAt(index);
+            EquipItem(weapons[0]);
+        }
 
         index = activeItems.FindIndex(match);
         if (index != -1)
             activeItems.RemoveAt(index);
+    }
+
+    public void CollectCoin()
+    {
+        currency++;
+        int randNum = UnityEngine.Random.Range(0, 2);
+
+        if (randNum == 0)
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_CoinCollect1, 0.4f);
+        else
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_CoinCollect2, 0.4f);
     }
 
     private void OnDeath(GameObject _)
@@ -426,6 +441,7 @@ public class PlayerController : MonoBehaviour
     public Item GetEquippedWeapon() { return equippedWeapon; }
     public Vector3 GetHandLocation() { return hand.position; }
     public Health GetHealthScript() { return healthScript; }
+    public float GetCurrency() { return currency; }
 
     private void OnDamageTaken(GameObject entity)
     {

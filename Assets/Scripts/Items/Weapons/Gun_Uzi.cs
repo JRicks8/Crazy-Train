@@ -29,6 +29,7 @@ public class Gun_Uzi : Gun
         if (success)
         {
             animator.SetTrigger("shootTrigger");
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_Gunshot1, 0.4f);
         }
 
         return success;

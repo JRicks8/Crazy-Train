@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     }
 
     public static GameController instance;
+    private List<int> validItemIndices = new List<int>();
 
     [Header("Object References")]
     [SerializeField] private GameObject playerPrefab;
@@ -21,6 +22,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject shopPrefab;
     [SerializeField] private Transform GUICanvas;
     [SerializeField] private Text enemiesLeftText;
+    [SerializeField] private GameObject coinPrefab;
 
     private WaveData waveData;
     private TrainCarData trainCarData;
@@ -63,6 +65,10 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         MusicPlayer.instance.PlaySoundFadeIn(MusicPlayer.Sound.Song_Menu, 3.0f, true, 0.7f);
+
+        validItemIndices = new List<int>(); // dont include the none or revolver
+        for (int i = 0; i < ItemData.staticItemPrefabs.Count - 2; i++)
+            validItemIndices.Add(i + 2);
     }
 
     private void Update()
@@ -178,6 +184,11 @@ public class GameController : MonoBehaviour
             Destroy(trainCars[i].gameObject);
         }
         trainCars = new List<TrainCar>();
+
+        // Reset Item spawning data
+        validItemIndices = new List<int>(); // dont include the none item
+        for (int i = 0; i < ItemData.staticItemPrefabs.Count - 2; i++)
+            validItemIndices.Add(i + 2);
 
         // Show Menu
         MainMenu.instance.ShowContent();
@@ -381,7 +392,7 @@ public class GameController : MonoBehaviour
     {
         if (waveQueue.Count == 0)
         {
-            makeAnnouncement = MakeAnnouncement("Waves Complete", 5.0f);
+            makeAnnouncement = MakeAnnouncement("Waves Complete. Thanks for playing the demo!", 5.0f);
             StartCoroutine(makeAnnouncement);
             waveActive = false;
             return false;
@@ -425,7 +436,31 @@ public class GameController : MonoBehaviour
     {
         if (charObject.TryGetComponent(out Character c))
         {
+            Vector2 position = charObject.transform.position;
             livingEnemies.Remove(c);
+            int randCoinNum = Random.Range(3, 7);
+
+            // Spawn coins
+            for (int i = 0; i < randCoinNum; i++)
+            {
+                GameObject coin = Instantiate(coinPrefab);
+                coin.transform.position = charObject.transform.position;
+                coin.GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(0.0f, 1.0f));
+            }
+
+            // Spawn item if it is the last enemy in the wave
+            if (livingEnemies.Count == 0 && validItemIndices.Count > 0)
+            {
+                // Instantiate Item pickup
+                GameObject itemPickupObject = Instantiate(ItemData.staticItemPickupPrefab);
+                itemPickupObject.transform.position = position;
+                ItemPickup itemPickupScript = itemPickupObject.GetComponent<ItemPickup>();
+
+                // Set item pickup item
+                int rand = Random.Range(0, validItemIndices.Count);
+                itemPickupScript.SetItemPrefab(ItemData.staticItemPrefabs[validItemIndices[rand]]);
+                validItemIndices.RemoveAt(rand);
+            }
         }
     }
 

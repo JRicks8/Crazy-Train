@@ -143,6 +143,8 @@ public class CutsceneManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_DeathFalling);
+
         float timer = 0.0f;
         float duration = 1.0f;
         Vector3 destination = new Vector3(fakePlayerTransform.localPosition.x / 2, 9.0f, 0);

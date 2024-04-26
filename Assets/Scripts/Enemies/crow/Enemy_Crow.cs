@@ -19,6 +19,9 @@ public class Enemy_Crow : Character
         pathfinder = GetComponent<AirPathfind>();
 
         animator.GetBehaviour<AnimCrowBehavior>().SetReferences(gameObject, animator);
+
+        healthScript.OnDeath += OnDeath;
+        healthScript.OnDamageTaken += OnOuch;
     }
 
     private void Update()
@@ -41,8 +44,22 @@ public class Enemy_Crow : Character
         }
     }
 
-    // State Machine States
+    private void OnOuch(GameObject _)
+    {
+        int rand = Random.Range(0, 2);
 
+        if (rand == 0)
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_CrowOuch1, 0.4f);
+        else
+            MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_CrowOuch2, 0.4f);
+    }
+
+    private void OnDeath(GameObject _)
+    {
+        MusicPlayer.instance.PlaySoundOneShot(MusicPlayer.Sound.Sound_CrowDie, 0.4f);
+    }
+
+    // State Machine States
     class Idle : IState
     {
         Enemy_Crow owner;
